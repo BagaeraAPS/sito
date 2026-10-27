@@ -1,39 +1,50 @@
 /* =====================================================================
-   EVENTI: unica fonte dei dati. Per aggiungere o modificare un evento
-   chiedi a Claude. Campi:
-     titolo   nome dell'evento
-     data     "AAAA-MM-GG" se il giorno è certo  (oppure)
-     mese     "AAAA-MM" se si conosce solo il mese
-     fine     "AAAA-MM-GG" ultimo giorno, per eventi su più giorni
-     etichetta testo al posto della data (es. "Estate"), opzionale
+   EVENTI: unica fonte dei dati del sito. Per aggiungere o modificare
+   un evento chiedi a Claude. Campi:
+     titolo    nome dell'evento
+     data      "AAAA-MM-GG" se il giorno è certo  (oppure)
+     mese      "AAAA-MM" se si conosce solo il mese
+     fine      "AAAA-MM-GG" ultimo giorno, per eventi su più giorni
      ora, luogo, testo, tag
-     serie    "femfest-estate" | "femfest-inverno" per comparire nella sezione Fem Fest
-     tema     tema dell'edizione (solo Fem Fest)
+     tema      stile della card: pugno26, winter25, dolce25, winter24,
+               summer24, paletto, cultura, aperitivo, serata
+               (per un nuovo Fem Fest si crea un tema nuovo)
+     img       immagine della card (cartella assets/img)
+     imgTipo   "foto" (default), "locandina", "logo" oppure "pattern"
+     link      pagina o sezione collegata (es. "fem-fest.html#pugno26")
+     sottotitolo  tema dell'edizione, per i Fem Fest
    Prossimi e passati si separano da soli in base alla data di oggi.
    ===================================================================== */
 const EVENTI = [
-  { titolo: "Lurago Fem Fest Summer 2026", tema: "Per un pugno di Bagai", data: "2026-06-13", fine: "2026-06-14",
-    luogo: "Lurago d'Erba", tag: "Fem Fest", serie: "femfest-estate",
-    testo: "Edizione estiva a tema Far West: due giorni di festa in paese." },
+  { titolo: "Lurago Fem Fest Summer 2026", sottotitolo: "Per un pugno di Bagai", data: "2026-06-13", fine: "2026-06-14",
+    luogo: "Lurago d'Erba", tag: "Fem Fest", tema: "pugno26", img: "ff/pugno26/01-t.webp", link: "fem-fest.html#pugno26",
+    testo: "Edizione estiva a tema Far West: totem, tende indiane e una prigione in piazza." },
   { titolo: "Torneo Paletto Bagaera 2026", data: "2026-06-13", ora: "9:30 – 18:35", luogo: "Oratorio di Lurago d'Erba", tag: "Sport",
-    testo: "12 squadre, 5 contro 5. Si segna colpendo il paletto avversario. Coppe per le prime tre squadre e per il miglior giocatore." },
-  { titolo: "Sanremo in Ciabatta", mese: "2026-02", luogo: "Lurago d'Erba", tag: "Serata",
+    tema: "paletto", img: "grafiche/paletto-logo.webp", imgTipo: "logo",
+    testo: "12 squadre, 5 contro 5. Si segna colpendo il paletto avversario." },
+  { titolo: "Sanremo in Ciabatta", mese: "2026-02", luogo: "Lurago d'Erba", tag: "Serata", tema: "serata", imgTipo: "pattern",
     testo: "La settimana del Festival si guarda insieme, in ciabatte, con food & drink." },
-  { titolo: "Lurago Fem Fest Winter 2025", mese: "2025-12", luogo: "Lurago d'Erba", tag: "Fem Fest", serie: "femfest-inverno",
-    testo: "La festa di Natale di Bagaera." },
-  { titolo: "Lurago Fem Fest 2025", tema: "La Dolce Vita", mese: "2025-06", luogo: "Piazza Giovanni XXIII", tag: "Fem Fest", serie: "femfest-estate",
-    testo: "Seconda edizione estiva, in piazza. Tema e dress code: La Dolce Vita." },
+  { titolo: "Lurago Fem Fest Winter 2025", data: "2025-12-20", luogo: "Lurago d'Erba", tag: "Fem Fest", tema: "winter25",
+    img: "ff/winter25/02-t.webp", link: "fem-fest.html#winter25",
+    testo: "La festa di Natale: cabinovia, albero e Babbo Natale in piazza." },
+  { titolo: "Lurago Fem Fest 2025", sottotitolo: "la Dolce Vita", data: "2025-06-21", luogo: "Piazza Giovanni XXIII", tag: "Fem Fest",
+    tema: "dolce25", img: "ff/dolce25/01-t.webp", link: "fem-fest.html#dolce25",
+    testo: "Tema e dress code: La Dolce Vita, con la 500 in piazza e il merch dell'edizione." },
   { titolo: "IMPATTO", data: "2025-05-16", ora: "20:30", luogo: "Sala consiliare, piazza Giovanni XXIII", tag: "Cultura",
-    testo: "Proiezione del documentario Storie di popoli in transizione con The Climate Route e discussione sul clima. Per lo Z Festival." },
+    tema: "cultura", img: "grafiche/locandina-impatto.webp", imgTipo: "locandina",
+    testo: "Il documentario Storie di popoli in transizione con The Climate Route e una discussione sul clima. Per lo Z Festival." },
   { titolo: "Aperitivo inaugurale", data: "2025-04-30", ora: "18:30", luogo: "Caffetteria Mambretti, piazza Giovanni XXIII", tag: "Aperitivo",
+    tema: "aperitivo", img: "grafiche/locandina-aperitivo.webp", imgTipo: "locandina",
     testo: "Bagaera è nata. La prima volta tutti insieme in piazza." },
-  { titolo: "Lurago Fem Fest Winter Edition 2024", mese: "2024-12", etichetta: "Inverno", luogo: "Lurago d'Erba", tag: "Fem Fest", serie: "femfest-inverno",
-    testo: "La prima edizione invernale." },
-  { titolo: "Lurago Fem Fest 2024", mese: "2024-06", etichetta: "Estate", luogo: "Lurago d'Erba", tag: "Fem Fest", serie: "femfest-estate",
-    testo: "La prima edizione. Da qui è partito tutto." }
+  { titolo: "Lurago Fem Fest Winter 2024", data: "2024-12-21", luogo: "Lurago d'Erba", tag: "Fem Fest", tema: "winter24",
+    img: "ff/winter24/01-t.webp", link: "fem-fest.html#winter24",
+    testo: "La prima edizione invernale, in versione après-ski." },
+  { titolo: "Lurago Fem Fest 2024", sottotitolo: "La prima edizione", data: "2024-06-01", luogo: "Lurago d'Erba", tag: "Fem Fest",
+    tema: "summer24", img: "ff/summer24/01-t.webp", link: "fem-fest.html#summer24",
+    testo: "Band dal vivo e la piazza piena. Da qui è partito tutto." }
 ];
 
-/* BAGAERA'S FRIENDS: stesso principio, una riga per attività. */
+/* BAGAERA'S FRIENDS: una riga per attività. */
 const FRIENDS = [
   { nome: "Caffetteria Mambretti", tipo: "Caffetteria", paese: "Lurago d'Erba", sconto: "Sconto sul primo spritz" },
   { nome: "Coccodè Cream", tipo: "Bar", paese: "Inverigo", sconto: "10% sulla prima consumazione" },

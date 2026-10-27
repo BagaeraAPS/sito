@@ -8,12 +8,14 @@ Pubblicato con GitHub Pages sul dominio `bagaera.it` (file `CNAME`).
 | File | A cosa serve |
 |---|---|
 | `index.html` | la home, con tutte le sezioni |
+| `fem-fest.html` | la pagina del Fem Fest: una sezione a tema e una galleria per ogni edizione |
 | `assets/dati.js` | **eventi e Bagaera's friends**: è l'unico file da toccare per aggiornarli |
 | `assets/sito.css` | grafica |
 | `assets/sito.js` | comportamento (schede eventi, filtri, menu, copia email) |
-| `assets/img/` | foto (WebP) e `og.jpg`, l'anteprima per WhatsApp e social |
+| `assets/img/ff/` | foto delle edizioni del Fem Fest (una cartella per edizione) |
+| `assets/img/grafiche/` | loghi Fem Fest, se fem?, pattern, locandine |
 | `assets/font/` | Archivo, font libero (OFL) usato al posto di LAPI bold |
-| `logo/` | logo e pittogramma **ridisegnati dal manuale**: da sostituire con gli SVG originali |
+| `logo/` | logo Bagaera originale (SVG) |
 | `404.html` | pagina per gli indirizzi sbagliati |
 | `CNAME` | dice a GitHub Pages di rispondere su bagaera.it. Non cancellarlo |
 
