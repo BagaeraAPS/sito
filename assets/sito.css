@@ -356,10 +356,10 @@ p { margin: 0; max-width: 62ch; }
    PAGINA FEM FEST
    ===================================================================== */
 .ffp-hero { background: var(--verde) url("img/grafiche/pattern-sefem-verde.webp") center / cover; color: var(--nero); }
-.ffp-hero .wrap { padding-block: clamp(56px, 9vw, 120px) clamp(40px, 6vw, 72px); display: grid; gap: clamp(28px, 4vw, 48px); }
+.ffp-hero .wrap { padding-block: clamp(40px, 6vw, 80px) clamp(40px, 6vw, 64px); display: grid; gap: clamp(28px, 4vw, 48px); }
 .ffp-hero__top { display: grid; gap: 28px; align-items: end; }
-@media (min-width: 900px) { .ffp-hero__top { grid-template-columns: 1.1fr 1fr; } }
-.ffp-hero__logo { width: min(620px, 100%); height: auto; filter: drop-shadow(0 16px 32px rgba(0,0,0,.28)); }
+@media (min-width: 900px) { .ffp-hero__top { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); align-items: center; gap: clamp(32px, 5vw, 72px); } }
+.ffp-hero__logo { width: min(380px, 100%); height: auto; margin-inline: auto; filter: drop-shadow(0 16px 32px rgba(0,0,0,.28)); }
 .ffp-hero__copy { background: var(--bianco); padding: clamp(22px, 3vw, 34px); display: grid; gap: 16px; min-width: 0; }
 .ffp-index { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
 .ffp-index a { display: inline-flex; gap: 10px; align-items: baseline; min-height: 48px; padding: 12px 16px; background: var(--t-bg); color: var(--t-ink); text-decoration: none; border: var(--rule) solid var(--nero); }
