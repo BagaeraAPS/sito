@@ -10,7 +10,7 @@
                summer24, paletto, cultura, aperitivo, serata
                (per un nuovo Fem Fest si crea un tema nuovo)
      img       immagine della card (cartella assets/img)
-     imgTipo   "foto" (default), "locandina", "logo" oppure "pattern"
+     imgTipo   "foto" (default), "locandina", "logo" oppure "pattern" (riquadro verde senza foto)
      link      pagina o sezione collegata (es. "fem-fest.html#pugno26")
      sottotitolo  tema dell'edizione, per i Fem Fest
    Prossimi e passati si separano da soli in base alla data di oggi.
@@ -24,9 +24,9 @@ const EVENTI = [
     testo: "12 squadre, 5 contro 5. Si segna colpendo il paletto avversario." },
   { titolo: "Sanremo in Ciabatta", mese: "2026-02", luogo: "Lurago d'Erba", tag: "Serata", tema: "serata", imgTipo: "pattern",
     testo: "La settimana del Festival si guarda insieme, in ciabatte, con food & drink." },
-  { titolo: "Lurago Fem Fest Winter 2025", data: "2025-12-20", luogo: "Lurago d'Erba", tag: "Fem Fest", tema: "winter25",
+  { titolo: "Lurago Fem Fest Winter 2025", sottotitolo: "Olimpiadi a Cortina", data: "2025-12-20", luogo: "Lurago d'Erba", tag: "Fem Fest", tema: "winter25",
     img: "ff/winter25/02-t.webp", link: "fem-fest.html#winter25",
-    testo: "La festa di Natale: cabinovia, albero e Babbo Natale in piazza." },
+    testo: "La festa di Natale a tema Olimpiadi di Cortina, con la cabinovia in piazza." },
   { titolo: "Lurago Fem Fest 2025", sottotitolo: "la Dolce Vita", data: "2025-06-21", luogo: "Piazza Giovanni XXIII", tag: "Fem Fest",
     tema: "dolce25", img: "ff/dolce25/01-t.webp", link: "fem-fest.html#dolce25",
     testo: "Tema e dress code: La Dolce Vita, con la 500 in piazza e il merch dell'edizione." },
@@ -36,9 +36,9 @@ const EVENTI = [
   { titolo: "Aperitivo inaugurale", data: "2025-04-30", ora: "18:30", luogo: "Caffetteria Mambretti, piazza Giovanni XXIII", tag: "Aperitivo",
     tema: "aperitivo", img: "grafiche/locandina-aperitivo.webp", imgTipo: "locandina",
     testo: "Bagaera è nata. La prima volta tutti insieme in piazza." },
-  { titolo: "Lurago Fem Fest Winter 2024", data: "2024-12-21", luogo: "Lurago d'Erba", tag: "Fem Fest", tema: "winter24",
+  { titolo: "Lurago Fem Fest Winter 2024", sottotitolo: "Après-ski", data: "2024-12-21", luogo: "Lurago d'Erba", tag: "Fem Fest", tema: "winter24",
     img: "ff/winter24/01-t.webp", link: "fem-fest.html#winter24",
-    testo: "La prima edizione invernale, in versione après-ski." },
+    testo: "La prima edizione invernale: maschere da sci, cappelli di pelo e piste in piazza." },
   { titolo: "Lurago Fem Fest 2024", sottotitolo: "La prima edizione", data: "2024-06-01", luogo: "Lurago d'Erba", tag: "Fem Fest",
     tema: "summer24", img: "ff/summer24/01-t.webp", link: "fem-fest.html#summer24",
     testo: "Band dal vivo e la piazza piena. Da qui è partito tutto." }

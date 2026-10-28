@@ -34,31 +34,34 @@
       return `<li class="ev-card" data-tema="${esc(e.tema || "serata")}">${media(e)}
         <div class="ev-card__body">
           <div class="ev-card__meta"><b>${esc(e.tag || "Evento")}</b>${meta}</div>
-          <h4 class="t-title">${esc(e.titolo)}</h4>
+          <h3 class="t-title">${esc(e.titolo)}</h3>
           ${e.sottotitolo ? `<span class="ev-card__tema">${esc(e.sottotitolo)}</span>` : ""}
           ${e.testo ? `<p class="ev-card__text">${esc(e.testo)}</p>` : ""}
           ${e.link ? `<a class="ev-card__link" href="${esc(e.link)}">Guarda le foto</a>` : ""}
         </div></li>`;
     }
+    const lim = +($("ev-grid").dataset.limit || 0);
+    function fillGrid(list) { $("ev-grid").innerHTML = (lim ? list.slice(0, lim) : list).map(card).join(""); }
     const next = $("ev-next");
     if (prossimi.length) {
       const p = prossimi[0];
       next.innerHTML = `<div class="ev-next ev-next--live"><svg viewBox="0 0 127.5 126.2" aria-hidden="true"><use href="#s-o2"/></svg>
         <div><span class="label green">Prossimo evento</span><p class="display">${esc(p.titolo)}</p><p>${esc([p.data || p.mese, p.ora, p.luogo].filter(Boolean).join(" · "))}</p></div>
         <a class="btn btn--verde" href="${esc(p.link || "#contatti")}">Scopri di più</a></div>`;
-      $("ev-grid").innerHTML = prossimi.slice(1).concat(passati).map(card).join("");
+      fillGrid(prossimi.slice(1).concat(passati));
     } else {
       next.innerHTML = `<div class="ev-next"><svg viewBox="0 0 127.5 126.2" aria-hidden="true"><use href="#s-o2"/></svg>
         <div><p class="display">Il prossimo lo stiamo preparando</p><p>Le date nuove escono prima su Instagram.</p></div>
         <a class="btn btn--verde" href="https://www.instagram.com/bagaeraa/" target="_blank" rel="noopener">Seguici su @bagaeraa</a></div>`;
-      $("ev-grid").innerHTML = passati.map(card).join("");
+      fillGrid(passati);
     }
-    $("ev-count").textContent = passati.length + " eventi dal 2024";
+    if ($("ev-count")) $("ev-count").textContent = passati.length + " eventi dal 2024";
     const chip = $("next-chip-text");
     if (chip) chip.innerHTML = prossimi.length ? `Prossimo: <b>${esc(prossimi[0].titolo)}</b>` : `Ultimo: <b>${esc(passati[0].titolo)}</b>`;
   }
 
   /* ---------- friends ---------- */
+  if (typeof FRIENDS !== "undefined" && $("fr-count")) $("fr-count").textContent = FRIENDS.length;
   if (typeof FRIENDS !== "undefined" && $("friends-list")) {
     const paesi = ["Tutti", ...Array.from(new Set(FRIENDS.map(f => f.paese)))];
     const ul = $("friends-list"), filt = $("filters");
