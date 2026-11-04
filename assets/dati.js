@@ -7,7 +7,8 @@
      fine      "AAAA-MM-GG" ultimo giorno, per eventi su più giorni
      ora, luogo, testo, tag
      tema      stile della card: pugno26, winter25, dolce25, winter24,
-               summer24, paletto, cultura, aperitivo, serata
+               summer24, paletto, cultura, aperitivo, serata,
+               zucche, night, sanremo, ggc, libri
                (per un nuovo Fem Fest si crea un tema nuovo)
      img       immagine della card (cartella assets/img)
      imgTipo   "foto" (default), "locandina", "logo" oppure "pattern" (riquadro verde senza foto)
@@ -22,8 +23,24 @@ const EVENTI = [
   { titolo: "Torneo Paletto Bagaera 2026", data: "2026-06-13", ora: "9:30 – 18:35", luogo: "Oratorio di Lurago d'Erba", tag: "Sport",
     tema: "paletto", img: "grafiche/paletto-logo.webp", imgTipo: "logo",
     testo: "12 squadre, 5 contro 5. Si segna colpendo il paletto avversario." },
-  { titolo: "Sanremo in Ciabatta", mese: "2026-02", luogo: "Lurago d'Erba", tag: "Serata", tema: "serata", imgTipo: "pattern",
-    testo: "La settimana del Festival si guarda insieme, in ciabatte, con food & drink." },
+  { titolo: "Campo di Zucche 2026", data: "2026-10-17", ora: "10:00 – 18:00", luogo: "Scuola elementare di Lurago d'Erba", tag: "Famiglie",
+    tema: "zucche", img: "eventi/campo-zucche-2026.webp", imgTipo: "locandina",
+    testo: "Laboratori di intaglio e pittura delle zucche, attività e giochi, stand dei commercianti e food & drinks." },
+  { titolo: "Bagaera by Night", data: "2026-07-17", ora: "dalle 19:30", luogo: "Via S. Stefano, Careggia", tag: "Serata",
+    tema: "night", img: "eventi/bagaera-by-night-2026.webp", imgTipo: "locandina",
+    testo: "Alla Festa della Madonna della Careggia: hamburger e food & drinks dalle 19:30, DJ set dalle 21." },
+  { titolo: "Sanremo in Ciabatta", data: "2026-02-28", ora: "dalle 20:00", luogo: "Palestra comunale di Inverigo", tag: "Serata",
+    tema: "sanremo", img: "eventi/sanremo-2026.webp", imgTipo: "locandina",
+    testo: "La finale di Sanremo guardata insieme, con i commenti live. Il primo evento insieme alla Consulta Giovani di Inverigo, Giüvin." },
+  { titolo: "Gin, Giochi & Caramelle", data: "2025-12-03", ora: "dalle 21:00", luogo: "Sala Cova, Comune di Lurago d'Erba", tag: "Serata",
+    tema: "ggc", img: "eventi/gin-giochi-caramelle-2025.webp", imgTipo: "locandina",
+    testo: "Una serata di giochi da tavolo, caramelle e gin (zero). Gratis." },
+  { titolo: "Campo di Zucche 2025", data: "2025-10-26", luogo: "Lurago d'Erba", tag: "Famiglie",
+    tema: "zucche", img: "eventi/campo-zucche-2025.webp",
+    testo: "La prima edizione: zucche, laboratori e giochi sul prato, per bambini e famiglie." },
+  { titolo: "All You Can Read", data: "2025-10-25", ora: "dalle 10:00", luogo: "Piazza Giovanni XXIII", tag: "Cultura",
+    tema: "libri", img: "eventi/all-you-can-read-2025.webp", imgTipo: "locandina",
+    testo: "Con la Biblioteca di Lurago salviamo i libri dal macero: porti via quanti libri riesci a leggere, a offerta libera." },
   { titolo: "Lurago Fem Fest Winter 2025", sottotitolo: "Olimpiadi a Cortina", data: "2025-12-20", luogo: "Lurago d'Erba", tag: "Fem Fest", tema: "winter25",
     img: "ff/winter25/02-t.webp", link: "fem-fest.html#winter25",
     testo: "La festa di Natale a tema Olimpiadi di Cortina, con la cabinovia in piazza." },

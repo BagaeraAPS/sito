@@ -6,6 +6,7 @@
   src: url("font/archivo-latin-ext.woff2") format("woff2");
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
 [hidden] { display: none !important; }
+@font-face { font-family: "Lapi"; src: url("font/lapi-bold.woff2") format("woff2"); font-weight: 400 900; font-style: normal; font-display: swap; }
 /* Layout: poster stack. Bande piene nero / verde / bianco come nel manuale del logo;
    titoli enormi in maiuscolo larghi, bordi netti, zero arrotondamenti. Look unico di marca (non segue il tema). */
 :root {
@@ -15,7 +16,7 @@
   --bianco: #ffffff;
   --nebbia: #c4cec4;       /* testo secondario su nero, grigio tinto di verde */
   --ombra: #5b665b;        /* testo secondario su bianco */
-  --display: "Archivo", "Arial Black", "Helvetica Neue", Arial, sans-serif; /* sostituto web di LAPI bold */
+  --display: "Lapi", "Archivo", "Arial Black", "Helvetica Neue", Arial, sans-serif; /* LAPI bold, font del brand */
   --body: "Archivo", "Helvetica Neue", Arial, sans-serif;
   --wide: 125%;
   --narrow: 78%;
@@ -178,13 +179,9 @@ p { margin: 0; max-width: 62ch; }
 .bagai__head { display: grid; gap: 28px; align-items: center; }
 @media (min-width: 900px) { .bagai__head { grid-template-columns: 1.3fr .9fr; } }
 .bagai__head :is(h1,h2) .outline { display: block; }
-.card-tessera { background: var(--bianco); color: var(--nero); padding: 22px 22px 18px; border: var(--rule) solid var(--verde); box-shadow: 0 2px 4px rgba(0,0,0,.35), 0 28px 48px -16px rgba(0,0,0,.75); transform: rotate(-2.5deg); max-width: 400px; width: 100%; justify-self: center; display: grid; gap: 14px; }
-.card-tessera .row { display: flex; justify-content: space-between; align-items: start; gap: 12px; }
-.card-tessera .t { font: 800 1.6rem/1 var(--display); font-stretch: var(--wide); text-transform: uppercase; }
-.card-tessera svg.o { height: 66px; width: auto; fill: var(--verde); flex: none; }
-.card-tessera .line { border-bottom: 2px solid var(--nero); padding-bottom: 18px; font-weight: 700; font-stretch: var(--narrow); text-transform: uppercase; letter-spacing: .08em; font-size: .8rem; }
-.card-tessera .doodle { height: 64px; border: 1.5px dashed var(--ombra); display: grid; place-items: center; color: var(--ombra); font-size: .8rem; }
-.card-tessera svg.word { width: 110px; height: 17px; fill: var(--verde); }
+.card-tessera { margin: 0; max-width: 440px; width: 100%; justify-self: center; transform: rotate(-3deg); display: grid; gap: 10px; }
+.card-tessera img { width: 100%; border-radius: 14px; box-shadow: 0 2px 4px rgba(0,0,0,.35), 0 28px 48px -16px rgba(0,0,0,.75); }
+.card-tessera figcaption { color: var(--nebbia); justify-self: end; }
 .paths { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
 .path { border: var(--rule) solid var(--bianco); padding: clamp(22px, 3vw, 32px); display: grid; gap: 16px; align-content: start; background: var(--nero); min-width: 0; }
 .path.primary { border-color: var(--verde); }
@@ -276,6 +273,11 @@ p { margin: 0; max-width: 62ch; }
 [data-tema="cultura"] { --t-bg: #1b0d08; --t-ink: #fff1e8; --t-muted: #e9b9a0; --t-accent: #ff6a2b; }
 [data-tema="aperitivo"] { --t-bg: var(--verde); --t-ink: var(--nero); --t-muted: var(--nero); --t-accent: var(--bianco); --t-line: var(--nero); }
 [data-tema="serata"] { --t-bg: #141414; --t-ink: var(--bianco); --t-muted: var(--nebbia); --t-accent: var(--verde); }
+[data-tema="zucche"] { --t-bg: #e8711d; --t-ink: #16130f; --t-muted: #2b1a0b; --t-accent: #1f5f22; --t-line: #16130f; }
+[data-tema="night"] { --t-bg: #0b2418; --t-ink: #eaf5ea; --t-muted: #a8c9b0; --t-accent: #f2e35c; }
+[data-tema="sanremo"] { --t-bg: #0c1142; --t-ink: #ffffff; --t-muted: #c3c7ef; --t-accent: #ff3d93; }
+[data-tema="ggc"] { --t-bg: #fbf5d6; --t-ink: #141414; --t-muted: #4d4a3c; --t-accent: #3446a6; --t-line: #141414; }
+[data-tema="libri"] { --t-bg: #f7ead7; --t-ink: #171717; --t-muted: #4f4a42; --t-accent: #c8413b; --t-line: #171717; }
 
 .t-title { font-family: var(--t-display); font-stretch: var(--t-stretch); font-weight: var(--t-weight); text-transform: var(--t-case); font-style: var(--t-style); line-height: .95; letter-spacing: 0; margin: 0; text-wrap: balance; }
 
@@ -322,7 +324,7 @@ p { margin: 0; max-width: 62ch; }
 .ev-card__link { margin-top: 4px; justify-self: start; color: var(--t-ink); font-weight: 800; text-decoration: none; border-bottom: 2px solid var(--t-accent); padding-bottom: 2px; }
 .ev-card__link::after { content: ""; position: absolute; inset: 0; }
 .ev-card__link:hover { color: var(--t-accent); }
-[data-tema="winter25"] .ev-card__link, [data-tema="paletto"] .ev-card__link, [data-tema="aperitivo"] .ev-card__link { border-color: var(--t-ink); }
+[data-tema="winter25"] .ev-card__link, [data-tema="paletto"] .ev-card__link, [data-tema="aperitivo"] .ev-card__link, [data-tema="zucche"] .ev-card__link { border-color: var(--t-ink); }
 /* firme grafiche per tema sulle card */
 [data-tema="pugno26"].ev-card { box-shadow: inset 0 0 0 6px var(--t-bg), inset 0 0 0 8px var(--t-line); }
 [data-tema="winter25"].ev-card .ev-card__body { background-image: radial-gradient(rgba(255,255,255,.22) 1.2px, transparent 1.6px); background-size: 18px 18px; }
