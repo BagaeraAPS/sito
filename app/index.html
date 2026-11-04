@@ -1386,7 +1386,7 @@ function vaiAGoogle(scopi = [], ritorno = location.hash || "#home") {
   try { localStorage.setItem(OAUTH_KEY, JSON.stringify({ state, nonce, scopi, ritorno, at: Date.now() })); } catch (e) {}
   const u = firebase.auth().currentUser;
   const p = new URLSearchParams({ client_id: window.GOOGLE_CLIENT_ID, redirect_uri: location.origin + location.pathname.replace(/index\.html$/, ""), response_type: scopi.length ? "id_token token" : "id_token",
-    scope: ["openid", "email", "profile", ...scopi].join(" "), nonce, state, hd: DOMINIO(), include_granted_scopes: "true", prompt: u ? "consent" : "select_account", ...(u && u.email ? { login_hint: u.email } : {}) });
+    scope: ["openid", "email", "profile", ...scopi].join(" "), nonce, state, hd: DOMINIO(), ...(scopi.length ? { include_granted_scopes: "true" } : {}), prompt: u ? "consent" : "select_account", ...(u && u.email ? { login_hint: u.email } : {}) });
   (window.__oauthNavigate || ((x) => location.assign(x)))("https://accounts.google.com/o/oauth2/v2/auth?" + p.toString());
 }
 /* al ritorno da Google: l'indirizzo contiene #id_token=… */
