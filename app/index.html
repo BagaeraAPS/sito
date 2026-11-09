@@ -888,6 +888,105 @@ input[type="checkbox"], input[type="radio"], progress { accent-color: var(--verd
 .tcol:has(input:checked) { border-color: var(--verde); box-shadow: inset 0 0 0 1px var(--verde); background: var(--ok-bg); }
 .tcol:has(input:focus-visible) { outline: 3px solid color-mix(in srgb, var(--verde) 70%, transparent); outline-offset: 2px; }
 
+/* verbali */
+.vnum { min-width: 2.2em; height: 2.2em; display: grid; place-items: center; flex: none; border-radius: var(--r-s); background: var(--bg-2); font: 700 .95rem/1 var(--f-display); color: var(--ink); }
+.drvbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--r-m); background: var(--surf); box-shadow: var(--sh-1); }
+.drvbar > .ic { width: 38px; height: 38px; display: grid; place-items: center; flex: none; border-radius: var(--r-s); background: var(--ok-bg); color: var(--verde); }
+.drvbar > .ic svg { width: 20px; height: 20px; }
+.drvbar > .grow { flex: 1 1 200px; min-width: 0; }
+.pdfv { display: flex; flex-direction: column; gap: 14px; }
+.pdfv img { width: 100%; max-width: 820px; height: auto; border-radius: var(--r-s); box-shadow: var(--sh-2); background: #fff; align-self: center; }
+.vlist { margin: 0; padding-left: 2.2em; display: flex; flex-direction: column; gap: 6px; }
+.vtesto { white-space: pre-wrap; overflow-wrap: anywhere; }
+/* open call */
+.occards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.occard { display: flex; gap: 12px; align-items: center; padding: 14px; border: 1px solid var(--line); border-radius: var(--r-m); background: var(--surf); box-shadow: var(--sh-1); text-decoration: none; color: inherit; min-width: 0; }
+.occard:hover { background: var(--bg-2); }
+.occard > .ic { width: 42px; height: 42px; display: grid; place-items: center; flex: none; border-radius: var(--r-s); background: var(--bosco); color: #fff; }
+.occard > .ic svg { width: 22px; height: 22px; }
+.occard .t { font-weight: 700; overflow-wrap: anywhere; }
+.occard .s { font-size: .84rem; color: var(--muted); }
+.occard.chiusa { opacity: .72; }
+.occard.chiusa > .ic { background: var(--bg-3); color: var(--muted); }
+.ocrisp { display: flex; flex-direction: column; gap: 10px; }
+.ocrisp summary { display: flex; gap: 12px; align-items: center; padding: 12px 14px; cursor: pointer; list-style: none; }
+.ocrisp summary::-webkit-details-marker { display: none; }
+.ocdl { margin: 0; display: grid; gap: 4px 0; border-top: 1px solid var(--line); }
+.ocdl dt { font-size: .78rem; font-weight: 700; color: var(--muted); margin-top: 8px; }
+.ocdl dd { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.guida summary { padding: 12px 14px; cursor: pointer; }
+/* omino che ti chiama all'assemblea */
+.omcall { display: flex; gap: 14px; align-items: flex-end; }
+.omcall-om { width: 64px; height: 84px; flex: none; fill: var(--verde); animation: omSaluta 2.4s ease-in-out 1; transform-origin: 50% 100%; }
+.omcall-b { position: relative; flex: 1; min-width: 0; padding: 14px 16px; border-radius: 20px 20px 20px 6px; background: var(--surf); border: 1px solid var(--line); box-shadow: var(--sh-2); display: flex; flex-direction: column; gap: 10px; }
+.omcall-b p { margin: 0; font-weight: 600; font-size: 1.02rem; text-wrap: pretty; }
+.omcall-b::before { content: ""; position: absolute; left: -9px; bottom: 10px; width: 16px; height: 16px; background: inherit; border-left: 1px solid var(--line); border-bottom: 1px solid var(--line); transform: rotate(45deg); }
+@keyframes omSaluta { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(-8deg); } 40% { transform: rotate(6deg); } 60% { transform: rotate(-4deg); } }
+@media (prefers-reduced-motion: reduce) { .omcall-om { animation: none; } }
+/* calendario editoriale */
+.ecal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.ecal .eg { font-size: .72rem; font-weight: 700; color: var(--muted); text-align: center; padding: 4px 0; text-transform: uppercase; }
+.ecell { min-height: 74px; display: flex; flex-direction: column; gap: 3px; align-items: stretch; padding: 5px; border: 1px solid var(--line); border-radius: var(--r-s); background: var(--surf); color: inherit; text-align: left; cursor: pointer; min-width: 0; font: inherit; }
+.ecell:hover { background: var(--bg-2); }
+.ecell.vuota { visibility: hidden; }
+.ecell b { font-size: .8rem; }
+.ecell.oggi { border-color: var(--verde); box-shadow: inset 0 0 0 1px var(--verde); }
+.pchip { display: block; font-size: .66rem; font-weight: 700; line-height: 1.25; padding: 2px 5px; border-radius: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.psq { width: 12px; height: 34px; border-radius: 4px; flex: none; }
+@media (max-width: 520px) { .ecell { min-height: 54px; padding: 3px; } .pchip { font-size: 0; height: 6px; padding: 0; } }
+
+/* strumenti compatti in home: una griglia da app */
+.tools.mini { grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 10px; }
+.tool.mini { min-height: 0; padding: 12px 6px 10px; gap: 8px; align-items: center; justify-content: flex-start; text-align: center; }
+.tool.mini svg { width: 26px; height: 26px; padding: 9px; border-radius: 14px; background: var(--ok-bg); box-sizing: content-box; }
+.tool.mini b { font-size: .8rem; line-height: 1.15; display: block; overflow-wrap: anywhere; }
+.tool.mini .badge { top: 6px; right: 6px; }
+@media (max-width: 420px) { .tools.mini { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; } .tool.mini { padding: 10px 2px 8px; } .tool.mini b { font-size: .74rem; } }
+/* personalizzare */
+.barprev { display: flex; justify-content: space-around; gap: 4px; padding: 8px 6px; border: 1px solid var(--line); border-radius: 24px; background: var(--surf); box-shadow: var(--sh-1); }
+.barprev span { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--muted); min-width: 0; }
+.barprev svg { width: 22px; height: 22px; }
+.barprev small { font-size: .66rem; font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70px; }
+.barprev span:first-child { color: var(--accent-ink); }
+.sbar svg { width: 16px; height: 16px; vertical-align: -3px; margin-right: 4px; }
+.sord > svg { width: 22px; height: 22px; color: var(--verde); flex: none; }
+.sord .btn.sm { padding-inline: 10px; }
+.sord.off { opacity: .6; }
+.sord.off > svg { color: var(--muted); }
+
+/* medaglie caricate dal consiglio */
+img.mb { display: block; object-fit: contain; user-select: none; }
+.medal img.mb { width: 88px; height: 88px; filter: drop-shadow(0 6px 10px rgba(20, 32, 25, .25)); }
+.medal.lock img.mb { filter: grayscale(1); opacity: .3; }
+.unlock img.mb { width: 170px; height: 170px; animation: conio 1s cubic-bezier(.2,1.6,.4,1) both; }
+@media (prefers-reduced-motion: reduce) { .unlock img.mb { animation: none; } }
+.medrow { display: flex; gap: 16px; align-items: center; }
+.medrow .medal { flex: none; }
+.medrow .medal svg.mb, .medrow .medal img.mb { width: 76px; height: 76px; }
+
+/* eventi: conto alla rovescia e storico */
+.cdhero { text-decoration: none; }
+.cdrow { position: relative; z-index: 1; display: flex; gap: 8px; flex-wrap: wrap; }
+.cdb { display: flex; flex-direction: column; align-items: center; min-width: 64px; padding: 10px 8px 8px; border-radius: var(--r-m); background: rgba(255, 255, 255, .92); color: var(--bosco); box-shadow: var(--sh-1); }
+.cdb b { font: 400 clamp(1.6rem, 7vw, 2.2rem)/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.cdb small { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.dbox { width: 46px; height: 50px; flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: var(--r-s); line-height: 1; }
+.dbox b { font: 400 1.25rem/1 var(--f-display); }
+.dbox small { font-size: .62rem; font-weight: 700; text-transform: uppercase; }
+.cdp { white-space: nowrap; }
+.evps { display: flex; flex-direction: column; }
+.evp { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+.evp:last-child { border-bottom: 0; }
+.evp-l { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; text-decoration: none; color: inherit; }
+.evp-l .t { font-weight: 700; overflow-wrap: anywhere; }
+.evp-l .s { font-size: .84rem; color: var(--muted); }
+.evp .medal svg.mb, .evp .medal img.mb { width: 48px; height: 48px; }
+.evp .btn span { margin-left: 2px; }
+@media (max-width: 420px) { .evp .btn span { display: none; } }
+.plist { list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px 12px; }
+.plist li { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: .9rem; }
+.plist li span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="s-picto" viewBox="269.6 205.0 810.8 440.4"><path d="M457.42,452.1c-20.6,7.13,5.64,36.68,17.82,61.08,12.18,24.39-20.1,38.9-48.45,40.88-28.35,1.98-18.46,5.93-25.05,42.2-7.1,39.07-29.7,21.74-33.68,18.34-.55-.47-1.1-.92-1.66-1.38-19.49-15.99-22.26-44.2,1.06-55.86,23.74-11.87,59.34-21.1,58.02-50.11-1.32-29.01-32.34-36.92-21.44-72.53,10.89-35.6,10.89-54.06-6.25-55.38-6.9-.53-11.88,6.42-17.34,15-7.77,12.2-19.16,20.77-35.37,20.77-18.11,0-43.08-3.22-63.7-26.82-18.79-21.5-15.6-44.93,13.05-45.59,34.68-.8,15.1,17.06,27.35,38.64,6.81,12,20.94,26.93,29.21,9.21,9.23-19.78,27.03-66.59,58.02-51.43,30.99,15.16,21.48,39.42,48.72,49.17,15.24,5.45-2.97,10.25-9.55-50.96-1.55-14.44-4.91-58.21,27.08-58.21s58.01,1.98,55.22,28.35c-2.79,26.37-44.33,60-43.01,85.71,1.32,25.71,13.16,35.22,31.19,23.74,0,0,31.49-31.29,66.66-28.95,35.16,2.34,43.66,31.65,63,24.18,0,0,27.03-10.33,35.52-26.21,11.68-21.85-74.24-19.22-54.52-51.81,19.72-32.59,75.91-51.88,88.03-19.81,12.12,32.06-14.15,67.66-14.16,67.66,0,0,32.39-26.37,45.82-14.51,13.43,11.87,15.8,32.97,23.85,34.28,8.04,1.32,17.01-25.05,32.31-19.78,15.3,5.27,57.25,19.78,85.73,9.23,28.47-10.55,43.39-14.5,43.4-14.51,0,0-51.91-.32-59.35-23.46-6.93-21.56-2.2-63.57,59.35-45.11,61.56,18.46,81.34,28.91,64.19,50.72-17.14,21.81-52.75,32.35-31.65,46.86,0,0,42.17,33.08,61.94,10.24,17-19.63,47.96-94.13-18.43-114.42-46.02-14.06-47.47-68.25-15.82-87.53,31.65-19.28,89.67-4.79,85.71,17.63-3.96,22.43-15.82,11.79-36.92,12.49-21.1.7-38.24,13.89,0,38.94,38.24,25.05,39.38,94.49,17.14,130.55-17.3,28.06-36.92,46.15-69.89,35.6-32.97-10.55-65.93-42.2-65.93-5.27s60.66,27.69,47.47,71.21c-13.19,43.52-51.43,51.43-2.64,61.98s32.97,51.43-19.78,56.7c-52.75,5.27-94.53,7.91-88.8-39.56,5.73-47.47,14.58-66.32,30-50.11,22.44,23.58-34.89,58.8,12.33,65.21,48.18,6.54,53.53-15.17,31.07-29.61-22.48-14.46-26.79-34.28-14.92-55.38,11.87-21.1,2.31-43.17-16.65-46.64-18.96-3.47-96.67-19.29-79.57,9.72,17.1,29.01,25.81,48.79,8.93,56.7-16.88,7.91-59.39-3.96-65.17-19.78-5.78-15.82,10.71-35.6,25.54-23.74,14.84,11.87,18.52-10.21,12.72-22.91-5.8-12.7-8.96-46.98,26.91-43.03,35.86,3.96,32.58-19.88,21.03-21.1-41.35-4.38-65.24,20.65-72.47,29.75-2.3,2.9-5.81,4.68-9.5,4.54-13.94-.54-10.36-25.06-22.11-43.52-13.43-21.1-41.95,3.96-27.05,30.33,10.06,17.8,3.35,40.41-5.69,58.09-13.42,26.24-2.79,58.49,23.45,71.91,11.78,6.02,27.31,11.34,47.76,15.05,26.1,4.74-11.85,52.75-24.5,55.38-12.65,2.64-19-6.59-4.24-25.05,12.38-15.49-3.62-18.91-31.69-15.72-17.07,1.94-34.27-4.1-45.9-16.75-11.85-12.89-15.94-30.38-.19-58.52,4.27-7.63-33.24-1.32-41.16,19.78-7.91,21.1,9.23,54.06-25.05,84.39-34.28,30.33-63.3,15.82-81.09,13.19-17.8-2.64.66-30.33,33.62-25.05,32.97,5.27,39.26-14.58,25.47-64.44-11.6-41.93,19.63-77.62,64.24-66.02,41.34,10.75,9.16-31.48-24.32-37.01-33.67-5.55-34.25-24.77-54.68-24.77-47.16,0-50.08,68.07-50.05,72.2,0,.13,0,.26-.02.39-2.37,27.46,3.64,21.54,10.7,45.21,7.08,23.74-17.53,41.47-36.65,46.75-19.12,5.27-3.96,18.46,10.71,39.56,14.67,21.1-37.74,25.05-50.93,20.44-13.19-4.62-13.19-16.48,5.27-17.99,18.46-1.5,9.89-16.96-5.93-26.19-11.87-6.92-3.36-22.96,16.68-32.33,20.79-9.73,24.56-23.74,18.52-54.85-5.1-26.27-14.29-68.77-38.85-60.27Z"/></symbol><symbol id="s-word" viewBox="44.2 711.6 1261.5 163.4"><path d="M44.23,714.98h98.68c29.98,0,50.8,13.65,50.8,39.16,0,15-7.16,24.84-22.15,30.21,21.26,4.92,32.22,18.12,32.22,38.49,0,29.09-22.38,48.78-64,48.78H44.23v-156.64ZM127.25,777.64c16.33,0,26.18-7.61,26.18-19.69s-9.18-18.35-26.18-18.35h-38.27v38.04h38.27ZM134.41,844.77c18.35,0,29.09-8.06,29.09-23.05s-10.29-22.83-29.09-22.83h-45.43v45.88h45.43ZM393.08,871.62h-44.76l-10.52-26.41h-71.38l-10.52,26.41h-44.76l68.03-156.64h45.87l68.03,156.64ZM328.86,822.84l-26.63-67.36-26.86,67.36h53.48ZM569.62,763.54l-34.01,12.98c-10.07-19.24-25.51-32.89-50.12-32.89-29.09,0-44.08,18.8-44.08,47.89,0,32,18.12,50.13,50.35,50.13,27.53,0,42.07-13.2,46.1-28.64h-53.93v-24.62h90.85v83.24h-35.81v-39.16c-9.4,29.09-29.76,42.52-59.3,42.52-46.77,0-78.77-33.34-78.77-82.12s30.88-81.23,87.94-81.23c47.66,0,73.62,23.27,80.78,51.91ZM768.09,871.62h-44.76l-10.52-26.41h-71.38l-10.52,26.41h-44.76l68.03-156.64h45.87l68.03,156.64ZM703.86,822.84l-26.63-67.36-26.86,67.36h53.48ZM924.49,871.62h-139.41v-156.64h134.94v26.85h-90.18v37.37h81.23v22.38h-81.23v42.07h94.66v27.97ZM1110.65,759.07c0,22.15-13.2,38.71-31.55,45.43l37.37,67.13h-46.99l-33.12-63.77h-38.27v63.77h-44.76v-156.64h106.52c29.98,0,50.79,15.89,50.79,44.08ZM1038.15,785.47c19.92,0,29.99-9.17,29.99-22.38s-9.62-21.26-29.99-21.26h-40.05v43.64h40.05ZM1305.77,871.62h-44.76l-10.52-26.41h-71.38l-10.52,26.41h-44.76l68.03-156.64h45.87l68.03,156.64ZM1241.55,822.84l-26.63-67.36-26.86,67.36h53.48Z"/></symbol><symbol id="s-o1" viewBox="0 0 99.8 129.8"><path d="M49.2,129.6C42.4,128.7 39.7,125.8 39.8,119.3C39.8,114.4 41.4,105.1 42.8,102.5C44.2,99.6 46.3,99.5 48.2,102.3C49.9,104.5 49.8,106.7 48.2,110.9C46.4,115.7 46.2,116.4 46.2,117.4C46.1,120.0 48.0,121.2 53.3,121.7C62.8,122.7 66.4,117.9 59.9,112.8C53.7,107.8 52.5,103.3 55.7,96.0C57.5,91.8 57.6,88.9 56.1,86.0C54.9,83.5 53.4,82.5 50.0,81.7C41.1,79.8 33.1,79.3 30.7,80.5C29.3,81.1 28.7,82.1 28.9,83.2C29.0,83.6 30.0,85.7 31.0,87.8C34.8,95.5 35.3,99.0 33.0,101.1C31.6,102.3 30.5,102.6 27.6,102.6C22.2,102.5 16.0,99.8 14.5,96.7C13.1,93.9 14.1,89.9 16.7,88.3C18.1,87.5 19.2,87.6 20.9,88.8C21.8,89.3 22.7,89.8 23.1,89.8C25.1,89.7 25.9,86.1 24.6,82.3C23.0,77.3 23.4,72.9 25.7,70.7C27.1,69.3 27.5,69.1 31.8,69.1C36.2,69.1 37.4,68.8 38.7,67.7C40.4,66.1 39.9,63.5 37.7,62.8C36.3,62.4 32.5,62.6 30.0,63.2C25.9,64.3 21.6,67.1 18.7,70.6C17.2,72.5 16.5,73.0 15.3,73.0C13.7,73.0 12.8,71.6 11.8,67.7C9.8,59.3 8.2,57.1 2.7,54.8C0.7,53.9 0.0,53.2 0.0,52.0C-0.0,50.1 3.1,48.2 6.4,48.0L8.3,47.9L9.6,49.3C10.9,50.6 11.3,51.3 13.9,56.9C15.2,59.7 16.2,59.6 18.9,56.4C20.8,53.9 22.1,53.0 23.4,53.0C23.8,53.0 25.7,53.6 27.7,54.3C32.9,56.0 36.2,56.7 40.1,56.9C44.0,57.1 45.3,56.9 48.9,55.5C50.4,54.9 53.4,53.8 55.5,53.0L59.3,51.6L56.5,51.3C50.1,50.6 45.5,48.5 44.0,45.5C43.1,43.7 42.7,39.4 43.3,36.7C43.7,34.7 44.9,32.6 46.3,31.5C49.7,28.8 54.4,29.0 63.4,32.1C81.7,38.6 83.1,41.9 71.7,51.9C65.8,57.0 65.6,58.0 70.2,61.4C75.1,65.0 79.6,66.4 82.8,65.4C87.5,63.8 92.6,50.2 91.5,42.3C90.6,35.7 87.3,31.6 80.9,29.1C74.0,26.5 70.5,21.6 70.5,14.8C70.5,11.8 70.8,10.1 71.9,7.8C73.5,4.5 76.3,2.1 80.1,0.8C82.9,-0.1 89.0,-0.2 92.1,0.7C95.4,1.6 97.7,3.1 98.9,4.8C100.3,6.9 99.6,10.9 97.7,11.9C97.0,12.3 96.6,12.3 94.8,12.1C87.5,11.3 83.9,12.4 83.6,15.3C83.3,17.5 84.9,19.7 88.6,22.6C95.4,27.9 98.1,34.4 98.1,45.2C98.1,54.2 96.6,59.5 92.0,66.3C88.7,71.3 85.1,73.9 81.0,74.2C77.3,74.4 74.7,73.6 67.9,69.9C62.0,66.7 60.4,66.2 59.0,66.9C57.7,67.5 57.4,68.5 57.4,71.5C57.4,73.9 57.4,74.3 58.1,75.5C59.0,77.4 61.0,79.2 64.2,81.2C67.2,83.1 68.8,84.4 69.6,85.9C71.8,89.6 70.4,95.3 65.5,103.0C63.3,106.5 63.0,107.1 63.0,108.1C63.0,109.6 64.1,110.3 68.7,111.6C75.0,113.4 77.3,115.5 77.4,119.1C77.4,123.0 73.1,127.0 67.2,128.3C63.7,129.2 52.2,130.0 49.2,129.6Z"/></symbol><symbol id="s-o2" viewBox="0 0 127.5 126.2"><path d="M62.2,126.0C59.3,125.6 57.5,124.5 57.1,122.7C56.8,121.3 58.3,120.0 60.7,119.5C64.1,118.9 64.8,118.4 64.8,116.8C64.8,115.1 63.4,113.2 60.4,110.8C57.8,108.8 57.5,107.5 58.8,104.8C59.6,103.1 61.8,101.0 64.6,99.4C72.1,95.0 73.0,90.9 69.9,75.7C67.2,62.7 63.2,57.3 58.2,59.8C55.0,61.4 55.6,64.4 61.0,74.3C64.6,81.1 65.1,82.3 64.9,84.5C64.7,87.7 62.7,90.1 58.6,92.1C55.7,93.5 53.5,94.1 49.3,94.6C42.7,95.4 42.5,95.6 42.0,102.6C41.7,106.9 40.9,111.2 40.3,113.2C38.3,118.8 34.2,119.3 29.5,114.4C25.3,109.9 24.2,104.2 26.6,99.7C27.7,97.5 29.1,96.5 34.8,93.6C45.0,88.5 47.7,85.8 48.5,80.4C49.0,77.1 48.0,73.9 44.8,68.6C40.7,61.8 40.5,59.7 42.5,51.4C44.0,45.1 44.3,42.6 44.2,40.0C44.0,36.8 42.8,35.0 40.6,34.6C38.7,34.2 37.2,35.4 35.0,39.0C31.2,45.2 28.2,47.0 21.7,46.7C13.5,46.3 7.0,42.7 2.6,36.2C-0.4,31.7 -0.9,27.0 1.4,24.2C2.9,22.5 6.7,21.5 10.2,22.0C13.8,22.5 14.4,23.3 14.7,28.2C15.0,32.2 15.5,34.2 17.0,36.5C19.7,40.8 22.3,42.1 24.1,40.2C24.6,39.7 25.4,38.1 26.1,36.3C29.1,29.1 31.3,25.2 34.0,22.5C37.1,19.4 39.8,18.8 43.4,20.6C46.7,22.2 48.9,24.7 51.3,29.4C54.0,34.5 55.4,36.1 58.9,37.6L60.3,38.2L59.9,37.7C58.6,35.6 57.1,30.2 56.2,24.1C55.5,19.2 55.4,10.3 56.1,7.7C56.9,4.3 58.6,1.8 60.7,0.7C61.8,0.1 62.0,0.1 66.9,0.1C73.9,0.1 77.0,0.9 79.3,2.9C80.8,4.3 81.3,5.5 81.4,7.9C81.7,12.0 80.5,14.8 74.4,24.3C68.6,33.5 67.5,36.7 68.3,41.8C69.5,49.7 73.6,51.2 79.3,45.9C83.0,42.5 87.9,39.5 92.0,38.2C93.6,37.7 94.4,37.6 97.5,37.6C102.8,37.6 104.9,38.5 110.4,42.9C113.8,45.6 114.9,46.1 116.9,46.0C122.5,45.7 125.3,46.9 126.9,50.4C128.9,54.7 125.4,56.8 116.4,56.8C110.9,56.7 107.7,55.5 103.1,51.6C100.2,49.1 99.0,48.5 97.0,48.3C87.4,47.4 80.8,58.5 80.7,75.5L80.6,79.9L81.4,81.8C84.2,88.4 84.7,90.3 84.3,93.1C83.5,97.9 79.4,102.3 73.4,104.6C70.9,105.6 70.5,105.9 70.0,106.7C69.3,108.0 70.1,109.7 73.8,115.3C76.7,119.6 77.1,120.5 76.4,122.1C75.3,124.8 68.2,126.7 62.2,126.0Z"/></symbol><symbol id="s-o3" viewBox="0 0 122.2 129.8"><path d="M17.0,129.4C12.9,128.7 8.0,127.3 7.3,126.7C5.8,125.3 7.2,121.9 10.2,120.0C13.2,118.1 16.2,117.6 20.8,118.1C26.2,118.8 28.8,117.8 30.4,114.6C32.0,111.6 31.9,105.8 30.1,97.9C28.4,89.9 28.4,90.4 28.6,86.5C28.7,82.4 29.1,80.8 30.5,77.9C34.3,69.9 41.6,66.7 50.9,68.9C55.8,70.0 57.8,69.6 57.8,67.5C57.7,63.0 49.9,56.6 42.2,54.9C38.8,54.1 35.7,52.7 33.1,50.6C27.2,46.1 22.8,46.0 16.3,49.9C2.9,58.1 -2.7,58.0 1.2,49.6C3.2,45.5 6.3,42.0 10.8,39.0C20.7,32.5 29.7,32.2 37.5,38.3C42.9,42.4 43.4,42.8 44.7,43.2C46.3,43.6 47.1,43.5 49.5,42.4C55.8,39.3 61.1,34.0 60.6,31.2C60.3,29.4 58.6,28.2 51.8,25.6C41.9,21.7 39.5,19.3 41.2,14.8C43.9,7.7 54.1,0.5 61.9,0.1C69.3,-0.3 72.9,3.9 72.8,13.1C72.8,18.4 71.7,22.7 69.0,28.2C68.0,30.0 67.7,30.9 68.0,30.7C73.2,27.0 75.8,25.6 78.3,25.2C82.1,24.5 83.9,26.2 87.4,33.9C90.1,39.9 91.0,40.3 93.8,36.8C98.6,30.8 99.1,30.6 106.1,33.1C108.3,33.8 111.9,34.9 114.1,35.3C120.1,36.7 122.2,37.9 122.2,39.8C122.3,41.0 121.4,42.0 119.8,42.8C118.8,43.3 118.1,43.4 114.6,43.5C109.9,43.7 107.7,44.2 104.3,45.9C100.3,47.8 97.1,50.3 94.2,54.0C92.1,56.5 90.5,57.1 88.7,55.9C87.5,55.1 86.9,53.6 85.9,49.5C84.4,43.4 83.3,40.7 81.7,38.9C78.5,35.2 73.2,38.1 72.2,44.2C71.8,46.3 72.2,48.6 73.5,51.6C74.8,54.7 75.1,55.9 75.1,59.2C75.1,63.6 74.0,67.8 71.6,73.2C70.1,76.7 69.7,78.7 69.7,82.5C69.7,86.4 70.2,88.6 71.6,91.7C74.9,98.7 80.6,102.3 92.7,105.4C97.6,106.6 98.3,107.0 98.8,108.8C99.6,112.0 96.1,119.3 91.3,124.3C88.6,127.0 86.3,127.9 84.5,126.8C82.3,125.5 82.8,122.1 86.0,117.5C87.4,115.4 87.7,114.3 87.1,113.2C86.1,111.5 83.1,111.1 74.7,111.6C71.6,111.8 70.8,111.8 69.2,111.4C63.2,110.1 57.8,105.1 56.4,99.6C55.4,95.6 56.1,90.8 58.6,85.0C59.7,82.4 59.7,82.3 57.7,82.3C54.9,82.2 50.5,84.3 48.0,86.8C45.2,89.6 44.5,92.1 44.5,100.1C44.5,107.8 44.0,111.2 42.1,115.1C40.9,117.8 39.4,119.9 36.9,122.4C30.9,128.4 24.3,130.7 17.0,129.4Z"/></symbol></defs></svg>
 <header class="top">
@@ -1003,6 +1102,11 @@ const I = {
   repeat: '<path d="M4 12V9a3 3 0 0 1 3-3h12l-3-3M20 12v3a3 3 0 0 1-3 3H5l3 3"/>',
   swap: '<path d="M4 8h14l-3-3M20 16H6l3 3"/>',
   sparkle: '<path d="M12 3v5M12 16v5M3 12h5M16 12h5M6.5 6.5l2.5 2.5M15 15l2.5 2.5M6.5 17.5 9 15M15 9l2.5-2.5"/>',
+  tools: '<rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/>',
+  up: '<path d="M12 20V9"/><path d="m7 14 5-5 5 5"/><path d="M5 4h14"/>',
+  cloud: '<path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 8.5a4.5 4.5 0 0 1-.5 9.5z"/>',
+  form: '<path d="M5 3h14v18H5z"/><path d="M9 8h7M9 12h7M9 16h4"/>',
+  megafono: '<path d="M3 10v4h4l7 5V5L7 10z"/><path d="M17 9a4 4 0 0 1 0 6"/>',
   link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
 };
 const ic = (n, cls = "") => `<svg ${cls ? `class="${cls}" ` : ""}viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">${I[n] || ""}</svg>`;
@@ -1027,7 +1131,7 @@ const RUOLI = {
 };
 const TIPI = {
   evento: { nome: "Evento", plur: "Eventi", desc: "Un evento dell'associazione: chi c'è riceve la medaglia" },
-  riunione: { nome: "Riunione generale", plur: "Riunioni", desc: "Conta per la serie di presenze" },
+  riunione: { nome: "Assemblea generale", plur: "Assemblee", desc: "Conta per la serie di presenze. La fissa solo il consiglio" },
   incontro: { nome: "Incontro di gruppo", plur: "Incontri", desc: "Un incontro di uno dei gruppi" },
   appuntamento: { nome: "Appuntamento", plur: "Appuntamenti", desc: "Un impegno con enti, reti e progetti esterni" },
 };
@@ -1048,6 +1152,7 @@ function colEv(e) {
   if (e.personale) return { bg: "var(--bg-3)", fg: "var(--ink)", k: "personale", l: "Promemoria" };
   if (e.scadenza) return { bg: COL_TIPO.scadenza[0], fg: COL_TIPO.scadenza[1], k: "scadenza", l: "Scadenze" };
   if (e.pagamento) return { bg: COL_TIPO.pagamento[0], fg: COL_TIPO.pagamento[1], k: "pagamento", l: "Pagamenti" };
+  if (e.post) { const c = canale(e.post); return { bg: c[1], fg: c[2], k: "post-" + e.post.canale, l: c[0] }; }
   const p = e.progetto && S.progetti[e.progetto];
   if (p) return { ...colProgetto(p), k: "pj-" + p.id, l: p.nome };
   if (e.tipo === "incontro" && COL_GRUPPO[e.gruppo]) return { bg: COL_GRUPPO[e.gruppo][0], fg: COL_GRUPPO[e.gruppo][1], k: "g-" + e.gruppo, l: GRUPPI[e.gruppo].breve };
@@ -1063,10 +1168,10 @@ const S = {
   acct: { id: null, isOwner: false, canEdit: false }, // l'account claude.ai (consiglio o assemblea)
   me: { id: null, name: "", email: "" },              // il socio che ha fatto l'accesso con la mail associativa
   adminMode: false,
-  soci: {}, contatti: {}, richieste: {}, inviti: {}, accessi: {}, profili: {}, esiti: {}, cal: {}, scadenze: {}, verbali: {}, tessere: {}, anticipi: {}, budget: {}, config: {}, prefsAll: {},
+  soci: {}, contatti: {}, richieste: {}, inviti: {}, accessi: {}, profili: {}, esiti: {}, cal: {}, scadenze: {}, verbali: {}, verbalicd: {}, opencall: {}, post: {}, tessere: {}, anticipi: {}, budget: {}, config: {}, prefsAll: {},
   products: {}, setup: {}, serate: {}, ordini: {}, movements: [], tallies: {},
   sponsor: {}, contributi: {}, segnalazioni: {}, prefs: {}, prefsExists: false,
-  progetti: {}, posta: {}, pagamenti: {}, carte: {}, cartemov: {}, carteric: {},
+  progetti: {}, medaglie: {}, posta: {}, pagamenti: {}, carte: {}, cartemov: {}, carteric: {},
   loaded: {}, route: { name: "home", arg: "" }, ui: {}, sheet: null, offline: false, pending: 0,
 };
 const cfg = (k) => S.config[k] || {};
@@ -1254,8 +1359,10 @@ function strumenti() {
   if (isCouncil()) t.push({ h: "posta", l: "Dalla posta", s: "Eventi trovati nelle mail", i: "mail", n: proposteNuove().length });
   if (isCouncil()) t.push({ h: "rimborsi", l: "Rimborsi", s: "Anticipi dei soci", i: "hand", n: anticipiDaGestire().length });
   if (isCouncil()) t.push({ h: "scadenze", l: "Scadenze", s: "Documenti degli eventi", i: "flag", n: scadenzeUrgenti().length });
-  if (isCouncil()) t.push({ h: "verbali", l: "Verbali", s: "Riunioni e decisioni", i: "doc" });
+  t.push({ h: "verbali", l: "Verbali", s: isCouncil() ? "Assemblee e consiglio" : "Le assemblee generali", i: "doc" });
+  if (isCouncil() || Object.values(S.opencall).some((c) => c.aperta !== false)) t.push({ h: "opencall", l: "Open call", s: isCouncil() ? "Moduli e risposte" : "Candidature aperte", i: "megafono", n: isCouncil() ? 0 : openCallPerMe().length });
   if (isCouncil()) t.push({ h: "soci", l: "Soci e tessere", s: "Ruoli, gruppi, tessere", i: "card", n: Object.keys(S.richieste).filter((u) => !S.soci[u]).length });
+  if (can.editoriale()) t.push({ h: "editoriale", l: "Editoriale", s: "Quando escono i post", i: "film", n: postMiei().length });
   if (can.allestimenti()) t.push({ h: "allestimenti", l: "Allestimenti", s: "Strutture e decori", i: "brush" });
   return t;
 }
@@ -1266,12 +1373,20 @@ function renderChrome() {
   postaAuto();
   if (WEB) gcalAuto();
   const cur = S.route.name;
-  const sec = { ev: "calendario", pj: "calendario", progetti: "calendario", gr: "gruppi", medaglie: "mison", anticipi: "mison", avvisi: "home" }[cur] || cur;
-  const nAv = avvisi().filter((a) => a.azione).length;
-  const link = (it, side) => `<a href="#${it.h}" ${sec === it.h ? 'aria-current="page"' : ""}>${ic(it.i)}<span>${it.l}</span>${side && it.n ? `<span class="badge">${it.n}</span>` : ""}${!side && it.h === "home" && nAv ? `<span class="badge">${nAv}</span>` : ""}</a>`;
-  $("#tabs").innerHTML = navItems().map((x) => link(x, false)).join("");
   const st = !S.noRuntime ? strumenti() : [];
-  $("#side").innerHTML = navItems().map((x) => link(x, true)).join("") + (st.length ? `<div class="sh">Strumenti</div>` + st.map((x) => link(x, true)).join("") : "");
+  const barra = vociBarra();
+  /* le pagine figlie accendono la voce giusta; uno strumento che non è in barra accende «Strumenti» */
+  const figlio = { ev: "calendario", pj: "calendario", progetti: "calendario", gr: "gruppi", medaglie: "mison", anticipi: "mison", avvisi: "home", eventi: "calendario", vb: "verbali", vc: "verbali", oc: "opencall", serata: "magazzino", storico: "magazzino", carico: "magazzino" }[cur] || cur;
+  const inB = (h) => barra.some((x) => x.h === h);
+  const sec = inB(figlio) ? figlio : st.some((t) => t.h === figlio) && inB("strumenti") ? "strumenti" : figlio;
+  const nAv = avvisi().filter((a) => a.azione).length;
+  const nStr = st.filter((t) => !inB(t.h)).reduce((n, t) => n + (t.n || 0), 0);
+  const nDi = (it) => (it.h === "home" ? nAv : it.h === "strumenti" ? nStr : it.n || 0);
+  const link = (it, side) => `<a href="#${it.h}" ${sec === it.h || (side && figlio === it.h) ? 'aria-current="page"' : ""}>${ic(it.i)}<span>${esc(it.l)}</span>${(side ? it.n : nDi(it)) ? `<span class="badge">${side ? it.n : nDi(it)}</span>` : ""}</a>`;
+  $("#tabs").innerHTML = barra.map((x) => link(x, false)).join("");
+  $("#tabs").style.gridTemplateColumns = `repeat(${barra.length}, minmax(0, 1fr))`;
+  const mie = !S.noRuntime ? mieiStrumenti() : [];
+  $("#side").innerHTML = navItems().map((x) => link(x, true)).join("") + (st.length ? `<div class="sh">Strumenti</div>` + mie.map((x) => link(x, true)).join("") + `<a href="#strumenti" ${cur === "strumenti" ? 'aria-current="page"' : ""}>${ic("tools")}<span>${mie.length < st.length ? "Tutti gli strumenti" : "Personalizza"}</span></a>` : "");
   $("#bell").innerHTML = ic("bell") + (nAv ? `<span class="badge">${nAv}</span>` : "");
   $("#meBtn").innerHTML = av(ME());
 }
@@ -1329,7 +1444,7 @@ async function salvaFile(nome, data, okMsg) {
 
 /* ================= VERSIONE PER IL SITO: Firebase (accesso con Google + Firestore) ================= */
 const ADMIN_EMAILS = ["claude-consiglio@bagaera.it"];
-const SCOPI = { sheets: "https://www.googleapis.com/auth/spreadsheets", gmail: "https://www.googleapis.com/auth/gmail.readonly", calendar: "https://www.googleapis.com/auth/calendar" };
+const SCOPI = { sheets: "https://www.googleapis.com/auth/spreadsheets", gmail: "https://www.googleapis.com/auth/gmail.readonly", calendar: "https://www.googleapis.com/auth/calendar", drive: "https://www.googleapis.com/auth/drive" };
 let fsdb = null;
 const ritarda = (ms) => new Promise((r) => setTimeout(r, ms));
 /* update di claude.ai = unione profonda: con Firestore si scrive campo per campo */
@@ -1386,7 +1501,7 @@ function vaiAGoogle(scopi = [], ritorno = location.hash || "#home") {
   try { localStorage.setItem(OAUTH_KEY, JSON.stringify({ state, nonce, scopi, ritorno, at: Date.now() })); } catch (e) {}
   const u = firebase.auth().currentUser;
   const p = new URLSearchParams({ client_id: window.GOOGLE_CLIENT_ID, redirect_uri: location.origin + location.pathname.replace(/index\.html$/, ""), response_type: scopi.length ? "id_token token" : "id_token",
-    scope: ["openid", "email", "profile", ...scopi].join(" "), nonce, state, hd: DOMINIO(), ...(scopi.length ? { include_granted_scopes: "true" } : {}), prompt: u ? "consent" : "select_account", ...(u && u.email ? { login_hint: u.email } : {}) });
+    scope: ["openid", "email", "profile", ...scopi].join(" "), nonce, state, hd: DOMINIO(), include_granted_scopes: "true", prompt: u ? "consent" : "select_account", ...(u && u.email ? { login_hint: u.email } : {}) });
   (window.__oauthNavigate || ((x) => location.assign(x)))("https://accounts.google.com/o/oauth2/v2/auth?" + p.toString());
 }
 /* al ritorno da Google: l'indirizzo contiene #id_token=… */
@@ -1524,36 +1639,55 @@ function avviaWeb() {
 
 /* ================= archivio: iscrizioni live ================= */
 const COLLEZIONI = [
-  ["soci", "soci"], ["richieste", "richieste"], ["calendario", "cal"], ["scadenze", "scadenze"], ["verbali", "verbali"],
+  ["soci", "soci"], ["richieste", "richieste"], ["calendario", "cal"], ["scadenze", "scadenze"], ["verbali", "verbali"], ["verbalicd", "verbalicd"], ["opencall", "opencall"], ["post", "post"],
   ["tessere", "tessere"], ["anticipi", "anticipi"], ["esiti", "esiti"], ["budget", "budget"], ["config", "config"],
   ["inviti", "inviti"], ["accessi", "accessi"], ["profili", "profili"], ["contatti", "contatti"],
   ["products", "products"], ["setup", "setup"], ["serate", "serate"], ["ordini", "ordini"],
   ["sponsor", "sponsor"], ["contributi", "contributi"], ["segnalazioni", "segnalazioni"],
-  ["progetti", "progetti"], ["posta", "posta"], ["pagamenti", "pagamenti"], ["carte", "carte"], ["cartemov", "cartemov"], ["carteric", "carteric"],
+  ["progetti", "progetti"], ["medaglie", "medaglie"], ["posta", "posta"], ["pagamenti", "pagamenti"], ["carte", "carte"], ["cartemov", "cartemov"], ["carteric", "carteric"],
 ];
-const RISERVATE = ["tessere", "contatti", "posta", "pagamenti", "richieste"];
-let riservateFatte = false;
-function iscriviRiservate() { // sul sito: le collezioni del solo consiglio si leggono quando si sa chi sei
-  if (!WEB || riservateFatte || !isCouncil()) return;
-  riservateFatte = true;
-  for (const [path, key] of COLLEZIONI) if (RISERVATE.includes(path)) ascolta(path, key);
+/* sul sito ognuno scarica solo quello che può vedere (le regole del database dicono lo stesso) */
+const PERMESSI = {
+  tessere: () => isCouncil(), contatti: () => isCouncil(), posta: () => isCouncil(), pagamenti: () => isCouncil(), richieste: () => isCouncil(),
+  verbalicd: () => isCouncil(), scadenze: () => isCouncil(), anticipi: () => isCouncil(), esiti: () => isCouncil(), verbali: () => isCouncil(),
+  sponsor: () => isCouncil() || inGroup("sponsor"), contributi: () => isCouncil() || inGroup("sponsor"), segnalazioni: () => isCouncil() || inGroup("sponsor"),
+};
+const PERSONALI = ["anticipi", "esiti"]; // chi non è del consiglio legge solo il suo documento
+const fatte = {};
+function iscriviRiservate() {
+  if (!WEB || !ME() || !S.loaded.soci) return;
+  for (const [path, key] of COLLEZIONI) {
+    const chi = PERMESSI[path]; if (!chi || fatte[path] === "tutto") continue;
+    if (chi()) { if (fatte[path] && fatte[path].stop) fatte[path].stop(); fatte[path] = "tutto"; ascolta(path, key); continue; }
+    if (fatte[path]) continue;
+    if (PERSONALI.includes(path)) fatte[path] = { stop: ascoltaMio(path, key) };
+    else if (path === "verbali") fatte[path] = { stop: ascolta(path, key, (q) => q.where("stato", "==", "approvato")) };
+    else { fatte[path] = "no"; S[key] = {}; S.loaded[path] = true; }
+  }
 }
 function iscrivi() {
   for (const [path, key] of COLLEZIONI) {
-    if (WEB && (path === "accessi" || path === "inviti" || RISERVATE.includes(path))) { S.loaded[path] = true; continue; }
+    if (WEB && (path === "accessi" || path === "inviti")) { S.loaded[path] = true; continue; }
+    if (WEB && PERMESSI[path]) continue;
     ascolta(path, key);
   }
   iscriviRiservate();
   iscriviAltro();
 }
-function ascolta(path, key) {
-    S.db.collection(path).onSnapshot((snap) => {
+function ascolta(path, key, filtro) {
+  const q = filtro ? filtro(S.db.collection(path)) : S.db.collection(path);
+  return q.onSnapshot((snap) => {
       const m = {}; snap.docs.forEach((d) => { m[d.id] = { id: d.id, ...d.data() }; });
       S[key] = m; S.loaded[path] = true; S.offline = false;
       if (path === "serate") curaTallies();
       if (path === "soci" || path === "accessi") { sincronizzaSessione(); iscriviRiservate(); }
       scheduleRender();
     }, (err) => { console.warn(path, err); S.loaded[path] = true; scheduleRender(); });
+}
+function ascoltaMio(path, key) {
+  const id = ME();
+  return S.db.doc(path + "/" + id).onSnapshot((d) => { S[key] = d.exists ? { [id]: { id, ...d.data() } } : {}; S.loaded[path] = true; scheduleRender(); },
+    (err) => { console.warn(path, err); S.loaded[path] = true; scheduleRender(); });
 }
 function iscriviAltro() {
   S.db.collection("movements").orderBy("ts", "desc").limit(WEB ? 120 : 300).onSnapshot((snap) => {
@@ -1634,6 +1768,14 @@ function statistiche(uid = ME()) {
   const medaglie = eventi().filter((e) => e.tipo === "evento" && presente(e, uid)).length;
   return { serie, migliore, presenzeAnno, presRiunioni, totRiunioni: riunioni.length, presIncontri, totIncontri: incontri.length, medaglie, ultimeRiunioni: riunioni.slice(-12).map((r) => presente(r, uid)) };
 }
+/* assemblee generali saltate di fila (solo da quando c'è l'app e da quando sei socio) */
+function assenzeDiFila(uid = ME()) {
+  const da = [APP_START, (socio(uid) && socio(uid).dal) || ""].sort().pop();
+  const ass = eventi().filter((e) => e.tipo === "riunione" && finito(e) && e.data >= da).sort(ordinaEv);
+  let n = 0; for (let i = ass.length - 1; i >= 0 && !presente(ass[i], uid); i--) n++;
+  return n;
+}
+const ASSENZE_OMINO = 4;
 function classifica(filtro = () => true, uids = tuttiSoci()) {
   const evs = eventi().filter((e) => finito(e) && e.data.startsWith(String(new Date().getFullYear())) && filtro(e));
   return uids.map((u) => ({ u, n: evs.filter((e) => presente(e, u)).length })).filter((x) => x.n > 0).sort((a, b) => b.n - a.n);
@@ -1655,6 +1797,8 @@ function forma(k, cx, cy, r) {
   return poly(pts(16, -Math.PI / 2, (i) => (i % 2 ? r * .86 : r)));
 }
 function medaglia(ev, { lock = false } = {}) {
+  const mp = ev.id && S.medaglie && S.medaglie[ev.id];
+  if (mp && mp.img) return `<img class="mb mbimg" src="${esc(mp.img)}" alt="" draggable="false">`;
   const h = hash(ev.id || ev.titolo);
   const col = lock ? "var(--bg-3)" : COLORI_MEDAGLIA[ev.colore] || ["#2a952d", "#7b3fa0", "#e07a1f", "#1f7ac4", "#d4a017", "#c0392b"][h % 6];
   const k = ev.forma != null ? ev.forma : h % 6;
@@ -1711,6 +1855,10 @@ function avvisi() {
     if (finestraCheckin(e) && !presente(e)) add({ id: "chk" + e.id, i: "check", t: `${e.titolo} è adesso: segna che ci sei`, s: e.tipo === "evento" ? "C'è una medaglia in palio" : "Conta per le tue presenze", h: "ev-" + e.id, azione: true, lv: "hot" });
   }
   if (isAdmin() && !Object.values(S.soci).some((x) => x.ruolo)) add({ id: "setup", i: "key", t: "Inserisci i soci e i ruoli del consiglio", s: WEB ? "Da Soci e tessere: aggiungi ognuno con la sua mail @bagaera.it, poi entra con Google" : "Da Soci e tessere: aggiungi ognuno con la sua mail associativa e mandagli il codice di primo accesso", h: "soci", azione: true, lv: "hot" });
+  // post che tocca a me pubblicare
+  for (const p of postMiei()) add({ id: "post" + p.id, i: "film", t: `Post da pubblicare: ${p.titolo}`, s: `${fData(p.data)}${p.ora ? " · " + p.ora : ""} · ${canale(p)[0]}`, h: "editoriale", azione: p.data === oggi() });
+  // open call aperte per me (solo le nuove degli ultimi 10 giorni)
+  for (const c of openCallPerMe().filter((x) => x.creato && Date.now() - x.creato < 10 * 864e5 && !isCouncil())) add({ id: "oc" + c.id, i: "megafono", t: `Open call: ${c.titolo}`, s: c.scadenza ? `aperta fino al ${fData(c.scadenza)}` : "Condividi il link con chi può partecipare", h: "oc-" + c.id });
   // pagamenti che tocca a me fare
   for (const p of pagamentiMiei()) add({ id: "pag" + p.id, i: "bank", t: `${p.metodo === "Bonifico" ? "Bonifico" : "Pagamento"} da fare: ${euro(p.importo)} a ${p.beneficiario}`, s: (p.scadenza ? `entro ${fData(p.scadenza)} (${traQuanto(p.scadenza)})` : "senza scadenza") + (p.causale ? " · " + p.causale : ""), h: "pagamenti", azione: true, lv: p.scadenza && p.scadenza < oggi() ? "bad" : "hot" });
   // ruoli
@@ -1732,7 +1880,7 @@ function avvisi() {
     if (seg.length) add({ id: "seg", i: "doc", t: `${seg.length} ${seg.length === 1 ? "ricevuta sponsor da emettere" : "ricevute sponsor da emettere"}`, s: seg.map((x) => x.sponsorNome).slice(0, 3).join(", "), h: "sponsor", azione: true });
     const mag = avvisiMagazzino();
     if (mag.length && haRuolo("vicepresidente")) add({ id: "mag", i: "box", t: `${mag.length} ${mag.length === 1 ? "lotto scaduto" : "lotti scaduti"} in magazzino`, s: [...new Set(mag.map((x) => x.p.name))].slice(0, 3).join(", "), h: "magazzino", azione: true, lv: "bad" });
-    const verbaliDaFare = eventi().filter((e) => e.tipo === "riunione" && finito(e) && e.data >= APP_START && !Object.values(S.verbali).some((v) => v.riunioneId === e.id));
+    const verbaliDaFare = [...riunioniSenzaVerbale("assemblea"), ...riunioniSenzaVerbale("consiglio")];
     if (verbaliDaFare.length && haRuolo("segretario")) add({ id: "verb", i: "doc", t: `Verbale da scrivere: ${verbaliDaFare[0].titolo}`, s: fData(verbaliDaFare[0].data), h: "verbali", azione: true });
   }
   return A;
@@ -1979,7 +2127,7 @@ async function pdfVerbale(v) {
 /* ================= HOME ================= */
 function saluto() { const h = new Date().getHours(); return h < 5 ? "Ciao" : h < 12 ? "Buongiorno" : h < 18 ? "Buon pomeriggio" : "Buonasera"; }
 function nomeMio() { return (S.me.name || "").split(/\s+/)[0] || "Bagai"; }
-function tipoLabel(e) { if (e.personale) return "Promemoria"; if (e.progetto && S.progetti[e.progetto]) return S.progetti[e.progetto].nome + (e.visib === "consiglio" ? " · consiglio" : ""); if (e.tipo === "appuntamento") return e.visib === "consiglio" ? "Appuntamento del consiglio" : "Appuntamento"; if (e.tipo === "incontro") return (GRUPPI[e.gruppo] ? GRUPPI[e.gruppo].breve : "Incontro") + (e.aperto ? " · aperto a tutti" : ""); return TIPI[e.tipo] ? TIPI[e.tipo].nome : "Evento"; }
+function tipoLabel(e) { if (e.post) return canale(e.post)[0]; if (e.personale) return "Promemoria"; if (e.progetto && S.progetti[e.progetto]) return S.progetti[e.progetto].nome + (e.visib === "consiglio" ? " · consiglio" : ""); if (e.tipo === "appuntamento") return e.visib === "consiglio" ? "Appuntamento del consiglio" : "Appuntamento"; if (e.tipo === "incontro" && e.gruppo === "consiglio") return "Riunione del consiglio"; if (e.tipo === "incontro") return (GRUPPI[e.gruppo] ? GRUPPI[e.gruppo].breve : "Incontro") + (e.aperto ? " · aperto a tutti" : ""); return TIPI[e.tipo] ? TIPI[e.tipo].nome : "Evento"; }
 function rsvpBtns(e, cls = "") {
   const r = rsvp(e);
   return `<div class="btns ${cls}">${[["si", "Ci sono"], ["forse", "Forse"], ["no", "Non ci sono"]].map(([v, l]) => `<button class="btn sm ${v === "si" ? "dark" : ""}" data-act="rsvp" data-id="${e.id}" data-v="${v}" aria-pressed="${r === v}">${l}</button>`).join("")}</div>`;
@@ -2001,11 +2149,32 @@ function heroProssimo() {
     ${om(e.tipo === "evento" ? 3 : e.tipo === "riunione" ? 1 : 2, "deco")}
   </section>`;
 }
+/* dopo 4 assemblee saltate, un omino Bagaera ti chiama alla prossima */
+function ominoIncoraggia() {
+  if (!S.me.id) return "";
+  const n = assenzeDiFila(); if (n < ASSENZE_OMINO) return "";
+  const pross = eventi().filter((e) => e.tipo === "riunione" && !finito(e)).sort(ordinaEv)[0];
+  const nome = esc(nomeMio()), quando = pross ? `${esc(fDataL(pross.data))}${pross.ora ? " alle " + esc(pross.ora) : ""}` : "";
+  const r = pross ? rsvp(pross) : null;
+  const frasi = pross ? [
+    `Ehi ${nome}, sono già ${n} assemblee che non ti vediamo! La prossima è ${quando}: ti teniamo un posto?`,
+    `Se fem senza di te? Ci manchi, ${nome}. Ci vediamo all'assemblea di ${quando}?`,
+    `${n} assemblee di fila senza ${nome}… il tuo omino si sente solo! Torna ${quando}.`,
+    `Un Bagai senza assemblee è come il Fem Fest senza musica. ${quando}: ci sei?`,
+  ] : [
+    `Ehi ${nome}, sono già ${n} assemblee che non ti vediamo! Appena il consiglio fissa la prossima, ti aspettiamo.`,
+    `Ci manchi, ${nome}! La prossima assemblea arriva presto: tieniti libero.`,
+  ];
+  const o = 1 + (hash(ME() + (pross ? pross.id : "")) % 3);
+  const testo = r === "si" ? `Grande ${nome}, ci sei! Ci vediamo ${quando}.` : frasi[(n + hash(ME())) % frasi.length];
+  return `<section class="omcall" aria-label="Un messaggio da Bagaera"><svg class="omcall-om" viewBox="${OM[o]}" aria-hidden="true"><use href="#s-o${o}"/></svg>
+    <div class="omcall-b"><p>${testo}</p>${pross && r !== "si" ? rsvpBtns(pross) : ""}${pross ? `<a class="small" href="#ev-${pross.id}">Vedi l'assemblea</a>` : ""}</div></section>`;
+}
 route("home", () => {
   if (S.noRuntime) return vSenzaRuntime();
   const st = statistiche();
   const av = avvisi();
-  const tools = strumenti();
+  const tools = mieiStrumenti();
   const prossimi = mieiEventi().filter((e) => !finito(e)).slice(0, 7);
   const primo = prossimoPerMe();
   const altri = prossimi.filter((e) => !primo || e.id !== primo.id).slice(0, 5);
@@ -2014,16 +2183,17 @@ route("home", () => {
     <div class="hello"><div class="stack s"><span class="eyebrow">${esc(fDataL(oggi()))}</span><h1>Se fem, <span>${esc(nomeMio())}</span>?</h1></div>
       <button class="btn sm" data-act="nuovo-anticipo">${ic("euro")}Chiedi un rimborso</button></div>
     ${live.map((s) => `<a class="live" href="#cassa"><span class="dot"></span><span class="grow"><b class="disp">Cassa aperta: ${esc(s.name)}</b><br><span class="small">Tocca per vendere e segnare i consumi.</span></span>${ic("chev", "chev")}</a>`).join("")}
+    ${ominoIncoraggia()}
     ${heroProssimo()}
     <div class="homecols"><div>
     <section class="stats" aria-label="Le tue presenze">
-      <a class="arco v" href="#mison"><svg class="om flame" viewBox="${OM[1]}" aria-hidden="true"><use href="#s-o1"/></svg><span class="n">${st.serie}</span><span class="l">${st.serie === 1 ? "riunione" : "riunioni"} di fila</span></a>
+      <a class="arco v" href="#mison"><svg class="om flame" viewBox="${OM[1]}" aria-hidden="true"><use href="#s-o1"/></svg><span class="n">${st.serie}</span><span class="l">${st.serie === 1 ? "assemblea" : "assemblee"} di fila</span></a>
       <a class="arco" href="#mison">${ic("check", "om")}<span class="n">${st.presenzeAnno}</span><span class="l">presenze nel ${new Date().getFullYear()}</span></a>
       <a class="arco" href="#medaglie">${ic("medal", "om")}<span class="n">${st.medaglie}</span><span class="l">${st.medaglie === 1 ? "medaglia" : "medaglie"}</span></a>
     </section>
     ${av.length ? `<section class="panel todo"><div class="ph"><h3>Da fare e novità</h3><span class="pill">${av.length}</span></div><div class="list">${av.map((a) => `<a class="li ${a.lv || ""}" href="#${a.h}"><span class="ic">${ic(a.i)}</span><span class="grow"><span class="t">${esc(a.t)}</span>${a.s ? `<br><span class="s">${esc(a.s)}</span>` : ""}</span>${ic("chev", "chev")}</a>`).join("")}</div></section>` : ""}
     </div><div>
-    ${tools.length ? `<section class="stack s"><h3>I tuoi strumenti</h3><div class="tools">${tools.map((t) => `<a class="tool" href="#${t.h}">${ic(t.i)}<span><b>${t.l}</b><small>${t.s}</small></span>${t.n ? `<span class="badge">${t.n}</span>` : ""}</a>`).join("")}</div></section>` : ""}
+    ${strumenti().length ? `<section class="stack s"><div class="row between"><h3>I tuoi strumenti</h3><a class="btn sm ghost" href="#strumenti">${tools.length < strumenti().length ? "Tutti" : "Personalizza"}${ic("chev")}</a></div>${tools.length ? `<div class="tools mini">${tools.map((t) => tileStr(t, true)).join("")}</div>` : `<p class="small muted">Li hai nascosti tutti: li trovi in Strumenti.</p>`}</section>` : ""}
     <section class="panel"><div class="ph"><h3>Prossimi appuntamenti</h3><a class="btn sm ghost" href="#calendario">Calendario${ic("chev")}</a></div>
       ${altri.length ? `<div class="list">${altri.map(evRow).join("")}</div>` : `<div class="pb"><p class="muted small">Nient'altro in programma per te.</p></div>`}</section>
     </div></div>
@@ -2039,10 +2209,10 @@ function evRow(e) {
   const tipo = e.personale ? "personale" : e.tipo;
   const r = rsvp(e);
   const g = e.tipo === "incontro" && GRUPPI[e.gruppo] ? GRUPPI[e.gruppo].breve : "";
-  const href = e.scadenza ? "#scadenze" : e.pagamento ? "#pagamenti" : `#ev-${e.id}`;
+  const href = e.scadenza ? "#scadenze" : e.pagamento ? "#pagamenti" : e.post ? `#editoriale-${e.data.slice(0, 7)}` : `#ev-${e.id}`;
   const c = colEv(e);
   const mat = Object.values(e.materiale || {}); const ok = mat.filter((m) => m.ok).length;
-  const right = e.personale ? `<span class="pill">solo tu</span>` : e.scadenza ? `<span class="pill bad">scadenza</span>` : e.pagamento ? `<span class="pill bad">da pagare</span>`
+  const right = e.post ? `<span class="pill ${(STATI_POST[e.post.stato] || STATI_POST.idea)[1]}">${(STATI_POST[e.post.stato] || STATI_POST.idea)[0]}</span>` : e.personale ? `<span class="pill">solo tu</span>` : e.scadenza ? `<span class="pill bad">scadenza</span>` : e.pagamento ? `<span class="pill bad">da pagare</span>`
     : finito(e) ? (presente(e) ? `<span class="pill ok">${ic("check")}c'eri</span>` : "")
     : r === "si" ? `<span class="pill ok">ci sei</span>` : r === "forse" ? `<span class="pill warn">forse</span>` : r === "no" ? `<span class="pill">no</span>` : (e.tipo === "appuntamento" ? invitato(e) : e.tipo !== "incontro" || inGroup(e.gruppo)) ? `<span class="pill warn">rispondi</span>` : e.fonte ? `<span class="pill">${ic("mail")}posta</span>` : "";
   return `<a class="evrow" href="${href}"><div class="when tipo-${tipo}" ${e.personale ? "" : `style="background:${c.bg};border-color:${c.bg};color:${c.fg}"`}><b>${d.getDate()}</b><span>${MESI[d.getMonth()].slice(0, 3)} · ${GG[d.getDay()]}</span></div>
@@ -2074,7 +2244,7 @@ FORMS.checkin = async (f) => {
 async function segnaPresente(e) {
   await wUpd("calendario/" + e.id, { presenze: { [ME()]: { c: Date.now(), r: "si" } } });
   if (e.tipo === "evento") mostraMedaglia(e, true);
-  else { const st = statistiche(); toast(e.tipo === "riunione" ? `Presenza segnata. Serie: ${st.serie + (finito(e) ? 0 : 1)} di fila!` : "Presenza segnata."); }
+  else { const st = statistiche(); toast(e.tipo === "riunione" ? `Presenza segnata. Assemblee di fila: ${st.serie + (finito(e) ? 0 : 1)}!` : "Presenza segnata."); }
 }
 function mostraMedaglia(e, nuova) {
   openSheet({ title: nuova ? "Medaglia sbloccata!" : esc(e.titolo), eyebrow: nuova ? esc(e.titolo) : "Medaglia",
@@ -2087,6 +2257,7 @@ ACT["sheet-close-go"] = (el) => { closeSheet(); go(el.dataset.h); };
 
 /* ================= CALENDARIO ================= */
 function filtroEv(e, f) {
+  if (e.post) return f === "marketing";
   if (e.personale) return f === "miei" || f === "tutti";
   if (e.scadenza || e.pagamento) return f === "miei" || f === "tutti" || f === "consiglio";
   if (!vedeEvento(e)) return false;
@@ -2100,7 +2271,8 @@ function filtroEv(e, f) {
 function itemsCal() {
   const sc = isCouncil() ? Object.values(S.scadenze).filter((s) => s.stato !== "fatto").map((s) => ({ id: "sc" + s.id, titolo: s.titolo, data: s.data, scadenza: true, tipo: "scadenza" })) : [];
   const pg = isCouncil() ? Object.values(S.pagamenti).filter((p) => p.stato !== "fatto" && p.scadenza).map((p) => ({ id: "pg" + p.id, titolo: `${euroT(p.importo)} a ${p.beneficiario}`, data: p.scadenza, pagamento: true, tipo: "pagamento" })) : [];
-  return [...eventi(), ...promemoria(), ...sc, ...pg].sort(ordinaEv);
+  const po = can.editoriale() ? postTutti().map((p) => ({ id: "po" + p.id, titolo: p.titolo, data: p.data, ora: p.ora || null, post: p, tipo: "post" })) : [];
+  return [...eventi(), ...promemoria(), ...sc, ...pg, ...po].sort(ordinaEv);
 }
 /* il mese: ogni appuntamento è una striscia colorata col titolo, quelli di più giorni continuano da un giorno all'altro */
 function meseHtml(tutti, mese, sel) {
@@ -2178,9 +2350,9 @@ route("calendario", () => {
       ${passati.length ? `<details class="panel"><summary class="ph" style="cursor:pointer"><h3>Già passati</h3><span class="pill">${passati.length}</span></summary><div class="list">${passati.slice(0, 40).map(evRow).join("")}</div></details>` : ""}`;
   }
   return `<div class="wrap">
-    <div class="pagehead"><div class="stack"><span class="eyebrow">Riunioni, eventi, incontri e progetti</span><h1>Calendario</h1></div>
+    <div class="pagehead"><div class="stack"><span class="eyebrow">Assemblee, eventi, incontri e progetti</span><h1>Calendario</h1></div>
       <div class="btns"><div class="seg" role="group" aria-label="Vista"><button data-act="cal-vista" data-v="mese" aria-pressed="${u.calVista === "mese"}">Mese</button><button data-act="cal-vista" data-v="agenda" aria-pressed="${u.calVista === "agenda"}">Elenco</button></div>
-      ${puo ? `<button class="btn pri" data-act="nuovo-evento">${ic("plus")}Nuovo</button>` : ""}</div></div>
+      <a class="btn" href="#eventi">${ic("medal")}Eventi</a>${puo ? `<button class="btn pri" data-act="nuovo-evento">${ic("plus")}Nuovo</button>` : ""}</div></div>
     <div class="chips hscroll" role="group" aria-label="Filtra">${filtri.map(([k, l]) => `<button class="chip" data-act="cal-filtro" data-v="${k}" aria-pressed="${f === k}">${l}</button>`).join("")}</div>
     ${corpo}
     <div class="btns">${WEB && isCouncil() ? `<button class="btn sm" data-act="gcal-apri">${ic("cal")}Google Calendar${gcalDaFare() ? ` <span class="badge">!</span>` : ""}</button>` : ""}${pj.length || isCouncil() ? `<a class="btn sm" href="#progetti">${ic("link")}Progetti e reti${pj.length ? ` (${pj.length})` : ""}</a>` : ""}${isCouncil() ? `<a class="btn sm" href="#posta">${ic("mail")}Appuntamenti dalla posta${proposteNuove().length ? ` <span class="badge">${proposteNuove().length}</span>` : ""}</a>` : ""}</div>
@@ -2214,7 +2386,8 @@ route("ev", (id) => {
   const check = finestraCheckin(e);
   const g = e.tipo === "incontro" ? GRUPPI[e.gruppo] : null;
   const puoMat = org || (g ? inGroup(e.gruppo) : isCouncil()) || rsvp(e) === "si";
-  const verb = Object.values(S.verbali).find((v) => v.riunioneId === e.id);
+  const verbO = riunioneDiOrgano(e, "consiglio") ? "consiglio" : "assemblea";
+  const verb = [...Object.values(S.verbali), ...Object.values(S.verbalicd)].find((v) => v.riunioneId === e.id);
   const col = colEv(e), pj = e.progetto && S.progetti[e.progetto];
   const chiVede = e.visib === "consiglio" ? `Consiglio direttivo${(e.invitati || []).length ? ` + ${e.invitati.length} ${e.invitati.length === 1 ? "invitato" : "invitati"}` : ""}` : g ? g.nome : e.tipo === "riunione" ? "Tutti i soci" : "Tutta l'associazione";
   let pres;
@@ -2225,10 +2398,12 @@ route("ev", (id) => {
       ${org && e.codice && (check || giorniTra(oggi(), e.data) <= 1) ? `<div class="codebox"><div><span class="eyebrow" style="color:#c4cec4">Codice presenza</span><br><span class="small">Mostralo a chi arriva</span></div><span class="code">${esc(e.codice)}</span></div>` : ""}
       ${org ? `<button class="btn sm" data-act="registro" data-id="${e.id}">${ic("clip")}Registro presenze (${presenti.length})</button>` : ""}</div>`;
   } else {
+    const ordP = presenti.slice().sort((a, b) => nm(a).localeCompare(nm(b), "it"));
     pres = `<div class="pb"><div class="row">${presenti.length ? avs(presenti, 10) : ""}<span class="small"><b>${presenti.length}</b> presenti</span></div>
+      ${ordP.length ? `<ul class="plist">${ordP.map((u) => `<li>${av(u)}<span>${esc(nm(u))}</span></li>`).join("")}</ul>` : ""}
       ${presente(e) ? (e.tipo === "evento" ? `<button class="medal" data-act="vedi-medaglia" data-id="${e.id}" style="align-self:flex-start;flex-direction:row;gap:12px;text-align:left">${medaglia(e)}<span><b>C'eri!</b><br><small>Tocca per vedere la medaglia</small></span></button>` : `<div class="notice">${ic("check")} C'eri.</div>`)
         : e.data < APP_START && e.tipo === "evento" ? `<button class="btn" data-act="cero" data-id="${e.id}">${ic("medal")}C'ero anch'io</button><p class="small muted">Gli eventi di prima dell'app si rivendicano sulla parola.</p>` : ""}
-      ${org ? `<button class="btn sm" data-act="registro" data-id="${e.id}">${ic("clip")}Correggi le presenze</button>` : ""}</div>`;
+      ${org ? `<button class="btn sm" data-act="registro" data-id="${e.id}">${ic("clip")}${e.tipo === "evento" ? "Correggi le presenze (e le medaglie)" : "Correggi le presenze"}</button>` : ""}</div>`;
   }
   return `<div class="wrap">
     ${backLink("calendario", "Calendario")}
@@ -2240,9 +2415,10 @@ route("ev", (id) => {
         ${pj ? `<div>${ic("link")}<span><b>Progetto: ${esc(pj.nome)}</b><a href="#pj-${pj.id}">Tutte le date del progetto</a></span></div>` : ""}</div>
     </section>
     ${e.fonte ? fonteHtml(e.fonte) : ""}
+    ${openCallDiEvento(e)}
     ${e.cosa ? `<section class="stack s"><h3>Cosa si farà</h3><p style="white-space:pre-wrap">${esc(e.cosa)}</p></section>` : ""}
     <div class="grid2">
-      <section class="panel"><div class="ph"><h3>${fin ? "Chi c'era" : "Chi c'è"}</h3>${e.tipo === "riunione" ? `<span class="pill warn">conta per la serie</span>` : e.tipo === "evento" ? `<span class="pill ok">${ic("medal")}medaglia</span>` : ""}</div>${pres}</section>
+      <section class="panel"><div class="ph"><h3>${fin ? "Chi c'era" : "Chi c'è"}</h3>${e.tipo === "riunione" ? `<span class="pill warn">assemblea: conta per la serie</span>` : e.tipo === "evento" ? `<span class="pill ok">${ic("medal")}medaglia</span>` : ""}</div>${pres}</section>
       <section class="panel"><div class="ph"><h3>Materiale</h3>${mat.length ? `<span class="pill ${pronti === mat.length ? "ok" : ""}">${pronti}/${mat.length} pronti</span>` : ""}</div>
         ${mat.length ? `<div class="list">${mat.map((m) => `<div class="mat ${m.ok ? "ok" : ""}"><button class="box" data-act="mat-ok" data-id="${e.id}" data-m="${m.mid}" aria-pressed="${!!m.ok}" aria-label="${m.ok ? "Segna come da trovare" : "Segna come già pronto"}: ${esc(m.n)}" ${puoMat ? "" : "disabled"}>${ic("check")}</button>
           <span class="grow"><span class="t">${esc(m.n)}</span>${m.chi ? `<br><span class="s">${m.chi === ME() ? "Lo porti tu" : "Lo porta " + esc(primoNome(m.chi))}</span>` : ""}</span>
@@ -2253,7 +2429,7 @@ route("ev", (id) => {
     </div>
     <div class="btns">
       <a class="btn" href="${linkGoogleCal(e)}" target="_blank" rel="noopener">${ic("cal")}Aggiungi a Google Calendar</a>
-      ${e.tipo === "riunione" && isCouncil() ? (verb ? `<a class="btn" href="#vb-${verb.id}">${ic("doc")}Verbale</a>` : `<button class="btn" data-act="nuovo-verbale" data-id="${e.id}">${ic("doc")}Scrivi il verbale</button>`) : ""}
+      ${(e.tipo === "riunione" || riunioneDiOrgano(e, "consiglio")) && isCouncil() ? (verb ? `<a class="btn" href="#${ORGANI[verbO].r}-${verb.id}">${ic("doc")}Verbale</a>` : `<button class="btn" data-act="nuovo-verbale" data-id="${e.id}">${ic("doc")}Scrivi il verbale</button>`) : e.tipo === "riunione" && verb && pubblico(verb) ? `<a class="btn" href="#vb-${verb.id}">${ic("doc")}Verbale</a>` : ""}
       ${isCouncil() && e.tipo !== "incontro" ? `<button class="btn" data-act="ev-invita" data-id="${e.id}">${ic("people")}Chi lo vede</button>` : ""}
       ${org ? `<button class="btn" data-act="modifica-evento" data-id="${e.id}">${ic("edit")}Modifica</button><button class="btn danger" data-act="annulla-evento" data-id="${e.id}">${ic("trash")}Annulla</button>` : ""}
     </div>
@@ -2337,7 +2513,7 @@ function leggiDate(txt, anno) {
 function formEvento(e, pre = {}, opz = {}) {
   const miei = Object.keys(GRUPPI).filter((g) => can.creaIncontro(g));
   const tipi = [];
-  if (can.creaGenerale()) tipi.push(["evento", "Evento"], ["riunione", "Riunione generale"], ["appuntamento", "Appuntamento / progetto"]);
+  if (can.creaGenerale()) tipi.push(["evento", "Evento"], ["riunione", "Assemblea generale"], ["appuntamento", "Appuntamento / progetto"]);
   if (miei.length) tipi.push(["incontro", "Incontro di gruppo"]);
   if (!e) tipi.push(["personale", "Solo per me"]);
   const t0 = (e && e.tipo) || pre.tipo || (pre.progetto ? "appuntamento" : miei.length && !can.creaGenerale() ? "incontro" : tipi[0][0]);
@@ -2365,7 +2541,8 @@ function formEvento(e, pre = {}, opz = {}) {
       ${cand.length ? `<details class="rip" data-show="appuntamento"><summary>${ic("people")}Invita altri soci${(v.invitati || []).length ? ` (${v.invitati.length})` : ""}</summary><div class="opts" style="padding-top:10px">${cand.map((u) => checkbox("inv", u, esc(nm(u)), (v.invitati || []).includes(u))).join("")}</div></details>` : ""}
       ${!e ? `<label class="field" data-hide="personale"><span>Materiale necessario</span><textarea class="in" name="materiale" placeholder="Uno per riga: si spunta quando c'è già o quando qualcuno lo porta"></textarea></label>` : ""}
       <label class="check" data-show="incontro"><input type="checkbox" name="aperto" ${v.aperto ? "checked" : ""}><span><b>Aperto a tutti i soci</b><br><small class="muted">Per le riprese del marketing o quando serve una mano: lo vedono tutti.</small></span></label>
-      <div class="field" data-show="evento"><span>Colore della medaglia</span><div class="opts">${Object.entries(COLORI_MEDAGLIA).map(([k, c]) => radio("colore", k, `<i style="width:14px;height:14px;background:${c};border:2px solid var(--rule);display:inline-block"></i>${k}`, (v.colore || "verde") === k)).join("")}</div></div>
+      ${isCouncil() ? campoMedaglia(e) : ""}
+      <div class="field" data-show="evento"><span>Colore della medaglia${isCouncil() ? " (se non la carichi)" : ""}</span><div class="opts">${Object.entries(COLORI_MEDAGLIA).map(([k, c]) => radio("colore", k, `<i style="width:14px;height:14px;background:${c};border:2px solid var(--rule);display:inline-block"></i>${k}`, (v.colore || "verde") === k)).join("")}</div></div>
       <p class="err" hidden></p></form>`,
     foot: `<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fEv">${e ? "Salva" : opz.ok || "Crea"}</button>`,
     mount: (root) => {
@@ -2390,7 +2567,7 @@ FORMS.evento = async (f) => {
   if (tipo === "evento" || tipo === "appuntamento") { d.dataFine = fv(f, "dataFine") || null; if (d.dataFine && d.dataFine < d.data) return fErr(f, "L'ultimo giorno viene prima del primo."); if (f.elements.progetto) d.progetto = fv(f, "progetto") || null; }
   if (tipo === "evento") d.colore = (f.querySelector('[name="colore"]:checked') || {}).value || "verde";
   if (tipo === "appuntamento") { d.visib = (f.querySelector('[name="visib"]:checked') || {}).value || "consiglio"; d.invitati = fvAll(f, "inv"); }
-  if (id) { await wUpd("calendario/" + id, d); closeSheet(); toast("Salvato."); return; }
+  if (id) { await wUpd("calendario/" + id, d); if (tipo === "evento") await salvaMedaglia(f, [id]); closeSheet(); toast("Salvato."); return; }
   // tutte le date
   let date = [d.data];
   const rip = fv(f, "ripeti"), fino = fv(f, "finoAl");
@@ -2412,6 +2589,7 @@ FORMS.evento = async (f) => {
     const materiale = {}; righe.forEach((n, i) => { materiale[genId("m") + i] = { n: n.slice(0, 80), ok: false, chi: null, ord: i + 1 }; });
     await wSet("calendario/" + nid, { ...d, data: dt, dataFine: durata ? addDays(dt, durata) : d.dataFine || null, tipo, materiale, presenze: {}, codice: String(1000 + Math.floor(Math.random() * 9000)), creatoDa: ME(), creato: Date.now(), ...(serie ? { serie } : {}), ...(sh.fonte ? { fonte: sh.fonte } : {}) });
   }
+  if (tipo === "evento") await salvaMedaglia(f, ids);
   const dopo = sh.dopo;
   closeSheet();
   if (dopo) await dopo(ids);
@@ -2467,6 +2645,100 @@ FORMS.progetto = async (f) => {
   closeSheet(); toast("Progetto salvato."); if (!prima) go("pj-" + id);
 };
 
+/* ---------- medaglia personalizzata di un evento (la carica il consiglio) ---------- */
+let medTmp = null; // { img } preparata dal file scelto
+function campoMedaglia(e) {
+  medTmp = null;
+  const mp = e && S.medaglie[e.id];
+  return `<div class="field medcampo" data-show="evento"><span>Medaglia</span>
+    <div class="medrow"><span class="medal" id="medPrev">${medaglia(e || { id: "nuovo", titolo: "Evento" })}</span>
+      <div class="stack s"><label class="btn sm">${ic("up")}${mp ? "Cambia immagine" : "Carica la tua"}<input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" data-act-change="med-file" hidden></label>
+        ${mp ? `<label class="check"><input type="checkbox" name="medAuto"><span>Torna a quella automatica</span></label>` : ""}
+        <small class="muted" id="medInfo">${mp ? "Questa è la medaglia caricata per l'evento." : "Se non carichi niente resta quella automatica. Meglio un PNG quadrato con lo sfondo trasparente."}</small></div></div></div>`;
+}
+/* l'immagine diventa un PNG quadrato da 320 px, intera e centrata */
+function preparaMedaglia(file) {
+  return new Promise((ok, ko) => {
+    const url = URL.createObjectURL(file), img = new Image();
+    img.onload = () => {
+      try {
+        const L = 320, cv = document.createElement("canvas"); cv.width = cv.height = L;
+        const w = img.naturalWidth || L, h = img.naturalHeight || L, k = Math.min(L / w, L / h);
+        cv.getContext("2d").drawImage(img, (L - w * k) / 2, (L - h * k) / 2, w * k, h * k);
+        let out = cv.toDataURL("image/png");
+        if (out.length > 350000) { const w2 = cv.toDataURL("image/webp", 0.9); out = w2.startsWith("data:image/webp") && w2.length < out.length ? w2 : out; }
+        if (out.length > 350000) { const c2 = document.createElement("canvas"); c2.width = c2.height = 240; c2.getContext("2d").drawImage(cv, 0, 0, 240, 240); out = c2.toDataURL("image/png"); }
+        URL.revokeObjectURL(url);
+        out.length > 700000 ? ko(new Error("troppo grande")) : ok(out);
+      } catch (e) { URL.revokeObjectURL(url); ko(e); }
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); ko(new Error("immagine non valida")); };
+    img.src = url;
+  });
+}
+document.addEventListener("change", async (ev) => {
+  const el = ev.target; if (!el.dataset || el.dataset.actChange !== "med-file" || !el.files || !el.files[0]) return;
+  const file = el.files[0]; el.value = "";
+  if (file.size > 8e6) return toast("Immagine troppo pesante: massimo 8 MB.");
+  try {
+    const img = await preparaMedaglia(file);
+    medTmp = { img, nome: file.name };
+    const p = $("#medPrev"); if (p) p.innerHTML = `<img class="mb mbimg" src="${img}" alt="">`;
+    const i = $("#medInfo"); if (i) i.textContent = `«${file.name}»: la vedrà chi c'era, al posto di quella automatica.`;
+    const a = document.querySelector('#fEv [name="medAuto"]'); if (a) a.checked = false;
+  } catch (e) { toast("Non riesco a leggere l'immagine: prova con un PNG o un JPG."); }
+});
+async function salvaMedaglia(f, ids) {
+  if (!isCouncil()) return;
+  const auto = f.elements.medAuto && f.elements.medAuto.checked;
+  for (const id of ids) {
+    if (medTmp) await wSet("medaglie/" + id, { img: medTmp.img, nome: medTmp.nome || "", da: ME(), at: Date.now() }, { quiet: true }).catch(() => toast("La medaglia non si è salvata: riprova."));
+    else if (auto && S.medaglie[id]) await wDel("medaglie/" + id, { quiet: true }).catch(() => {});
+  }
+  medTmp = null;
+}
+
+/* ================= EVENTI: quelli in arrivo col conto alla rovescia, quelli passati con chi c'era ================= */
+const inizioEv = (e) => new Date(`${e.data}T${e.ora || "00:00"}:00`).getTime();
+function quantoManca(ms) {
+  const t = Math.max(0, Math.floor(ms / 1000));
+  return { g: Math.floor(t / 86400), h: Math.floor((t % 86400) / 3600), m: Math.floor((t % 3600) / 60), s: t % 60 };
+}
+function trTra(e) {
+  const g = giorniTra(oggi(), e.data);
+  return g <= 0 ? (finestraCheckin(e) ? "in corso" : "oggi") : g === 1 ? "domani" : `tra ${g} giorni`;
+}
+route("eventi", () => {
+  const tutti = eventi().filter((e) => e.tipo === "evento");
+  const futuri = tutti.filter((e) => !finito(e)).sort(ordinaEv);
+  const passati = tutti.filter(finito).sort(ordinaEv).reverse();
+  const adesso = futuri.filter((e) => inizioEv(e) <= Date.now()), prossimi = futuri.filter((e) => inizioEv(e) > Date.now());
+  const primo = prossimi[0];
+  const cd = primo ? quantoManca(inizioEv(primo) - Date.now()) : null;
+  const box = (n, l, k) => `<span class="cdb"><b data-cd-k="${k}">${String(n).padStart(2, "0")}</b><small>${l}</small></span>`;
+  const anni = [...new Set(passati.map((e) => e.data.slice(0, 4)))];
+  const rigaP = (e) => { const n = presentiDi(e).length, io = presente(e);
+    return `<div class="evp"><a class="evp-l" href="#ev-${e.id}"><span class="medal ${io ? "" : "lock"}">${medaglia(e, { lock: !io })}</span><span class="grow"><span class="t">${esc(e.titolo)}</span><br><span class="s">${esc(fDataL(e.data))} · ${n} ${n === 1 ? "presente" : "presenti"}</span></span>${io ? `<span class="pill ok">c'eri</span>` : ""}</a>
+      ${puoModificareEvento(e) ? `<button class="btn sm ghost" data-act="registro" data-id="${e.id}" aria-label="Presenze di ${esc(e.titolo)}">${ic("clip")}<span>Presenze</span></button>` : ""}</div>`; };
+  return { html: `<div class="wrap">${backLink("calendario", "Calendario")}
+    <div class="pagehead"><div class="stack"><span class="eyebrow">Dal calendario · le medaglie si guadagnano qui</span><h1>Eventi</h1></div>${can.creaGenerale() ? `<button class="btn pri" data-act="nuovo-evento" data-t="evento">${ic("plus")}Nuovo evento</button>` : ""}</div>
+    ${adesso.map((e) => `<a class="occard" href="#ev-${e.id}"><span class="ic">${ic("medal")}</span><span class="grow"><span class="t">In corso: ${esc(e.titolo)}</span><br><span class="s">${e.luogo ? esc(e.luogo) + " · " : ""}segna che ci sei per la medaglia</span></span>${ic("chev", "chev")}</a>`).join("")}
+    ${primo ? `<a class="hero cdhero" href="#ev-${primo.id}" data-cd="${inizioEv(primo)}"><span class="eyebrow">Il prossimo evento · ${esc(fDataL(primo.data))}${primo.ora ? " alle " + esc(primo.ora) : ""}</span><h2>${esc(primo.titolo)}</h2>
+      <span class="cdrow" aria-label="Mancano ${cd.g} giorni e ${cd.h} ore">${box(cd.g, cd.g === 1 ? "giorno" : "giorni", "g")}${box(cd.h, "ore", "h")}${box(cd.m, "minuti", "m")}${box(cd.s, "secondi", "s")}</span>${om(1, "deco")}</a>` : (adesso.length ? "" : empty("Nessun evento in arrivo", "Quando il consiglio ne fissa uno, qui parte il conto alla rovescia."))}
+    ${prossimi.length > 1 ? `<section class="panel"><div class="ph"><h3>Poi arrivano</h3><span class="pill">${prossimi.length - 1}</span></div><div class="list">${prossimi.slice(1).map((e) => `<a class="li" href="#ev-${e.id}"><span class="dbox" style="background:${colEv(e).bg};color:${colEv(e).fg}"><b>${dOf(e.data).getDate()}</b><small>${MESI[dOf(e.data).getMonth()].slice(0, 3)}</small></span><span class="grow"><span class="t">${esc(e.titolo)}</span><br><span class="s">${e.ora ? esc(e.ora) + " · " : ""}${esc(e.luogo || "")}</span></span><span class="pill cdp">${trTra(e)}</span></a>`).join("")}</div></section>` : ""}
+    <section class="stack s"><div class="row between"><h3>Già fatti</h3><span class="small muted">${passati.length} eventi · tocca per vedere chi c'era</span></div>
+      ${passati.length ? anni.map((y) => `<div class="wk">${y}</div><div class="panel evps">${passati.filter((e) => e.data.startsWith(y)).map(rigaP).join("")}</div>`).join("") : `<p class="small muted">Ancora nessun evento passato.</p>`}</section>
+  </div>`, mount: () => {
+    clearInterval(S._cdT);
+    S._cdT = setInterval(() => {
+      const el = document.querySelector("[data-cd]"); if (!el) return clearInterval(S._cdT);
+      const q = quantoManca(Number(el.dataset.cd) - Date.now());
+      for (const k of ["g", "h", "m", "s"]) { const b = el.querySelector(`[data-cd-k="${k}"]`); if (b) b.textContent = String(q[k]).padStart(2, "0"); }
+      if (!q.g && !q.h && !q.m && !q.s) { clearInterval(S._cdT); render(true); }
+    }, 1000);
+  } };
+});
+
 /* ================= GRUPPI ================= */
 route("gruppi", () => {
   const miei = gruppiDi(ME());
@@ -2496,7 +2768,7 @@ route("gr", (k) => {
     extra = `<a class="goal" href="#sponsor" style="text-decoration:none"><span class="eyebrow" style="color:var(--nero)">Raccolti nel giro ${esc(giroAttuale())}</span><span class="big">${esc(euroT(t.raccolti))}</span>${t.obiettivo ? `<div class="gbar"><b style="width:${Math.min(100, ((t.raccolti + t.promessi) / t.obiettivo) * 100)}%"></b><i style="width:${Math.min(100, (t.raccolti / t.obiettivo) * 100)}%"></i></div><span class="small"><b>Obiettivo ${esc(euroT(t.obiettivo))}</b> · promessi ${esc(euroT(t.promessi))}</span>` : ""}<span class="btn dark sm" style="align-self:flex-start">Apri Sponsor${ic("chev")}</span></a>`;
   }
   if (g.budget) extra = bloccoBudget(k);
-  if (k === "marketing") extra = `<div class="notice">Gli incontri «aperti a tutti» (per esempio le riprese) li vede ogni socio, che può dire se partecipa. Segna sempre luogo, orario e materiale.</div>`;
+  if (k === "marketing") extra = (can.editoriale() ? bloccoEditoriale() : "") + `<div class="notice">Gli incontri «aperti a tutti» (per esempio le riprese) li vede ogni socio, che può dire se partecipa. Segna sempre luogo, orario e materiale.</div>`;
   const puoCreare = can.creaIncontro(k);
   return `<div class="wrap">
     ${backLink("gruppi", "Gruppi")}
@@ -2593,8 +2865,8 @@ route("mison", () => {
     <div class="grid2">
       <section class="panel"><div class="ph"><h3>Le tue presenze</h3></div><div class="pb">
         <div class="stats"><div class="arco v"><svg class="om flame" viewBox="${OM[1]}" aria-hidden="true"><use href="#s-o1"/></svg><span class="n">${st.serie}</span><span class="l">di fila</span></div><div class="arco"><span class="n">${st.migliore}</span><span class="l">record</span></div><div class="arco"><span class="n">${st.presenzeAnno}</span><span class="l">nel ${anno}</span></div></div>
-        <span class="small"><b>Riunioni generali:</b> ${st.presRiunioni} su ${st.totRiunioni} · <b>incontri dei tuoi gruppi:</b> ${st.presIncontri} su ${st.totIncontri}</span>
-        ${st.ultimeRiunioni.length ? `<div class="stack s" style="gap:6px"><span class="eyebrow">Ultime riunioni</span><div class="timeline">${st.ultimeRiunioni.map((p) => `<i class="${p ? "y" : "n"}" title="${p ? "presente" : "assente"}"></i>`).join("")}</div></div>` : ""}</div></section>
+        <span class="small"><b>Assemblee generali:</b> ${st.presRiunioni} su ${st.totRiunioni} · <b>incontri dei tuoi gruppi:</b> ${st.presIncontri} su ${st.totIncontri}</span>
+        ${st.ultimeRiunioni.length ? `<div class="stack s" style="gap:6px"><span class="eyebrow">Ultime assemblee</span><div class="timeline">${st.ultimeRiunioni.map((p) => `<i class="${p ? "y" : "n"}" title="${p ? "presente" : "assente"}"></i>`).join("")}</div></div>` : ""}</div></section>
     </div>
     <section class="panel"><div class="ph"><h3>Medagliere</h3><a class="btn sm ghost" href="#medaglie">Tutte${ic("chev")}</a></div><div class="pb">
       ${meds.length ? `<div class="medals">${meds.slice(0, 6).map((e) => `<button class="medal" data-act="vedi-medaglia" data-id="${e.id}">${medaglia(e)}<b>${esc(e.titolo)}</b><small>${esc(fDataIt(e.data))}</small></button>`).join("")}</div>` : `<p class="small muted">Ogni evento a cui partecipi ti dà una medaglia: il giorno dell'evento apri l'app e tocca «Sono qui».</p>`}</div></section>
@@ -3002,52 +3274,6 @@ FORMS["scad-mod-salva"] = async (f) => {
   await wSet("config/scadenze", { ...strip(cfg("scadenze")), modello }); closeSheet(); toast("Modello salvato.");
 };
 
-/* ================= VERBALI (segretario) ================= */
-route("verbali", () => {
-  if (!isCouncil()) return soloConsiglio();
-  const vs = Object.values(S.verbali).sort((a, b) => (b.data || "").localeCompare(a.data || ""));
-  const daFare = eventi().filter((e) => e.tipo === "riunione" && finito(e) && !vs.some((v) => v.riunioneId === e.id)).sort(ordinaEv).reverse().slice(0, 5);
-  return `<div class="wrap">${backLink("gr-consiglio", "Consiglio")}
-    <div class="pagehead"><div class="stack"><span class="eyebrow">Riunioni e decisioni · segretario</span><h1>Verbali</h1></div><button class="btn pri" data-act="nuovo-verbale">${ic("plus")}Nuovo</button></div>
-    ${needAdmin()}
-    ${daFare.length ? `<section class="panel"><div class="ph"><h3>Riunioni senza verbale</h3></div><div class="list">${daFare.map((e) => `<button class="li" data-act="nuovo-verbale" data-id="${e.id}"><span class="grow"><span class="t">${esc(e.titolo)}</span><br><span class="s">${esc(fDataL(e.data))} · ${presentiDi(e).length} presenti</span></span><span class="btn sm">Scrivi</span></button>`).join("")}</div></section>` : ""}
-    <section class="panel"><div class="ph"><h3>Archivio</h3><span class="pill">${vs.length}</span></div>${vs.length ? `<div class="list">${vs.map((v) => `<a class="li" href="#vb-${v.id}"><span class="grow"><span class="t">${esc(v.titolo || "Verbale")}</span><br><span class="s">${esc(fDataL(v.data))} · ${(v.presenti || []).length} presenti · ${(v.decisioni || []).length} decisioni</span></span><span class="pill ${v.stato === "approvato" ? "ok" : "warn"}">${v.stato === "approvato" ? "approvato" : "bozza"}</span></a>`).join("")}</div>` : `<div class="pb"><p class="small muted">Nessun verbale ancora.</p></div>`}</section>
-  </div>`;
-});
-ACT["nuovo-verbale"] = async (el) => {
-  const e = el.dataset.id ? S.cal[el.dataset.id] : null;
-  const id = genId("vb");
-  await wSet("verbali/" + id, { riunioneId: e ? e.id : null, titolo: e ? e.titolo : "Riunione del consiglio", data: e ? e.data : oggi(), ora: e ? e.ora || "" : "", luogo: e ? e.luogo || "" : "", presenti: e ? presentiDi(e) : [], odg: e && e.cosa ? e.cosa.split("\n").map((s) => s.replace(/^[-•\d.)\s]+/, "").trim()).filter(Boolean).slice(0, 20) : [], testo: "", decisioni: [], redattore: ME(), stato: "bozza", creato: Date.now() });
-  go("vb-" + id);
-};
-route("vb", (id) => {
-  if (!isCouncil()) return soloConsiglio();
-  const v = S.verbali[id]; if (!v) return `<div class="wrap">${backLink("verbali", "Verbali")}${empty("Verbale non trovato")}</div>`;
-  const cand = [...new Set([...tuttiSoci(), ...(v.presenti || [])])].sort((a, b) => nm(a).localeCompare(nm(b), "it"));
-  const r = v.riunioneId && S.cal[v.riunioneId];
-  return `<div class="wrap">${backLink("verbali", "Verbali")}
-    <form data-form="verbale" data-id="${id}" class="stack l" id="fVb">
-      <div class="pagehead"><div class="stack"><span class="eyebrow">Verbale ${v.stato === "approvato" ? "approvato" : "in bozza"}</span><h1>${esc(v.titolo || "Verbale")}</h1></div>
-        <div class="btns"><button type="button" class="btn" data-act="verbale-pdf" data-id="${id}">${ic("down")}PDF</button><button class="btn pri">Salva</button></div></div>
-      <div class="fields"><label class="field"><span>Titolo</span><input class="in" name="titolo" value="${esc(v.titolo || "")}" maxlength="120"></label><label class="field"><span>Data</span><input class="in" type="date" name="data" value="${esc(v.data || "")}"></label><label class="field"><span>Ora</span><input class="in" type="time" name="ora" value="${esc(v.ora || "")}"></label><label class="field"><span>Luogo</span><input class="in" name="luogo" value="${esc(v.luogo || "")}" maxlength="120"></label></div>
-      <section class="panel"><div class="ph"><h3>Presenti</h3><span class="row">${r ? `<button type="button" class="btn sm ghost" data-act="verbale-presenti" data-id="${id}">Prendi dal registro (${presentiDi(r).length})</button>` : ""}<span class="pill">${(v.presenti || []).length}</span></span></div>
-        <div class="pb"><div class="opts">${cand.map((u) => checkbox("p", u, esc(nm(u)), (v.presenti || []).includes(u))).join("") || `<p class="small muted">Nessun socio registrato.</p>`}</div></div></section>
-      <label class="field"><span>Ordine del giorno (un punto per riga)</span><textarea class="in" name="odg" rows="4">${esc((v.odg || []).join("\n"))}</textarea></label>
-      <label class="field"><span>Discussione</span><textarea class="in" name="testo" rows="10" placeholder="Cosa si è detto, punto per punto">${esc(v.testo || "")}</textarea></label>
-      <label class="field"><span>Decisioni prese (una per riga)</span><textarea class="in" name="decisioni" rows="4">${esc((v.decisioni || []).join("\n"))}</textarea></label>
-      <div class="row between"><label class="check"><input type="checkbox" name="appr" ${v.stato === "approvato" ? "checked" : ""}><span><b>Approvato</b> dall'assemblea o dal consiglio</span></label><button type="button" class="btn sm danger" data-act="verbale-del" data-id="${id}">${ic("trash")}Elimina</button></div>
-      <p class="err" hidden></p>
-    </form></div>`;
-});
-FORMS.verbale = async (f) => {
-  const lines = (n) => fv(f, n).split("\n").map((s) => s.trim()).filter(Boolean);
-  await wUpd("verbali/" + f.dataset.id, { titolo: fv(f, "titolo"), data: fv(f, "data"), ora: fv(f, "ora"), luogo: fv(f, "luogo"), presenti: fvAll(f, "p"), odg: lines("odg"), testo: fv(f, "testo"), decisioni: lines("decisioni"), stato: fv(f, "appr") ? "approvato" : "bozza", agg: Date.now(), aggDa: ME() });
-  toast("Verbale salvato.");
-};
-ACT["verbale-presenti"] = async (el) => { const v = S.verbali[el.dataset.id]; const r = v && S.cal[v.riunioneId]; if (!r) return; await wUpd("verbali/" + v.id, { presenti: presentiDi(r) }); render(true); toast("Presenti presi dal registro."); };
-ACT["verbale-pdf"] = async (el) => { const v = S.verbali[el.dataset.id]; if (!v) return; await risolviNomi([...(v.presenti || []), v.redattore]); try { const b = await pdfVerbale(v); await salvaFile(`Verbale ${fDataIt(v.data).replace(/\//g, "-")}.pdf`, b, "Verbale pronto."); } catch (e) { toast("Non sono riuscito a creare il PDF."); } };
-ACT["verbale-del"] = (el) => confirmSheet({ title: "Eliminare il verbale?", text: "Non si può recuperare.", ok: "Elimina", danger: true, onOk: async () => { await wDel("verbali/" + el.dataset.id); go("verbali"); } });
-
 /* ================= SOCI E TESSERE (segretario) ================= */
 route("soci", () => {
   if (!isCouncil()) return soloConsiglio();
@@ -3060,13 +3286,16 @@ route("soci", () => {
     const soci = Object.keys(S.soci).filter((u) => !q || norm(nm(u)).includes(q)).sort((a, b) => (isCouncil(b) - isCouncil(a)) || nm(a).localeCompare(nm(b), "it"));
     corpo = `${ric.length ? `<section class="panel"><div class="ph"><h3>Nuovi da sistemare</h3><span class="badge">${ric.length}</span></div><div class="list">${ric.map(([u, r]) => `<button class="li" data-act="socio-apri" data-u="${u}">${av(u)}<span class="grow"><span class="t">${esc(r.nome || u)}</span><br><span class="s">${esc(r.email || "")} · chiede: ${esc((r.gruppi || []).map((g) => GRUPPI[g] ? GRUPPI[g].breve : g).join(", ") || "nessun gruppo")}${r.nota ? " · «" + esc(r.nota) + "»" : ""}</span></span><span class="btn sm pri">Conferma</span></button>`).join("")}</div></section>` : ""}
       <div class="row nw"><label class="sr" for="sociQ">Cerca</label><input class="in grow" id="sociQ" type="search" placeholder="Cerca un socio" value="${esc(S.ui.sociQ || "")}" data-input="soci-q"><button class="btn pri" data-act="socio-aggiungi">${ic("plus")}Aggiungi</button></div>
-      <section class="panel">${soci.length ? `<div class="list">${soci.map((u) => { const s = S.soci[u]; return `<button class="li" data-act="socio-apri" data-u="${u}">${av(u)}<span class="grow"><span class="t">${esc(nm(u))}${s.attivo === false ? ` <span class="pill">non attivo</span>` : ""}</span><br><span class="s">${esc(s.email || "senza mail associativa")} · ${WEB ? (S.profili[u] && S.profili[u].visto ? "entrato nell'app" : "non ancora entrato") : S.accessi[u] && !S.accessi[u].reset ? "entra nell'app" : S.inviti[u] && S.inviti[u].exp > Date.now() ? "codice mandato" : "<b style='color:var(--bad)'>senza accesso</b>"}</span><br><span class="chips" style="margin-top:4px">${s.ruolo ? `<span class="pill verde">${esc(RUOLI[s.ruolo].nome)}</span>` : ""}${(s.gruppi || []).map((g) => `<span class="pill">${esc(GRUPPI[g] ? GRUPPI[g].breve : g)}</span>`).join("")}</span></span>${ic("chev", "chev")}</button>`; }).join("")}</div>` : empty("Nessun socio nell'app", "Aggiungi ognuno con la sua mail associativa e mandagli il codice di primo accesso.")}</section>`;
+      <section class="panel">${soci.length ? `<div class="list">${soci.map((u) => { const s = S.soci[u]; return `<button class="li" data-act="socio-apri" data-u="${u}">${av(u)}<span class="grow"><span class="t">${esc(nm(u))}${s.attivo === false ? ` <span class="pill">non attivo</span>` : ""}</span><br><span class="s">${esc(s.email || "senza mail associativa")} · ${WEB ? (S.profili[u] && S.profili[u].visto ? "entrato nell'app" : "non ancora entrato") : S.accessi[u] && !S.accessi[u].reset ? "entra nell'app" : S.inviti[u] && S.inviti[u].exp > Date.now() ? "codice mandato" : "<b style='color:var(--bad)'>senza accesso</b>"}</span><br><span class="chips" style="margin-top:4px">${s.ruolo ? `<span class="pill verde">${esc(RUOLI[s.ruolo].nome)}</span>` : ""}${(s.gruppi || []).map((g) => `<span class="pill">${esc(GRUPPI[g] ? GRUPPI[g].breve : g)}</span>`).join("")}</span></span>${ic("chev", "chev")}</button>`; }).join("")}</div>` : empty("Nessun socio nell'app", WEB ? "Aggiungi ognuno con la sua mail @bagaera.it: entra da bagaera.it/app con «Accedi con Google»." : "Aggiungi ognuno con la sua mail associativa e mandagli il codice di primo accesso.")}</section>`;
   } else {
     const tes = Object.values(S.tessere).filter((t) => Number(t.anno) === Number(anno)).sort((a, b) => a.numero - b.numero);
     const pag = tes.filter((t) => t.pagata);
-    corpo = `<div class="row between"><div class="seg" role="group" aria-label="Anno">${[anno - 1, anno, anno + 1].map((y) => `<button data-act="tes-anno" data-v="${y}" aria-pressed="${y === anno}">${y}</button>`).join("")}</div><div class="btns"><button class="btn" data-act="tes-csv">${ic("down")}Libro soci (CSV)</button><button class="btn pri" data-act="tes-nuova">${ic("plus")}Nuova tessera</button></div></div>
+    const conT = new Set(tes.map((t) => t.uid).filter(Boolean));
+    const senza = tuttiSoci().filter((u) => !conT.has(u) && (S.soci[u] || {}).attivo !== false).sort((a, b) => nm(a).localeCompare(nm(b), "it"));
+    corpo = `<div class="row between"><div class="seg" role="group" aria-label="Anno">${[anno - 1, anno, anno + 1].map((y) => `<button data-act="tes-anno" data-v="${y}" aria-pressed="${y === anno}">${y}</button>`).join("")}</div><div class="btns"><button class="btn" data-act="tes-csv">${ic("down")}Libro soci (CSV)</button><label class="btn">${ic("up")}Importa CSV<input type="file" accept=".csv,text/csv,text/plain" data-act-change="tes-importa" hidden></label><button class="btn pri" data-act="tes-nuova">${ic("plus")}Nuova tessera</button></div></div>
       <div class="tcolore"><span class="tprev" style="${stileTessera(anno)}"><b>${anno}</b></span><span class="grow"><b>Colore della tessera ${anno}</b><br><span class="small muted">${esc(COLORI_TESSERA[coloreTessera(anno)][0])}: lo vedono i soci sulla loro tessera in Mi son.</span></span>${isAdmin() ? `<button class="btn sm" data-act="tes-colore" data-anno="${anno}">${ic("brush")}Cambia</button>` : ""}</div>
       <div class="kpis"><div class="kpi v"><span class="l">Tessere ${anno}</span><span class="n">${tes.length}</span><span class="s">${tes.filter((t) => t.tipo === "socio").length} soci · ${tes.filter((t) => t.tipo !== "socio").length} tesserati</span></div><div class="kpi"><span class="l">Quote incassate</span><span class="n">${esc(euro(pag.reduce((s, t) => s + (Number(t.quota) || 0), 0)))}</span><span class="s">${tes.length - pag.length} da pagare</span></div></div>
+      ${senza.length && Number(anno) >= new Date().getFullYear() ? `<details class="panel"><summary class="ph" style="cursor:pointer"><h3>Nell'app senza tessera ${anno}</h3><span class="pill warn">${senza.length}</span></summary><div class="list">${senza.map((u) => `<button class="li" data-act="tes-nuova" data-u="${esc(u)}">${av(u)}<span class="grow"><span class="t">${esc(nm(u))}</span>${S.soci[u].email ? `<br><span class="s">${esc(S.soci[u].email)}</span>` : ""}</span><span class="btn sm">Tessera</span></button>`).join("")}</div></details>` : ""}
       <section class="panel">${tes.length ? `<div class="list">${tes.map((t) => `<button class="li" data-act="tes-apri" data-id="${t.id}"><span class="disp" style="min-width:2.4em">${String(t.numero).padStart(3, "0")}</span><span class="grow"><span class="t">${esc(t.nome)}</span><br><span class="s">${t.tipo === "socio" ? "Socio" : "Tesserato"}${t.uid ? " · nell'app" : ""}${t.ricevuta ? " · ricevuta " + esc(numRicevuta(t.ricevuta)) : ""}</span></span><span class="pill ${t.pagata ? "ok" : "warn"}">${t.pagata ? esc(euroT(t.quota)) : "da pagare"}</span></button>`).join("")}</div>` : empty(`Nessuna tessera ${anno}`, "Registra le tessere man mano che i soci pagano la quota.")}</section>`;
   }
   return `<div class="wrap">${backLink("gr-consiglio", "Consiglio")}
@@ -3090,7 +3319,7 @@ function formSocio(u) {
     <div class="fields"><label class="field"><span>Nome e cognome</span><input class="in" name="nome" required maxlength="80" value="${esc(v.nome)}" ${s ? "" : "autofocus"}></label>
       <label class="field"><span>${WEB ? "Mail associativa" : "Mail associativa (se ce l'ha)"}</span><input class="in" type="email" name="email" maxlength="120" value="${esc(v.email)}" placeholder="nome.cognome@${esc(DOMINIO())}" ${WEB ? "required" : ""}>${WEB ? `<small>Entra in BagaeraPP con questo account Google.</small>` : ""}</label>
       <label class="field"><span>Cellulare (per WhatsApp)</span><input class="in" type="tel" name="tel" maxlength="20" value="${esc((u && S.contatti[u] || {}).telefono || "")}" placeholder="es. 333 1234567"><small>Lo vede solo il consiglio.</small></label></div>
-    <label class="field"><span>Ruolo nel consiglio</span><select class="in" name="ruolo">${opt("", "Nessuno")}${Object.entries(RUOLI).map(([k, x]) => opt(k, x.nome + (preso(k) ? ` (ora: ${nm(preso(k))})` : ""), v.ruolo === k)).join("")}</select><small>Chi ha un ruolo vede gli strumenti del consiglio. Per salvarci deve usare l'app dall'account del consiglio.</small></label>
+    <label class="field"><span>Ruolo nel consiglio</span><select class="in" name="ruolo">${opt("", "Nessuno")}${Object.entries(RUOLI).map(([k, x]) => opt(k, x.nome + (preso(k) ? ` (ora: ${nm(preso(k))})` : ""), v.ruolo === k)).join("")}</select><small>Chi ha un ruolo vede gli strumenti del consiglio.${WEB ? "" : " Per salvarci deve usare l'app dall'account del consiglio."}</small></label>
     <div class="field"><span>Gruppi</span><div class="opts">${Object.entries(GRUPPI).filter(([k]) => k !== "consiglio").map(([k, g]) => checkbox("g", k, g.nome, (v.gruppi || []).includes(k))).join("")}</div></div>
     ${s ? `<label class="check"><input type="checkbox" name="attivo" ${v.attivo !== false ? "checked" : ""}><span><b>Attivo</b><br><small class="muted">Togli la spunta per chi non partecipa più: non entra più nell'app ma resta nello storico.</small></span></label>
       ${WEB ? `<div class="soft"><b>Accesso</b><span class="small">${S.profili[u] && S.profili[u].visto ? `Entrato l'ultima volta il ${esc(fTs(S.profili[u].visto))}.` : "Non è ancora entrato: deve aprire bagaera.it/app e toccare «Accedi con Google» con " + esc(v.email || "la sua mail associativa") + "."}</span></div>` : ""}
@@ -3098,7 +3327,7 @@ function formSocio(u) {
         <div class="btns">${v.email ? `<button type="button" class="btn sm" data-act="invito" data-u="${esc(u)}">${ic("key")}${acc ? "Nuovo codice per mail" : "Codice per mail"}</button>` : ""}<button type="button" class="btn sm" data-act="pin-whatsapp" data-u="${esc(u)}">${ic("key")}PIN su WhatsApp</button></div>
         <small class="muted">Codice per mail: arriva alla mail associativa e il socio sceglie il suo PIN. PIN su WhatsApp: per chi non riesce a leggere la mail o non ce l'ha.</small></div>`}` : ""}
     <p class="err" hidden></p></form>`,
-    foot: `${r ? `<button class="btn danger" data-act="richiesta-rifiuta" data-u="${esc(u)}">Rifiuta</button>` : ""}<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fSo">${s ? "Salva" : "Aggiungi e crea il codice"}</button>` });
+    foot: `${r ? `<button class="btn danger" data-act="richiesta-rifiuta" data-u="${esc(u)}">Rifiuta</button>` : ""}${s && !Object.values(S.tessere).some((t) => t.uid === u && Number(t.anno) === new Date().getFullYear()) ? `<button class="btn" data-act="tes-nuova" data-u="${esc(u)}">${ic("card")}Tessera ${new Date().getFullYear()}</button>` : ""}<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fSo">${s ? "Salva" : (WEB ? "Aggiungi" : "Aggiungi e crea il codice")}</button>` });
 }
 FORMS.socio = async (f) => {
   const old = f.dataset.u || null, esiste = old && S.soci[old];
@@ -3123,37 +3352,160 @@ FORMS.socio = async (f) => {
 };
 ACT["richiesta-rifiuta"] = (el) => confirmSheet({ title: "Rifiutare la richiesta?", text: "La richiesta sparisce. Se era un errore, potrà richiederlo.", ok: "Rifiuta", danger: true, onOk: () => wDel("richieste/" + el.dataset.u) });
 function prossimoNumero(anno) { const n = Object.values(S.tessere).filter((t) => Number(t.anno) === Number(anno)).map((t) => t.numero); return (n.length ? Math.max(...n) : 0) + 1; }
-function formTessera(t) {
+function formTessera(t, pre = {}) {
   const anno = t ? t.anno : (S.ui.tesAnno || new Date().getFullYear());
-  const quota = cfg("app").quota || "";
+  const uid = t ? t.uid || "" : pre.uid || "";
+  const so = uid && S.soci[uid];
+  const conTessera = new Set(Object.values(S.tessere).filter((x) => Number(x.anno) === Number(anno) && x.uid && (!t || x.id !== t.id)).map((x) => x.uid));
+  const sociOrd = tuttiSoci().slice().sort((a, b) => nm(a).localeCompare(nm(b), "it"));
+  const quota = cfg("app").quota || QUOTA_BASE;
+  const reg = t && t.registro;
   openSheet({ title: t ? `Tessera ${String(t.numero).padStart(3, "0")}/${t.anno}` : "Nuova tessera", body: `<form data-form="tessera" id="fTe" data-id="${t ? t.id : ""}" class="stack">
     <div class="fields"><label class="field"><span>Numero</span><input class="in" name="numero" inputmode="numeric" value="${t ? t.numero : prossimoNumero(anno)}" required></label><label class="field"><span>Anno</span><input class="in" name="anno" inputmode="numeric" value="${anno}" required></label></div>
-    <label class="field"><span>Nome e cognome</span><input class="in" name="nome" required maxlength="80" value="${esc((t && t.nome) || "")}" ${t ? "" : "autofocus"}></label>
-    <label class="field"><span>È nell'app?</span><select class="in" name="uid">${opt("", "No, solo tessera")}${tuttiSoci().map((u) => opt(u, nm(u), t && t.uid === u)).join("")}</select></label>
+    <label class="field"><span>Chi è</span><select class="in" name="uid" data-act-change="tes-chi">${opt("", "Una persona che non è nell'app")}${sociOrd.map((u) => opt(u, nm(u) + (conTessera.has(u) ? ` (ha già la tessera ${anno})` : ""), uid === u)).join("")}</select>
+      <small id="teChi" ${so ? "" : "hidden"}>Nome, mail e telefono presi dall'anagrafica dell'app.</small></label>
+    <label class="field" id="teNome" ${so ? "hidden" : ""}><span>Nome e cognome</span><input class="in" name="nome" maxlength="80" value="${esc((t && t.nome) || "")}"></label>
     <div class="field"><span>Tipo</span><div class="opts">${radio("tipo", "socio", "Socio", !t || t.tipo === "socio")}${radio("tipo", "tesserato", "Tesserato", t && t.tipo === "tesserato")}</div></div>
     <div class="fields"><label class="field"><span>Quota (€)</span><input class="in" name="quota" inputmode="decimal" value="${esc(t ? t.quota : quota)}"></label><label class="field"><span>Pagata il</span><input class="in" type="date" name="data" value="${esc((t && t.data) || oggi())}"></label><label class="field"><span>Come</span><select class="in" name="metodo">${["Contanti", "Bonifico", "Carta / POS", "PayPal"].map((m) => opt(m, m, t && t.metodo === m)).join("")}</select></label></div>
     <label class="check"><input type="checkbox" name="pagata" ${!t || t.pagata ? "checked" : ""}><span><b>Quota pagata</b></span></label>
-    <div class="fields"><label class="field"><span>Email (facoltativa)</span><input class="in" name="email" type="email" maxlength="80" value="${esc((t && t.email) || "")}"></label><label class="field"><span>Telefono (facoltativo)</span><input class="in" name="tel" maxlength="30" value="${esc((t && t.tel) || "")}"></label></div>
+    ${reg ? `<div class="notice small">${ic("check")} Entrata registrata in Finanze: movimento n. ${esc(String(reg.n))} del registro ${esc(String(reg.anno))}.</div>`
+      : `<label class="check"><input type="checkbox" name="entrata" ${!t ? "checked" : ""}><span><b>Registra l'entrata in Finanze</b><br><small class="muted">Scrive la quota nel registro contabile (voce EA1 · quote associative, tag «Tesseramento»): in cassa se pagata in contanti, sul conto altrimenti.</small></span></label>`}
+    <div class="fields"><label class="field"><span>Email (facoltativa)</span><input class="in" name="email" type="email" maxlength="80" value="${esc((t && t.email) || (so && so.email) || "")}"></label><label class="field"><span>Telefono (facoltativo)</span><input class="in" name="tel" maxlength="30" value="${esc((t && t.tel) || (uid && (S.contatti[uid] || {}).telefono) || "")}"></label></div>
     ${t && t.ricevuta ? `<div class="notice small">Ricevuta ${esc(numRicevuta(t.ricevuta))} emessa il ${esc(fDataIt(t.ricevuta.emessa))}.</div>` : ""}<p class="err" hidden></p></form>`,
     foot: `${t ? `<button class="btn danger" data-act="tes-del" data-id="${t.id}" aria-label="Elimina">${ic("trash")}</button>` : ""}${t && t.pagata ? `<button class="btn" data-act="tes-ricevuta" data-id="${t.id}">${ic("doc")}${t.ricevuta ? "Scarica ricevuta" : "Emetti ricevuta"}</button>` : ""}<button class="btn pri" type="submit" form="fTe">Salva</button>` });
 }
-ACT["tes-nuova"] = () => formTessera(null);
+ACT["tes-nuova"] = (el) => { closeSheet(); formTessera(null, { uid: (el && el.dataset && el.dataset.u) || "" }); };
+document.addEventListener("change", (e) => {
+  const el = e.target; if (!el.dataset || el.dataset.actChange !== "tes-chi") return;
+  const f = el.form, u = el.value, so = u && S.soci[u];
+  $("#teNome").hidden = !!so; $("#teChi").hidden = !so;
+  if (so) { if (!f.elements.email.value) f.elements.email.value = so.email || ""; if (!f.elements.tel.value) f.elements.tel.value = (S.contatti[u] || {}).telefono || ""; }
+  else f.elements.nome.focus();
+});
 ACT["tes-apri"] = (el) => formTessera(S.tessere[el.dataset.id]);
 FORMS.tessera = async (f) => {
   const id = f.dataset.id || genId("t");
-  const d = { numero: parseInt(fv(f, "numero"), 10), anno: parseInt(fv(f, "anno"), 10), nome: fv(f, "nome"), uid: fv(f, "uid") || null, tipo: (f.querySelector('[name="tipo"]:checked') || {}).value || "socio",
+  const uidT = fv(f, "uid") || null;
+  const d = { numero: parseInt(fv(f, "numero"), 10), anno: parseInt(fv(f, "anno"), 10), nome: uidT && S.soci[uidT] ? S.soci[uidT].nome || nm(uidT) : fv(f, "nome"), uid: uidT, tipo: (f.querySelector('[name="tipo"]:checked') || {}).value || "socio",
     quota: leggiImporto(fv(f, "quota")) || 0, data: fv(f, "data"), metodo: fv(f, "metodo"), pagata: fv(f, "pagata"), email: fv(f, "email"), tel: fv(f, "tel") };
-  if (!d.nome) return fErr(f, "Scrivi nome e cognome."); if (!(d.numero > 0) || !(d.anno > 2000)) return fErr(f, "Controlla numero e anno.");
+  if (!d.nome) return fErr(f, "Scegli chi è o scrivi nome e cognome.");
+  const giaSua = d.uid && Object.values(S.tessere).find((t) => t.id !== id && t.uid === d.uid && Number(t.anno) === d.anno);
+  if (giaSua) return fErr(f, `${d.nome} ha già la tessera ${d.anno} (n. ${giaSua.numero}).`); if (!(d.numero > 0) || !(d.anno > 2000)) return fErr(f, "Controlla numero e anno.");
   const doppia = Object.values(S.tessere).find((t) => t.id !== id && Number(t.anno) === d.anno && Number(t.numero) === d.numero);
   if (doppia) return fErr(f, `Il numero ${d.numero} del ${d.anno} è già di ${doppia.nome}.`);
   const prima = S.tessere[id];
   await wSet("tessere/" + id, { ...(prima ? strip(prima) : { creato: Date.now(), da: ME() }), ...d });
   if (prima && prima.uid && prima.uid !== d.uid && S.soci[prima.uid]) await wUpd("soci/" + prima.uid, { tessera: null }, { quiet: true }).catch(() => {});
   if (prima && prima.uid && prima.uid !== d.uid && S.soci[prima.uid]) { const st = { ...((S.soci[prima.uid] || {}).tessere || {}) }; delete st[prima.anno]; await wSet("soci/" + prima.uid, { ...strip(S.soci[prima.uid]), tessere: st }, { quiet: true }).catch(() => {}); }
+  await collegaTesseraSocio(d);
+  closeSheet();
+  if (fv(f, "entrata") && d.pagata && d.quota > 0 && !(prima && prima.registro)) await registraQuota({ ...d, id });
+  else toast("Tessera salvata.");
+};
+const QUOTA_BASE = 15;
+async function collegaTesseraSocio(d) {
   const info = { anno: d.anno, numero: d.numero, tipo: d.tipo, pagata: d.pagata, data: d.data };
   if (d.uid && S.soci[d.uid]) await wUpd("soci/" + d.uid, { ...(d.anno >= new Date().getFullYear() || !S.soci[d.uid].tessera || Number(S.soci[d.uid].tessera.anno) <= d.anno ? { tessera: info } : {}), tessere: { [d.anno]: info } }, { quiet: true }).catch(() => {});
-  if (d.quota && !cfg("app").quota && isAdmin()) wSet("config/app", { ...strip(cfg("app")), quota: d.quota }, { quiet: true }).catch(() => {});
-  closeSheet(); toast("Tessera salvata.");
+}
+/* la quota entra nel registro contabile (Finanze) */
+async function registraQuota(t) {
+  const data = t.data || oggi();
+  try {
+    const r = await scriviMovimento(data.slice(0, 4), { tipo: "E", conto: t.metodo === "Contanti" ? "cassa" : "cc", importo: Number(t.quota), data, desc: `Quota associativa ${t.anno} – ${t.nome}`, codice: "EA1", tag: "Tesseramento" });
+    await wUpd("tessere/" + t.id, { registro: r }, { quiet: true }).catch(() => {});
+    toast(`Tessera salvata e quota registrata in Finanze (movimento n. ${r.n}).`);
+  } catch (e) {
+    console.warn(e);
+    if (WEB && e && e.code === "needs_token") { toast("Tessera salvata. Per registrare la quota serve il foglio Google.", { label: "Collega", fn: () => { try { localStorage.setItem("bagaera-tes-entrata", t.id); } catch (er) {} vaiAGoogle([SCOPI.sheets], "#soci"); } }); return; }
+    toast("Tessera salvata, ma la quota non è entrata in Finanze: " + spiegaMcp(e) + " Riapri la tessera e salva di nuovo con la spunta.");
+  }
+}
+function tesDopoRitorno() {
+  let id = null; try { id = localStorage.getItem("bagaera-tes-entrata"); localStorage.removeItem("bagaera-tes-entrata"); } catch (e) {}
+  if (!id || !WEB || !tokenValido(SCOPI.sheets)) return;
+  const prova = (n) => { const t = S.tessere[id]; if (t && !t.registro) registraQuota(t); else if (!t && n < 20) setTimeout(() => prova(n + 1), 500); };
+  setTimeout(() => prova(0), 600);
+}
+/* ---------- import del libro soci / tesserati da CSV ---------- */
+function leggiCsv(testo) {
+  const t = String(testo || "").replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n");
+  const prima = t.split("\n")[0] || "";
+  const sep = [";", "\t", ","].map((c) => [c, prima.split(c).length]).sort((a, b) => b[1] - a[1])[0][0];
+  const righe = []; let riga = [], campo = "", q = false;
+  for (let i = 0; i < t.length; i++) {
+    const c = t[i];
+    if (q) { if (c === '"') { if (t[i + 1] === '"') { campo += '"'; i++; } else q = false; } else campo += c; continue; }
+    if (c === '"') q = true; else if (c === sep) { riga.push(campo); campo = ""; } else if (c === "\n") { riga.push(campo); righe.push(riga); riga = []; campo = ""; } else campo += c;
+  }
+  if (campo || riga.length) { riga.push(campo); righe.push(riga); }
+  return righe.filter((r) => r.some((x) => String(x).trim()));
+}
+const COLONNE_CSV = [["numero", /^(n|n\.|n°|nr|num|numero|tessera|n\.? ?tessera|numero tessera)$/], ["anno", /^anno$/], ["cognome", /^cognome$/], ["nome", /^(nome e cognome|nome cognome|cognome e nome|nominativo|socio|tesserato|nome)$/],
+  ["tipo", /^(tipo|categoria|tipologia)/], ["quota", /(quota|importo|euro|versat)/], ["pagata", /pagat/], ["data", /^data/], ["metodo", /(metodo|modalit|come|pagamento)/], ["email", /mail/], ["tel", /(tel|cell)/]];
+function tessereDaCsv(righe, annoBase) {
+  const testa = righe[0].map((h) => norm(h).replace(/[^a-z0-9°. ]/g, " ").replace(/\s+/g, " ").trim());
+  const col = {};
+  testa.forEach((h, i) => { const k = (COLONNE_CSV.find(([kk, re]) => col[kk] === undefined && re.test(h)) || [])[0]; if (k) col[k] = i; });
+  if (col.nome === undefined && col.cognome === undefined) return { err: "Non trovo la colonna con il nome: la prima riga del file deve avere le intestazioni (es. Numero;Nome;Tipo;Quota;Pagata;Data)." };
+  const v = (r, k) => (col[k] === undefined ? "" : String(r[col[k]] ?? "").trim());
+  const dataIso = (s) => { let m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s); if (m) return m[0]; m = /^(\d{1,2})[/.-](\d{1,2})[/.-](\d{2,4})/.exec(s); if (!m) return ""; const y = m[3].length === 2 ? 2000 + Number(m[3]) : Number(m[3]); return `${y}-${pad(m[2])}-${pad(m[1])}`; };
+  const out = [];
+  for (const r of righe.slice(1)) {
+    const nome = [col.nome !== undefined && col.cognome !== undefined && col.nome !== col.cognome ? v(r, "nome") + " " + v(r, "cognome") : v(r, "nome") || v(r, "cognome")].join("").replace(/\s+/g, " ").trim();
+    if (!nome) continue;
+    const pag = norm(v(r, "pagata")), q = v(r, "quota");
+    const data = dataIso(v(r, "data"));
+    out.push({ numero: parseInt(v(r, "numero").replace(/\D/g, ""), 10) || null, anno: parseInt(v(r, "anno"), 10) || (data ? Number(data.slice(0, 4)) : annoBase), nome,
+      tipo: /tesserat/.test(norm(v(r, "tipo"))) ? "tesserato" : "socio", quota: q ? leggiImporto(q) || 0 : QUOTA_BASE,
+      pagata: col.pagata === undefined || !pag ? true : !/^(no|n|0|false|falso|da pagare)$/.test(pag), data, metodo: (["Contanti", "Bonifico", "Carta / POS", "PayPal"].find((m) => norm(v(r, "metodo")).includes(norm(m).split(" ")[0])) || (v(r, "metodo") ? v(r, "metodo") : "Contanti")),
+      email: v(r, "email").toLowerCase(), tel: v(r, "tel") });
+  }
+  return { tessere: out };
+}
+function socioPerTessera(t) {
+  if (t.email) { const s = Object.entries(S.soci).find(([, x]) => String(x.email || "").toLowerCase() === t.email); if (s) return s[0]; }
+  const n = norm(t.nome).replace(/[^a-z ]/g, "").trim(), inv = n.split(" ").reverse().join(" ");
+  const s = Object.entries(S.soci).find(([, x]) => { const m = norm(x.nome).replace(/[^a-z ]/g, "").trim(); return m === n || m === inv; });
+  return s ? s[0] : null;
+}
+document.addEventListener("change", async (e) => {
+  const el = e.target; if (!el.dataset || el.dataset.actChange !== "tes-importa" || !el.files || !el.files[0]) return;
+  const file = el.files[0]; el.value = "";
+  const anno = S.ui.tesAnno || new Date().getFullYear();
+  let r; try { r = tessereDaCsv(leggiCsv(await file.text()), anno); } catch (er) { r = { err: "Non riesco a leggere il file." }; }
+  if (r.err || !r.tessere.length) return toast(r.err || "Nel file non ci sono righe con un nome.");
+  const ts = r.tessere, esistenti = Object.values(S.tessere);
+  const gia = (t) => esistenti.find((x) => Number(x.anno) === t.anno && ((t.numero && Number(x.numero) === t.numero) || norm(x.nome) === norm(t.nome)));
+  S.tesImport = ts.map((t) => ({ ...t, gia: gia(t) || null, uid: socioPerTessera(t) }));
+  const nuove = S.tesImport.filter((t) => !t.gia), doppie = S.tesImport.filter((t) => t.gia);
+  const anni = [...new Set(ts.map((t) => t.anno))].sort();
+  openSheet({ title: "Importa tesserati", eyebrow: esc(file.name), wide: true, body: `<form data-form="tes-importa" id="fTi" class="stack">
+    <div class="kpis"><div class="kpi v"><span class="l">Nuove</span><span class="n">${nuove.length}</span><span class="s">tessere ${esc(anni.join(", "))}</span></div><div class="kpi"><span class="l">Già presenti</span><span class="n">${doppie.length}</span><span class="s">stesso numero o nome</span></div><div class="kpi"><span class="l">Nell'app</span><span class="n">${S.tesImport.filter((t) => t.uid).length}</span><span class="s">collegate a un socio</span></div></div>
+    ${doppie.length ? `<div class="field"><span>Quelle già presenti</span><div class="opts">${radio("doppie", "salta", "Lasciale come sono", true)}${radio("doppie", "aggiorna", "Aggiornale con i dati del file", false)}</div></div>` : ""}
+    <section class="panel"><div class="list">${S.tesImport.slice(0, 60).map((t) => `<div class="li"><span class="disp" style="min-width:2.4em">${t.numero ? String(t.numero).padStart(3, "0") : "—"}</span><span class="grow"><span class="t">${esc(t.nome)}</span><br><span class="s">${t.anno} · ${t.tipo === "socio" ? "Socio" : "Tesserato"} · ${esc(euroT(t.quota))}${t.pagata ? "" : " da pagare"}${t.uid ? " · nell'app" : ""}</span></span>${t.gia ? `<span class="pill">già c'è</span>` : `<span class="pill ok">nuova</span>`}</div>`).join("")}${S.tesImport.length > 60 ? `<div class="li small muted">…e altre ${S.tesImport.length - 60}</div>` : ""}</div></section>
+    <p class="small muted">Senza numero ricevono il primo libero. Senza quota: ${QUOTA_BASE} €. Le quote importate non vengono scritte in Finanze: di solito sono già nel registro.</p><p class="err" hidden></p></form>`,
+    foot: `<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fTi">Importa ${nuove.length || S.tesImport.length}</button>` });
+});
+FORMS["tes-importa"] = async (f) => {
+  const lista = S.tesImport || []; if (!lista.length) return closeSheet();
+  const aggiorna = (f.querySelector('[name="doppie"]:checked') || {}).value === "aggiorna";
+  const btn = document.querySelector('[form="fTi"]'); if (btn) btn.disabled = true;
+  let n = 0, agg = 0;
+  try {
+    for (const t of lista) {
+      const { gia, ...d } = t;
+      if (gia && !aggiorna) continue;
+      if (!d.numero) d.numero = gia ? gia.numero : prossimoNumero(d.anno);
+      const id = gia ? gia.id : genId("t");
+      const base = gia ? strip(gia) : { creato: Date.now(), da: ME(), importato: true };
+      const doc = { ...base, ...d, uid: d.uid || (gia && gia.uid) || null, ricevuta: (gia && gia.ricevuta) || null };
+      await wSet("tessere/" + id, doc);
+      S.tessere[id] = { id, ...doc };
+      await collegaTesseraSocio(doc);
+      gia ? agg++ : n++;
+    }
+    closeSheet(); S.tesImport = null; toast(`Importate ${n} tessere${agg ? `, aggiornate ${agg}` : ""}.`);
+  } catch (e) { console.warn(e); if (btn) btn.disabled = false; fErr(f, `Mi sono fermato dopo ${n + agg}: controlla la connessione e riprova (quelle già importate le riconosco).`); }
 };
 ACT["tes-colore"] = (el) => {
   const anno = Number(el.dataset.anno), cur = coloreTessera(anno);
@@ -4481,6 +4833,623 @@ document.addEventListener("change", async (e) => {
   el.value = "";
 });
 
+/* ================= VERBALI: assemblee generali (tutti i soci) e consiglio direttivo (solo consiglio) ================= */
+const ORGANI = {
+  assemblea: { coll: "verbali", key: "verbali", nome: "Assemblee generali", uno: "Assemblea generale", r: "vb", cartella: "Verbali Assemblee" },
+  consiglio: { coll: "verbalicd", key: "verbalicd", nome: "Consiglio direttivo", uno: "Consiglio direttivo", r: "vc", cartella: "Verbali Direttivo" },
+};
+/* le cartelle del Drive condiviso: Libro verbali digitale → Verbali Assemblee / Verbali Direttivo */
+const DRIVE_VERBALI = { assemblea: "1C50rbU_mqqdQnwTZyi8LrgiI21NmSla_", consiglio: "1o6RtoxvmBSOO6vJubWu038MMYLwK9-Fc" };
+const cartellaVerbali = (o) => ((cfg("verbali").cartelle || {})[o]) || DRIVE_VERBALI[o];
+const PEZZO = 700000; // caratteri base64 per documento (Firestore tiene fino a 1 MB)
+const vedeOrgano = (o) => o === "assemblea" || isCouncil();
+const pubblico = (v) => v.stato === "approvato" || !!v.pdf;
+function verbaliDi(o) {
+  return Object.values(S[ORGANI[o].key] || {}).filter((v) => isCouncil() || pubblico(v))
+    .sort((a, b) => (b.data || "").localeCompare(a.data || "") || (Number(b.numero) || 0) - (Number(a.numero) || 0));
+}
+const verbaleDi = (o, id) => (S[ORGANI[o].key] || {})[id] || null;
+const riunioneDiOrgano = (e, o) => (o === "assemblea" ? e.tipo === "riunione" : e.tipo === "incontro" && e.gruppo === "consiglio");
+function riunioniSenzaVerbale(o, tutte = false) {
+  const tutti = [...Object.values(S.verbali || {}), ...Object.values(S.verbalicd || {})];
+  return eventi().filter((e) => riunioneDiOrgano(e, o) && finito(e) && (tutte || e.data >= APP_START) && !tutti.some((v) => v.riunioneId === e.id)).sort(ordinaEv).reverse();
+}
+const nomeVerbale = (v, o) => v.titolo || `${ORGANI[o].uno}${v.numero ? " n. " + v.numero : ""}`;
+const prossimoNumeroVerbale = (o, extra = []) => Math.max(0, ...Object.values(S[ORGANI[o].key] || {}).map((v) => Number(v.numero) || 0), ...extra) + 1;
+/* «13) 19.02.2026.pdf» → numero 13, data 2026-02-19 */
+function infoDaNome(nome) {
+  const m = /^\s*(\d+)\s*[)._-]\s*(\d{1,2})[./-](\d{1,2})[./-](\d{2,4})/.exec(nome || "");
+  if (m) { const y = m[4].length === 2 ? 2000 + Number(m[4]) : Number(m[4]); return { numero: Number(m[1]), data: `${y}-${pad(m[3])}-${pad(m[2])}` }; }
+  const d = /(\d{1,2})[./-](\d{1,2})[./-](\d{4})/.exec(nome || "");
+  return { numero: null, data: d ? `${d[3]}-${pad(d[2])}-${pad(d[1])}` : null };
+}
+const nomeDrive = (numero, data) => `${numero}) ${fDataIt(data).replace(/\//g, ".")}.pdf`;
+/* ---------- PDF salvati a pezzi nell'archivio ---------- */
+function bytesB64(u8) { let s = ""; for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(s); }
+const PDF_CACHE = {};
+async function salvaPdf(o, id, bytes) {
+  const b64 = bytesB64(bytes), parti = Math.ceil(b64.length / PEZZO);
+  for (let i = 0; i < parti; i++) await wSet(`${ORGANI[o].coll}/${id}/pdf/${i}`, { n: i, d: b64.slice(i * PEZZO, (i + 1) * PEZZO) });
+  (PDF_CACHE[o + id] || (PDF_CACHE[o + id] = {})).bytes = bytes;
+  return { parti, size: bytes.length };
+}
+async function leggiPdf(o, v) {
+  const k = o + v.id;
+  if (PDF_CACHE[k] && PDF_CACHE[k].bytes) return PDF_CACHE[k].bytes;
+  const parti = (v.pdf && v.pdf.parti) || 1; let b64 = "";
+  for (let i = 0; i < parti; i++) { const d = await S.db.doc(`${ORGANI[o].coll}/${v.id}/pdf/${i}`).get(); if (!d.exists) throw new Error("pezzo mancante " + i); b64 += (d.data() || {}).d || ""; }
+  const bytes = b64Bytes(b64);
+  (PDF_CACHE[k] || (PDF_CACHE[k] = {})).bytes = bytes;
+  return bytes;
+}
+async function cancellaPdf(o, id, parti) { for (let i = 0; i < (parti || 0); i++) await wDel(`${ORGANI[o].coll}/${id}/pdf/${i}`, { quiet: true }).catch(() => {}); }
+/* le pagine diventano immagini, così il PDF si legge dentro l'app anche sull'iPhone */
+async function paginePdf(o, v) {
+  const k = o + v.id, c = PDF_CACHE[k] || (PDF_CACHE[k] = {});
+  if (c.pagine || c.caricando) return;
+  c.caricando = true; c.err = null;
+  try {
+    const bytes = await leggiPdf(o, v), lib = await pdfjs();
+    const doc = await lib.getDocument({ data: bytes.slice(), isEvalSupported: false }).promise;
+    const pagine = [];
+    for (let i = 1; i <= Math.min(doc.numPages, 30); i++) {
+      const p = await doc.getPage(i); const vp0 = p.getViewport({ scale: 1 }); const vp = p.getViewport({ scale: Math.min(2.2, 1500 / vp0.width) });
+      const cv = document.createElement("canvas"); cv.width = vp.width; cv.height = vp.height;
+      await p.render({ canvasContext: cv.getContext("2d"), viewport: vp }).promise;
+      pagine.push(cv.toDataURL("image/jpeg", 0.85));
+    }
+    c.pagine = pagine; c.tot = doc.numPages;
+  } catch (e) { console.warn(e); c.err = "Non riesco a mostrare il PDF qui: scaricalo per leggerlo."; }
+  c.caricando = false; scheduleRender();
+}
+
+/* ---------- elenco ---------- */
+route("verbali", () => {
+  const o = isCouncil() && S.ui.vbOrgano === "consiglio" ? "consiglio" : "assemblea";
+  const vs = verbaliDi(o);
+  const daFare = isCouncil() ? riunioniSenzaVerbale(o, true).slice(0, 5) : [];
+  const ctrl = (cfg("verbali").controllo || {})[o];
+  const riga = (v) => `<a class="li" href="#${ORGANI[o].r}-${v.id}"><span class="vnum">${v.numero ? esc(String(v.numero)) : "—"}</span><span class="grow"><span class="t">${esc(nomeVerbale(v, o))}</span><br><span class="s">${esc(fDataL(v.data))}${v.pdf ? " · PDF" : (v.presenti || []).length ? ` · ${(v.presenti || []).length} presenti` : ""}${isCouncil() && v.drive ? " · sul Drive" : ""}</span></span>${isCouncil() ? `<span class="pill ${pubblico(v) ? "ok" : "warn"}">${pubblico(v) ? (v.pdf ? "PDF" : "approvato") : "bozza"}</span>` : ic("chev", "chev")}</a>`;
+  return `<div class="wrap">${isCouncil() ? backLink("gr-consiglio", "Consiglio") : backLink("home", "Home")}
+    <div class="pagehead"><div class="stack"><span class="eyebrow">${isCouncil() ? "Riunioni e decisioni · segretario" : "Le decisioni delle assemblee"}</span><h1>Verbali</h1></div>
+      ${isCouncil() ? `<div class="btns"><button class="btn" data-act="vb-carica" data-o="${o}">${ic("up")}Carica PDF</button><button class="btn pri" data-act="nuovo-verbale" data-o="${o}">${ic("plus")}Scrivi</button></div>` : ""}</div>
+    ${isCouncil() ? `<div class="seg" role="group" aria-label="Quali verbali"><button data-act="vb-organo" data-v="assemblea" aria-pressed="${o === "assemblea"}">Assemblee generali</button><button data-act="vb-organo" data-v="consiglio" aria-pressed="${o === "consiglio"}">Consiglio direttivo</button></div>
+      <p class="small muted">${o === "assemblea" ? "Li vedono tutti i soci (le bozze no)." : "Li vede solo il consiglio."}</p>` : `<p class="muted">I verbali delle assemblee generali, approvati. Quelli del consiglio direttivo restano al consiglio.</p>`}
+    ${isCouncil() ? `<section class="drvbar"><span class="ic">${ic("cloud")}</span><span class="grow"><b>Drive condiviso · ${esc(ORGANI[o].cartella)}</b><br><span class="small muted">${ctrl ? `Controllato ${esc(fTs(ctrl.at))} da ${esc(primoNome(ctrl.da))}: ${ctrl.mancanti ? `<b>${ctrl.mancanti} da sistemare</b>` : "tutto allineato"}` : "Non ancora controllato"}</span></span>
+      ${WEB ? `<button class="btn sm" data-act="vb-drive" data-o="${o}">${ic("repeat")}Controlla col Drive</button>` : `<span class="small muted">Dal sito bagaera.it/app</span>`}</section>` : ""}
+    ${daFare.length ? `<section class="panel"><div class="ph"><h3>Riunioni senza verbale</h3></div><div class="list">${daFare.map((e) => `<button class="li" data-act="nuovo-verbale" data-o="${o}" data-id="${e.id}"><span class="grow"><span class="t">${esc(e.titolo)}</span><br><span class="s">${esc(fDataL(e.data))} · ${presentiDi(e).length} presenti</span></span><span class="btn sm">Scrivi</span></button>`).join("")}</div></section>` : ""}
+    <section class="panel"><div class="ph"><h3>${esc(ORGANI[o].nome)}</h3><span class="pill">${vs.length}</span></div>${vs.length ? `<div class="list">${vs.map(riga).join("")}</div>` : `<div class="pb"><p class="small muted">${isCouncil() ? "Nessun verbale ancora: caricali in PDF o portali dal Drive." : "Nessun verbale pubblicato per ora."}</p></div>`}</section>
+  </div>`;
+});
+ACT["vb-organo"] = (el) => { S.ui.vbOrgano = el.dataset.v; render(true); };
+ACT["nuovo-verbale"] = async (el) => {
+  const e = el.dataset.id ? S.cal[el.dataset.id] : null;
+  const o = e ? (riunioneDiOrgano(e, "consiglio") ? "consiglio" : "assemblea") : el.dataset.o || "assemblea";
+  const id = genId("vb");
+  await wSet(`${ORGANI[o].coll}/${id}`, { organo: o, riunioneId: e ? e.id : null, titolo: e ? e.titolo : ORGANI[o].uno, numero: prossimoNumeroVerbale(o), data: e ? e.data : oggi(), ora: e ? e.ora || "" : "", luogo: e ? e.luogo || "" : "", presenti: e ? presentiDi(e) : [], odg: e && e.cosa ? e.cosa.split("\n").map((s) => s.replace(/^[-•\d.)\s]+/, "").trim()).filter(Boolean).slice(0, 20) : [], testo: "", decisioni: [], redattore: ME(), stato: "bozza", fonte: "app", creato: Date.now() });
+  go(`${ORGANI[o].r}-${id}`);
+};
+
+/* ---------- dettaglio ---------- */
+function vistaVerbale(o, id) {
+  if (!vedeOrgano(o)) return soloConsiglio();
+  const v = verbaleDi(o, id);
+  if (!v || (!isCouncil() && !pubblico(v))) return `<div class="wrap">${backLink("verbali", "Verbali")}${empty("Verbale non trovato")}</div>`;
+  if (v.pdf) {
+    const c = PDF_CACHE[o + v.id] || {};
+    return { html: `<div class="wrap">${backLink("verbali", "Verbali")}
+      <div class="pagehead"><div class="stack"><span class="eyebrow">${esc(ORGANI[o].uno)}${v.numero ? " · n. " + esc(String(v.numero)) : ""}</span><h1>${esc(nomeVerbale(v, o))}</h1><span class="muted">${esc(fDataL(v.data))}</span></div>
+        <div class="btns"><button class="btn pri" data-act="vb-scarica" data-o="${o}" data-id="${v.id}">${ic("down")}Scarica PDF</button>${isCouncil() ? `<button class="btn" data-act="vb-dati" data-o="${o}" data-id="${v.id}">${ic("edit")}Dati</button>` : ""}</div></div>
+      ${isCouncil() ? `<p class="small muted">${v.drive ? `${ic("cloud")} Sul Drive come «${esc(v.drive.nome || "")}»` : "Non ancora sul Drive condiviso"}${v.caricatoDa ? ` · caricato da ${esc(primoNome(v.caricatoDa))}` : ""}</p>` : ""}
+      <section class="pdfv" aria-label="Pagine del verbale">${c.pagine ? c.pagine.map((src, i) => `<img src="${src}" alt="Pagina ${i + 1} di ${c.tot}" loading="lazy">`).join("") + (c.tot > c.pagine.length ? `<p class="small muted">Le altre pagine sono nel PDF.</p>` : "") : c.err ? `<div class="notice">${esc(c.err)}</div>` : `<div class="loading">${omini()}<p class="eyebrow">Apro il verbale…</p></div>`}</section>
+    </div>`, mount: () => paginePdf(o, v) };
+  }
+  if (!isCouncil()) return verbaleLettura(o, v);
+  const cand = [...new Set([...tuttiSoci().filter((u) => o === "assemblea" || isCouncil(u)), ...(v.presenti || [])])].sort((a, b) => nm(a).localeCompare(nm(b), "it"));
+  const r = v.riunioneId && S.cal[v.riunioneId];
+  return `<div class="wrap">${backLink("verbali", "Verbali")}
+    <form data-form="verbale" data-o="${o}" data-id="${v.id}" class="stack l" id="fVb">
+      <div class="pagehead"><div class="stack"><span class="eyebrow">${esc(ORGANI[o].uno)} · ${v.stato === "approvato" ? "approvato" : "in bozza"}</span><h1>${esc(nomeVerbale(v, o))}</h1></div>
+        <div class="btns"><button type="button" class="btn" data-act="verbale-pdf" data-o="${o}" data-id="${v.id}">${ic("down")}PDF</button><button class="btn pri">Salva</button></div></div>
+      <div class="fields"><label class="field"><span>Titolo</span><input class="in" name="titolo" value="${esc(v.titolo || "")}" maxlength="120"></label><label class="field"><span>Numero</span><input class="in" name="numero" inputmode="numeric" value="${esc(v.numero || "")}"></label><label class="field"><span>Data</span><input class="in" type="date" name="data" value="${esc(v.data || "")}"></label><label class="field"><span>Ora</span><input class="in" type="time" name="ora" value="${esc(v.ora || "")}"></label><label class="field"><span>Luogo</span><input class="in" name="luogo" value="${esc(v.luogo || "")}" maxlength="120"></label></div>
+      <section class="panel"><div class="ph"><h3>Presenti</h3><span class="row">${r ? `<button type="button" class="btn sm ghost" data-act="verbale-presenti" data-o="${o}" data-id="${v.id}">Prendi dal registro (${presentiDi(r).length})</button>` : ""}<span class="pill">${(v.presenti || []).length}</span></span></div>
+        <div class="pb"><div class="opts">${cand.map((u) => checkbox("p", u, esc(nm(u)), (v.presenti || []).includes(u))).join("") || `<p class="small muted">Nessun socio registrato.</p>`}</div></div></section>
+      <label class="field"><span>Ordine del giorno (un punto per riga)</span><textarea class="in" name="odg" rows="4">${esc((v.odg || []).join("\n"))}</textarea></label>
+      <label class="field"><span>Discussione</span><textarea class="in" name="testo" rows="10" placeholder="Cosa si è detto, punto per punto">${esc(v.testo || "")}</textarea></label>
+      <label class="field"><span>Decisioni prese (una per riga)</span><textarea class="in" name="decisioni" rows="4">${esc((v.decisioni || []).join("\n"))}</textarea></label>
+      <div class="row between"><label class="check"><input type="checkbox" name="appr" ${v.stato === "approvato" ? "checked" : ""}><span><b>Approvato</b>${o === "assemblea" ? "<br><small class='muted'>Da approvato lo vedono tutti i soci e va sul Drive al prossimo controllo.</small>" : ""}</span></label><button type="button" class="btn sm" data-act="vb-dati" data-o="${o}" data-id="${v.id}">${ic("edit")}Sposta o elimina</button></div>
+      <p class="err" hidden></p>
+    </form></div>`;
+}
+function verbaleLettura(o, v) {
+  return `<div class="wrap">${backLink("verbali", "Verbali")}
+    <div class="pagehead"><div class="stack"><span class="eyebrow">${esc(ORGANI[o].uno)}${v.numero ? " · n. " + esc(String(v.numero)) : ""}</span><h1>${esc(nomeVerbale(v, o))}</h1><span class="muted">${esc(fDataL(v.data))}${v.ora ? " · " + esc(v.ora) : ""}${v.luogo ? " · " + esc(v.luogo) : ""}</span></div>
+      <button class="btn" data-act="verbale-pdf" data-o="${o}" data-id="${v.id}">${ic("down")}PDF</button></div>
+    <section class="panel"><div class="ph"><h3>Presenti</h3><span class="pill">${(v.presenti || []).length}</span></div><div class="pb">${avs(v.presenti || [], 20)}</div></section>
+    ${(v.odg || []).length ? `<section class="panel"><div class="ph"><h3>Ordine del giorno</h3></div><ol class="pb vlist">${v.odg.map((x) => `<li>${esc(x)}</li>`).join("")}</ol></section>` : ""}
+    ${v.testo ? `<section class="panel"><div class="ph"><h3>Discussione</h3></div><div class="pb vtesto">${esc(v.testo)}</div></section>` : ""}
+    ${(v.decisioni || []).length ? `<section class="panel"><div class="ph"><h3>Decisioni</h3></div><ul class="pb vlist">${v.decisioni.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></section>` : ""}
+  </div>`;
+}
+route("vb", (id) => vistaVerbale("assemblea", id));
+route("vc", (id) => vistaVerbale("consiglio", id));
+FORMS.verbale = async (f) => {
+  const o = f.dataset.o || "assemblea", lines = (n) => fv(f, n).split("\n").map((s) => s.trim()).filter(Boolean);
+  await wUpd(`${ORGANI[o].coll}/${f.dataset.id}`, { titolo: fv(f, "titolo"), numero: parseInt(fv(f, "numero"), 10) || null, data: fv(f, "data"), ora: fv(f, "ora"), luogo: fv(f, "luogo"), presenti: fvAll(f, "p"), odg: lines("odg"), testo: fv(f, "testo"), decisioni: lines("decisioni"), stato: fv(f, "appr") ? "approvato" : "bozza", agg: Date.now(), aggDa: ME() });
+  toast("Verbale salvato.");
+};
+ACT["verbale-presenti"] = async (el) => { const o = el.dataset.o, v = verbaleDi(o, el.dataset.id); const r = v && S.cal[v.riunioneId]; if (!r) return; await wUpd(`${ORGANI[o].coll}/${v.id}`, { presenti: presentiDi(r) }); render(true); toast("Presenti presi dal registro."); };
+const nomeFileVerbale = (o, v) => `Verbale ${o === "consiglio" ? "consiglio" : "assemblea"}${v.numero ? " " + v.numero : ""} ${fDataIt(v.data).replace(/\//g, "-")}.pdf`;
+ACT["verbale-pdf"] = async (el) => { const o = el.dataset.o || "assemblea", v = verbaleDi(o, el.dataset.id); if (!v) return; try { const b = await pdfVerbale(v); await salvaFile(nomeFileVerbale(o, v), b, "Verbale pronto."); } catch (e) { toast("Non sono riuscito a creare il PDF."); } };
+ACT["vb-scarica"] = async (el) => {
+  const o = el.dataset.o, v = verbaleDi(o, el.dataset.id); if (!v) return;
+  try { const bytes = await leggiPdf(o, v); await salvaFile((v.pdf && v.pdf.nome) || nomeFileVerbale(o, v), new Blob([bytes], { type: "application/pdf" }), "PDF scaricato."); }
+  catch (e) { console.warn(e); toast("Non riesco a leggere il PDF: riprova con la connessione."); }
+};
+
+/* ---------- caricare un verbale in PDF ---------- */
+ACT["vb-carica"] = (el) => {
+  const o = el.dataset.o || "assemblea";
+  openSheet({ title: "Carica un verbale in PDF", eyebrow: "Verbali", body: `<form data-form="vb-carica" id="fVc" class="stack">
+    <div class="field"><span>Di cosa</span><div class="opts">${Object.entries(ORGANI).map(([k, x]) => radio("o", k, x.nome, k === o)).join("")}</div></div>
+    <label class="field"><span>File PDF</span><input class="in" type="file" name="file" accept="application/pdf,.pdf" required data-act-change="vb-file"><small>Se si chiama come quelli del Drive («13) 19.02.2026.pdf») numero e data li prendo dal nome.</small></label>
+    <div class="fields"><label class="field"><span>Numero</span><input class="in" name="numero" inputmode="numeric" value="${prossimoNumeroVerbale(o)}"></label><label class="field"><span>Data della riunione</span><input class="in" type="date" name="data" value="${oggi()}" required></label></div>
+    <label class="field"><span>Titolo (facoltativo)</span><input class="in" name="titolo" maxlength="120" placeholder="es. Assemblea di approvazione del bilancio"></label>
+    <label class="check"><input type="checkbox" name="drive" ${WEB ? "checked" : "disabled"}><span><b>Mettilo anche sul Drive condiviso</b><br><small class="muted">${WEB ? "Nella cartella «Libro verbali digitale». Se Google non è collegato lo fai dopo con «Controlla col Drive»." : "Dal sito bagaera.it/app."}</small></span></label>
+    <p class="err" hidden></p></form>`,
+    foot: `<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fVc">Carica</button>` });
+};
+document.addEventListener("change", (e) => {
+  const t = e.target;
+  if (t.dataset && t.dataset.actChange === "vb-file" && t.files && t.files[0]) {
+    const f = t.form, info = infoDaNome(t.files[0].name);
+    if (info.numero) f.elements.numero.value = info.numero;
+    if (info.data) f.elements.data.value = info.data;
+  }
+  if (t.name === "o" && t.form && t.form.dataset.form === "vb-carica") t.form.elements.numero.value = prossimoNumeroVerbale(t.value);
+});
+FORMS["vb-carica"] = async (f) => {
+  const o = (f.querySelector('[name="o"]:checked') || {}).value || "assemblea";
+  const file = f.elements.file.files && f.elements.file.files[0];
+  if (!file) return fErr(f, "Scegli il file PDF.");
+  if (!/pdf$/i.test(file.type) && !/\.pdf$/i.test(file.name)) return fErr(f, "Deve essere un PDF.");
+  if (file.size > 9e6) return fErr(f, "Il PDF è troppo grande (massimo 9 MB): comprimilo e riprova.");
+  const numero = parseInt(fv(f, "numero"), 10) || null, data = fv(f, "data");
+  if (!data) return fErr(f, "Scrivi la data della riunione.");
+  const doppio = Object.values(S[ORGANI[o].key] || {}).find((v) => numero && Number(v.numero) === numero && v.data === data);
+  if (doppio) return fErr(f, `C'è già il verbale n. ${numero} del ${fDataIt(data)}.`);
+  const btn = document.querySelector('[form="fVc"]'); if (btn) { btn.disabled = true; btn.textContent = "Carico…"; }
+  try {
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    const id = await nuovoVerbalePdf(o, { bytes, nome: file.name, numero, data, titolo: fv(f, "titolo"), fonte: "pdf" });
+    closeSheet(); toast("Verbale caricato.");
+    if (fv(f, "drive") && WEB && tokenValido(SCOPI.drive)) { const v = verbaleDi(o, id) || { id, numero, data, pdf: { parti: 1 } }; mandaSulDrive(o, { ...v, id, numero, data }, bytes).then(() => toast("Messo anche sul Drive.")).catch((e) => toast(spiegaDrive(e))); }
+    else if (fv(f, "drive") && WEB) toast("Caricato. Per metterlo sul Drive usa «Controlla col Drive».");
+    go(`${ORGANI[o].r}-${id}`);
+  } catch (e) { console.warn(e); if (btn) { btn.disabled = false; btn.textContent = "Carica"; } fErr(f, "Non sono riuscito a caricarlo. Controlla la connessione e riprova."); }
+};
+async function nuovoVerbalePdf(o, { bytes, nome, numero, data, titolo, fonte, drive }) {
+  const id = genId("vb");
+  const pdf = await salvaPdf(o, id, bytes);
+  await wSet(`${ORGANI[o].coll}/${id}`, { organo: o, titolo: titolo || "", numero: numero || null, data, stato: "approvato", fonte, pdf: { nome, ...pdf, at: Date.now() }, drive: drive || null, caricatoDa: ME(), creato: Date.now() });
+  return id;
+}
+/* modificare dati, spostare tra assemblea e consiglio, eliminare */
+ACT["vb-dati"] = (el) => {
+  const o = el.dataset.o, v = verbaleDi(o, el.dataset.id); if (!v) return;
+  const altro = o === "assemblea" ? "consiglio" : "assemblea";
+  openSheet({ title: esc(nomeVerbale(v, o)), eyebrow: esc(ORGANI[o].uno), body: `<form data-form="vb-dati" data-o="${o}" data-id="${v.id}" id="fVd" class="stack">
+    ${v.pdf ? `<div class="fields"><label class="field"><span>Numero</span><input class="in" name="numero" inputmode="numeric" value="${esc(v.numero || "")}"></label><label class="field"><span>Data</span><input class="in" type="date" name="data" value="${esc(v.data || "")}" required></label></div>
+      <label class="field"><span>Titolo</span><input class="in" name="titolo" maxlength="120" value="${esc(v.titolo || "")}" placeholder="${esc(ORGANI[o].uno)}${v.numero ? " n. " + esc(String(v.numero)) : ""}"></label>` : ""}
+    <div class="soft"><b>Sezione sbagliata?</b><span class="small">Spostalo in «${esc(ORGANI[altro].nome)}»: ${altro === "assemblea" ? "lo vedranno tutti i soci" : "lo vedrà solo il consiglio"}. Sul Drive va spostato a mano.</span><button type="button" class="btn sm" data-act="vb-sposta" data-o="${o}" data-id="${v.id}">Sposta in ${esc(ORGANI[altro].nome)}</button></div>
+    <p class="err" hidden></p></form>`,
+    foot: `<button class="btn danger" data-act="vb-del" data-o="${o}" data-id="${v.id}" aria-label="Elimina">${ic("trash")}</button><button class="btn ghost" data-act="sheet-close">Chiudi</button>${v.pdf ? `<button class="btn pri" type="submit" form="fVd">Salva</button>` : ""}` });
+};
+FORMS["vb-dati"] = async (f) => {
+  const o = f.dataset.o; if (!fv(f, "data")) return fErr(f, "Scrivi la data.");
+  await wUpd(`${ORGANI[o].coll}/${f.dataset.id}`, { numero: parseInt(fv(f, "numero"), 10) || null, data: fv(f, "data"), titolo: fv(f, "titolo"), agg: Date.now(), aggDa: ME() });
+  closeSheet(); toast("Salvato.");
+};
+ACT["vb-sposta"] = async (el) => {
+  const o = el.dataset.o, v = verbaleDi(o, el.dataset.id); if (!v) return;
+  const altro = o === "assemblea" ? "consiglio" : "assemblea";
+  el.disabled = true;
+  try {
+    if (v.pdf) { const bytes = await leggiPdf(o, v); await salvaPdf(altro, v.id, bytes); }
+    await wSet(`${ORGANI[altro].coll}/${v.id}`, { ...strip(v), organo: altro });
+    if (v.pdf) await cancellaPdf(o, v.id, v.pdf.parti);
+    await wDel(`${ORGANI[o].coll}/${v.id}`);
+    closeSheet(); toast(`Spostato in ${ORGANI[altro].nome}.`); go(`${ORGANI[altro].r}-${v.id}`);
+  } catch (e) { console.warn(e); el.disabled = false; toast("Non sono riuscito a spostarlo: riprova."); }
+};
+ACT["vb-del"] = (el) => {
+  const o = el.dataset.o, v = verbaleDi(o, el.dataset.id); if (!v) return;
+  confirmSheet({ title: "Eliminare il verbale?", text: v.drive ? "Sparisce dall'app. Il file sul Drive condiviso resta: al prossimo controllo lo vedrai tra quelli «solo sul Drive»." : "Sparisce dall'app e non si può recuperare.", ok: "Elimina", danger: true, onOk: async () => {
+    if (v.pdf) await cancellaPdf(o, v.id, v.pdf.parti);
+    await wDel(`${ORGANI[o].coll}/${v.id}`); go("verbali"); } });
+};
+
+/* ---------- confronto con il Drive condiviso (solo sito) ---------- */
+const DRV = "https://www.googleapis.com/drive/v3/";
+function spiegaDrive(e) {
+  const m = (e && e.message) || "";
+  if (e && e.code === "needs_token") return "Collega Google per usare il Drive.";
+  if (/has not been used|is disabled|accessNotConfigured/i.test(m)) return "L'API di Google Drive non è abilitata nel progetto Google Cloud: abilitala (come avete fatto per Calendar) e riprova.";
+  if (/not ?found|File not found/i.test(m)) return "Non trovo la cartella dei verbali sul Drive: hai accesso al Drive condiviso?";
+  if (/insufficient|permission/i.test(m)) return "Il tuo account non può scrivere nella cartella dei verbali sul Drive condiviso.";
+  return "Il Drive ha risposto con un errore: " + (m || "sconosciuto") + ".";
+}
+async function driveElenco(o) {
+  const q = encodeURIComponent(`'${cartellaVerbali(o)}' in parents and trashed=false and mimeType='application/pdf'`);
+  const r = await gapi(`${DRV}files?q=${q}&fields=files(id,name,size,modifiedTime)&pageSize=500&supportsAllDrives=true&includeItemsFromAllDrives=true`, {}, SCOPI.drive);
+  return (r.files || []).map((f) => ({ ...f, ...infoDaNome(f.name) }));
+}
+async function driveScarica(id) {
+  const t = tokenValido(SCOPI.drive); if (!t) throw { code: "needs_token" };
+  const r = await fetch(`${DRV}files/${id}?alt=media&supportsAllDrives=true`, { headers: { Authorization: "Bearer " + t } });
+  if (r.status === 401) { dimenticaToken(); throw { code: "needs_token" }; }
+  if (!r.ok) { const j = await r.json().catch(() => ({})); throw { message: (j.error && j.error.message) || "HTTP " + r.status }; }
+  return new Uint8Array(await r.arrayBuffer());
+}
+async function driveCarica(cartella, nome, bytes) {
+  const t = tokenValido(SCOPI.drive); if (!t) throw { code: "needs_token" };
+  const conf = "bagaera" + casuale(), meta = JSON.stringify({ name: nome, parents: [cartella], mimeType: "application/pdf" });
+  const body = new Blob([`--${conf}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${meta}\r\n--${conf}\r\nContent-Type: application/pdf\r\n\r\n`, bytes, `\r\n--${conf}--`]);
+  const r = await fetch(`https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true&fields=id,name`, { method: "POST", headers: { Authorization: "Bearer " + t, "Content-Type": "multipart/related; boundary=" + conf }, body });
+  if (r.status === 401) { dimenticaToken(); throw { code: "needs_token" }; }
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw { message: (j.error && j.error.message) || "HTTP " + r.status };
+  return j;
+}
+/* abbina app e Drive: prima con l'id del file, poi con numero e data del nome */
+function abbinaDrive(o, files) {
+  const vs = Object.values(S[ORGANI[o].key] || {});
+  const usati = new Set(), entrambi = [], soloApp = [], bozze = [];
+  for (const v of vs) {
+    let f = v.drive && files.find((x) => x.id === v.drive.id && !usati.has(x.id));
+    if (!f) f = files.find((x) => !usati.has(x.id) && x.data && x.data === v.data && (!x.numero || !v.numero || Number(x.numero) === Number(v.numero)));
+    if (f) { usati.add(f.id); entrambi.push({ v, f }); }
+    else if (pubblico(v)) soloApp.push(v); else bozze.push(v);
+  }
+  const soloDrive = files.filter((f) => !usati.has(f.id)).sort((a, b) => (a.data || "").localeCompare(b.data || "") || (a.numero || 0) - (b.numero || 0));
+  return { entrambi, soloApp, soloDrive, bozze };
+}
+async function mandaSulDrive(o, v, bytes) {
+  const files = S.drv && S.drv.o === o && S.drv.files ? S.drv.files : [];
+  const numero = v.numero || prossimoNumeroVerbale(o, files.map((f) => f.numero || 0));
+  const b = bytes || (v.pdf ? await leggiPdf(o, v) : new Uint8Array(await (await pdfVerbale(v)).arrayBuffer()));
+  const nome = nomeDrive(numero, v.data);
+  const r = await driveCarica(cartellaVerbali(o), nome, b);
+  await wUpd(`${ORGANI[o].coll}/${v.id}`, { numero, drive: { id: r.id, nome: r.name || nome, at: Date.now() } }, { quiet: true });
+  return r;
+}
+function sheetDrive() {
+  const d = S.drv || {}, o = d.o || "assemblea";
+  const body = () => {
+    if (!tokenValido(SCOPI.drive)) return `<p>Per confrontare i verbali con la cartella «${esc(ORGANI[o].cartella)}» del Drive condiviso serve il permesso di Google Drive.</p><div class="btns"><button class="btn pri" data-act="vb-drive-collega" data-o="${o}">${ic("key")}Collega Google Drive</button></div><p class="small muted">Lo chiede una volta ogni tanto: vale per un'ora.</p>`;
+    if (d.err) return `<div class="notice bad">${esc(d.err)}</div><div class="btns"><button class="btn" data-act="vb-drive" data-o="${o}">Riprova</button></div>`;
+    if (!d.files) return `<div class="loading">${omini()}<p class="eyebrow">Guardo il Drive…</p></div>`;
+    const a = abbinaDrive(o, d.files);
+    const voce = (t, s) => `<div class="li"><span class="grow"><span class="t">${t}</span>${s ? `<br><span class="s">${s}</span>` : ""}</span></div>`;
+    return `${d.lavoro ? `<div class="notice">${esc(d.lavoro)}</div>` : ""}
+      <div class="kpis"><div class="kpi ${a.soloDrive.length + a.soloApp.length ? "" : "v"}"><span class="l">Allineati</span><span class="n">${a.entrambi.length}</span><span class="s">nell'app e sul Drive</span></div><div class="kpi"><span class="l">Da sistemare</span><span class="n">${a.soloDrive.length + a.soloApp.length}</span><span class="s">${a.soloDrive.length} solo sul Drive · ${a.soloApp.length} solo nell'app</span></div></div>
+      ${a.soloDrive.length ? `<section class="panel"><div class="ph"><h3>Solo sul Drive</h3><span class="pill warn">${a.soloDrive.length}</span></div><div class="list">${a.soloDrive.map((f) => voce(esc(f.name), f.data ? `${ORGANI[o].uno}${f.numero ? " n. " + f.numero : ""} · ${esc(fDataL(f.data))}` : "nome non riconosciuto: data e numero li sistemi dopo")).join("")}</div></section>` : ""}
+      ${a.soloApp.length ? `<section class="panel"><div class="ph"><h3>Solo nell'app</h3><span class="pill warn">${a.soloApp.length}</span></div><div class="list">${a.soloApp.map((v) => voce(esc(nomeVerbale(v, o)), `${esc(fDataL(v.data))} · ${v.pdf ? "PDF caricato" : "scritto nell'app: diventa un PDF"}`)).join("")}</div></section>` : ""}
+      ${a.bozze.length ? `<p class="small muted">${a.bozze.length} ${a.bozze.length === 1 ? "bozza resta" : "bozze restano"} solo nell'app finché non ${a.bozze.length === 1 ? "è approvata" : "sono approvate"}.</p>` : ""}
+      ${!a.soloDrive.length && !a.soloApp.length ? `<div class="notice">${ic("check")} Tutto allineato: i ${a.entrambi.length} verbali dell'app sono anche sul Drive.</div>` : ""}`;
+  };
+  const foot = () => {
+    if (!tokenValido(SCOPI.drive) || !d.files || d.err) return `<button class="btn ghost" data-act="sheet-close">Chiudi</button>`;
+    const a = abbinaDrive(o, d.files);
+    return `<button class="btn ghost" data-act="sheet-close">Chiudi</button>${a.soloDrive.length || a.soloApp.length ? `<button class="btn pri" data-act="vb-allinea" data-o="${o}" ${d.lavoro ? "disabled" : ""}>${ic("repeat")}Allinea ${a.soloDrive.length + a.soloApp.length}</button>` : ""}`;
+  };
+  openSheet({ title: `${esc(ORGANI[o].nome)} e Drive`, eyebrow: "Libro verbali digitale", body, foot, live: true, wide: true });
+}
+async function salvaControllo(o, mancanti) {
+  const c = { [o]: { at: Date.now(), da: ME(), mancanti } };
+  if (S.config.verbali) await wUpd("config/verbali", { controllo: c }, { quiet: true }).catch(() => {});
+  else await wSet("config/verbali", { controllo: c }, { quiet: true }).catch(() => {});
+}
+ACT["vb-drive"] = async (el) => {
+  const o = el.dataset.o || "assemblea";
+  S.drv = { o }; sheetDrive();
+  if (!tokenValido(SCOPI.drive)) return;
+  try { S.drv.files = await driveElenco(o); const a = abbinaDrive(o, S.drv.files); salvaControllo(o, a.soloDrive.length + a.soloApp.length); }
+  catch (e) { console.warn(e); S.drv.err = spiegaDrive(e); }
+  if (S.sheet) drawSheet();
+};
+ACT["vb-drive-collega"] = (el) => { try { localStorage.setItem("bagaera-vb-dopo", el.dataset.o || "assemblea"); } catch (e) {} vaiAGoogle([SCOPI.drive], "#verbali"); };
+function vbDopoRitorno() {
+  let o = null; try { o = localStorage.getItem("bagaera-vb-dopo"); localStorage.removeItem("bagaera-vb-dopo"); } catch (e) {}
+  if (o && WEB && tokenValido(SCOPI.drive)) setTimeout(() => { S.ui.vbOrgano = o; ACT["vb-drive"]({ dataset: { o } }); }, 400);
+}
+ACT["vb-allinea"] = async (el) => {
+  const o = el.dataset.o, d = S.drv; if (!d || !d.files) return;
+  const a = abbinaDrive(o, d.files), tot = a.soloDrive.length + a.soloApp.length;
+  let fatti = 0, errori = 0;
+  const passo = (t) => { d.lavoro = `${t} (${fatti + errori + 1} di ${tot})…`; if (S.sheet) drawSheet(); };
+  // gli abbinati per nome ricevono l'id del Drive, così la prossima volta si riconoscono subito
+  for (const { v, f } of a.entrambi) if (!v.drive || v.drive.id !== f.id) await wUpd(`${ORGANI[o].coll}/${v.id}`, { drive: { id: f.id, nome: f.name }, ...(v.numero || !f.numero ? {} : { numero: f.numero }) }, { quiet: true }).catch(() => {});
+  for (const f of a.soloDrive) {
+    passo(`Porto nell'app «${f.name}»`);
+    try { const bytes = await driveScarica(f.id); await nuovoVerbalePdf(o, { bytes, nome: f.name, numero: f.numero, data: f.data || (f.modifiedTime || "").slice(0, 10) || oggi(), titolo: "", fonte: "drive", drive: { id: f.id, nome: f.name } }); fatti++; }
+    catch (e) { console.warn(e); errori++; d.ultimoErr = spiegaDrive(e); }
+  }
+  for (const v of a.soloApp) {
+    passo(`Metto sul Drive «${nomeVerbale(v, o)}»`);
+    try { const r = await mandaSulDrive(o, v); d.files.push({ id: r.id, name: r.name, ...infoDaNome(r.name) }); fatti++; }
+    catch (e) { console.warn(e); errori++; d.ultimoErr = spiegaDrive(e); }
+  }
+  d.lavoro = null;
+  try { d.files = await driveElenco(o); } catch (e) { /* resta l'elenco di prima */ }
+  const dopo = abbinaDrive(o, d.files); salvaControllo(o, dopo.soloDrive.length + dopo.soloApp.length);
+  if (S.sheet) drawSheet();
+  toast(errori ? `${fatti} allineati, ${errori} non riusciti: ${d.ultimoErr}` : `Fatto: ${fatti} ${fatti === 1 ? "verbale allineato" : "verbali allineati"}.`);
+};
+
+/* ================= OPEN CALL: moduli Google e risposte lette dal foglio collegato ================= */
+const idFoglio = (u) => (/\/spreadsheets\/d\/([a-zA-Z0-9_-]{20,})/.exec(u || "") || /^([a-zA-Z0-9_-]{30,})$/.exec(String(u || "").trim()) || [])[1] || null;
+const linkModulo = (u) => /^https:\/\/(docs\.google\.com\/forms\/|forms\.gle\/)/.test(String(u || "").trim());
+const ocAperta = (c) => c.aperta !== false && (!c.scadenza || c.scadenza >= oggi());
+const ocVede = (c) => isCouncil() || !c.chi || c.chi === "tutti" || inGroup(c.chi);
+const ocRisposte = (c) => isCouncil() || (c.gestisce && inGroup(c.gestisce));
+function openCallPerMe() { return Object.values(S.opencall || {}).filter((c) => ocVede(c) && ocAperta(c)); }
+const ocViste = (id) => ((S.prefs.ocViste || {})[id]) || 0;
+route("opencall", () => {
+  const tutte = Object.values(S.opencall || {}).filter(ocVede).sort((a, b) => (ocAperta(b) - ocAperta(a)) || (a.scadenza || "9999").localeCompare(b.scadenza || "9999"));
+  const aperte = tutte.filter(ocAperta), chiuse = tutte.filter((c) => !ocAperta(c));
+  const card = (c) => { const nuove = ocRisposte(c) ? Math.max(0, (c.nRisposte || 0) - ocViste(c.id)) : 0; const ev = c.evento && S.cal[c.evento];
+    return `<a class="occard ${ocAperta(c) ? "" : "chiusa"}" href="#oc-${c.id}"><span class="ic">${ic("megafono")}</span><span class="grow stack s" style="gap:4px"><span class="t">${esc(c.titolo)}</span>
+      <span class="s">${ocAperta(c) ? (c.scadenza ? `aperta fino al ${esc(fDataL(c.scadenza))}` : "aperta") : "chiusa"}${ev ? ` · ${esc(ev.titolo)}` : ""}${ocRisposte(c) && c.nRisposte != null ? ` · ${c.nRisposte} ${c.nRisposte === 1 ? "risposta" : "risposte"}` : ""}</span></span>${nuove ? `<span class="badge">${nuove}</span>` : ""}${ic("chev", "chev")}</a>`; };
+  return `<div class="wrap">${backLink("home", "Home")}
+    <div class="pagehead"><div class="stack"><span class="eyebrow">Candidature e iscrizioni con i moduli Google</span><h1>Open call</h1></div>${isCouncil() ? `<button class="btn pri" data-act="oc-nuova">${ic("plus")}Nuova</button>` : ""}</div>
+    ${aperte.length ? `<div class="occards">${aperte.map(card).join("")}</div>` : empty("Nessuna open call aperta", isCouncil() ? "Collega un modulo Google: chi lo compila finisce nel foglio delle risposte e qui le vedete tutte." : "Quando il consiglio ne apre una, la trovi qui con il link per partecipare.")}
+    ${chiuse.length ? `<section class="stack s"><h3>Chiuse</h3><div class="occards">${chiuse.map(card).join("")}</div></section>` : ""}
+    ${isCouncil() ? guidaOpenCall() : ""}
+  </div>`;
+});
+const guidaOpenCall = () => `<details class="panel guida"><summary><b>Come si collega un modulo Google</b></summary><ol class="pb vlist">
+  <li>Apri il modulo in Google Moduli con l'account dell'associazione e vai nella scheda <b>Risposte</b>.</li>
+  <li>Tocca <b>Collega a Fogli</b> → «Crea un nuovo foglio di lavoro». Il foglio si riempie da solo a ogni risposta.</li>
+  <li>Copia il link per compilare: <b>Invia</b> → icona del link → Copia.</li>
+  <li>Apri il foglio delle risposte e copia l'indirizzo dalla barra del browser.</li>
+  <li>Qui tocca <b>Nuova</b> e incolla i due link. Il foglio deve stare nel Drive condiviso (o essere condiviso con il consiglio) perché chi guarda le risposte possa leggerlo.</li></ol></details>`;
+function formOpenCall(c) {
+  const evs = eventi().filter((e) => !finito(e) || (c && c.evento === e.id)).sort(ordinaEv).slice(0, 60);
+  openSheet({ title: c ? "Modifica open call" : "Nuova open call", eyebrow: "Open call", body: `<form data-form="oc" data-id="${c ? c.id : ""}" id="fOc" class="stack">
+    <label class="field"><span>Titolo</span><input class="in" name="titolo" required maxlength="90" value="${esc((c && c.titolo) || "")}" placeholder="es. Cerchiamo band per il Fem Fest Summer" ${c ? "" : "autofocus"}></label>
+    <label class="field"><span>Link del modulo (per compilarlo)</span><input class="in" name="form" type="url" required value="${esc((c && c.formUrl) || "")}" placeholder="https://forms.gle/…"></label>
+    <label class="field"><span>Link del foglio delle risposte</span><input class="in" name="foglio" type="url" value="${esc((c && c.foglioUrl) || "")}" placeholder="https://docs.google.com/spreadsheets/d/…"><small>Dal modulo: Risposte → Collega a Fogli. Senza foglio l'app mostra solo il link.</small></label>
+    <label class="field"><span>Due righe per spiegarla (facoltativo)</span><textarea class="in" name="descr" maxlength="600" rows="3">${esc((c && c.descr) || "")}</textarea></label>
+    <div class="fields"><label class="field"><span>Aperta fino al</span><input class="in" type="date" name="scadenza" value="${esc((c && c.scadenza) || "")}"></label>
+      <label class="field"><span>Legata a</span><select class="in" name="evento">${opt("", "Nessun appuntamento")}${evs.map((e) => opt(e.id, `${fData(e.data)} · ${e.titolo}`, c && c.evento === e.id)).join("")}</select></label></div>
+    <div class="fields"><label class="field"><span>Chi la vede nell'app</span><select class="in" name="chi">${opt("tutti", "Tutti i soci", !c || !c.chi || c.chi === "tutti")}${Object.entries(GRUPPI).map(([k, g]) => opt(k, g.nome, c && c.chi === k)).join("")}</select></label>
+      <label class="field"><span>Chi guarda le risposte</span><select class="in" name="gestisce">${opt("", "Il consiglio")}${Object.entries(GRUPPI).filter(([k]) => k !== "consiglio").map(([k, g]) => opt(k, `Il consiglio e ${g.nome}`, c && c.gestisce === k)).join("")}</select></label></div>
+    ${c ? `<label class="check"><input type="checkbox" name="aperta" ${c.aperta !== false ? "checked" : ""}><span><b>Aperta</b><br><small class="muted">Togli la spunta quando la chiudete: resta nell'archivio con le sue risposte.</small></span></label>` : ""}
+    <p class="err" hidden></p></form>`,
+    foot: `${c ? `<button class="btn danger" data-act="oc-del" data-id="${c.id}" aria-label="Elimina">${ic("trash")}</button>` : ""}<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fOc">${c ? "Salva" : "Crea"}</button>` });
+}
+ACT["oc-nuova"] = () => formOpenCall(null);
+ACT["oc-mod"] = (el) => formOpenCall(S.opencall[el.dataset.id]);
+FORMS.oc = async (f) => {
+  const id = f.dataset.id || genId("oc"), prima = S.opencall[f.dataset.id];
+  const formUrl = fv(f, "form"), foglioUrl = fv(f, "foglio");
+  if (!fv(f, "titolo")) return fErr(f, "Scrivi un titolo.");
+  if (!linkModulo(formUrl)) return fErr(f, "Il link del modulo deve essere di Google Moduli (docs.google.com/forms o forms.gle).");
+  if (foglioUrl && !idFoglio(foglioUrl)) return fErr(f, "Il link del foglio non sembra un foglio Google: copialo dalla barra del browser con il foglio aperto.");
+  const d = { titolo: fv(f, "titolo"), formUrl, foglioUrl, foglio: idFoglio(foglioUrl), descr: fv(f, "descr"), scadenza: fv(f, "scadenza") || null, evento: fv(f, "evento") || null, chi: fv(f, "chi") || "tutti", gestisce: fv(f, "gestisce") || null, aperta: prima ? fv(f, "aperta") : true, agg: Date.now() };
+  await wSet("opencall/" + id, { ...(prima ? strip(prima) : { creato: Date.now(), da: ME(), nRisposte: null }), ...d, ...(prima && prima.foglio !== d.foglio ? { nRisposte: null } : {}) });
+  closeSheet(); toast(prima ? "Salvata." : "Open call creata."); if (!prima) go("oc-" + id);
+};
+ACT["oc-del"] = (el) => confirmSheet({ title: "Eliminare l'open call?", text: "Sparisce dall'app. Il modulo e il foglio delle risposte restano su Google.", ok: "Elimina", danger: true, onOk: async () => { await wDel("opencall/" + el.dataset.id); go("opencall"); } });
+
+/* ---------- risposte ---------- */
+S.ocUi = {};
+async function caricaRisposte(c, fresco) {
+  const st = S.ocUi[c.id] || (S.ocUi[c.id] = {});
+  if (st.loading || (st.righe && !fresco)) return;
+  st.loading = true; st.err = null; scheduleRender();
+  try {
+    const mcp = await mcpPronto();
+    const res = await mcp.callTool(SHEETS, "get_values", { spreadsheetId: c.foglio, range: "A1:AZ3000" }, { cache: fresco ? false : { staleTime: 30000 } });
+    const v = (res && res.payload && res.payload.values) || [];
+    st.testa = (v[0] || []).map((x) => String(x || "").trim());
+    st.righe = v.slice(1).filter((r) => (r || []).some((x) => String(x ?? "").trim())).reverse();
+    st.at = Date.now();
+    if (c.nRisposte !== st.righe.length) wUpd("opencall/" + c.id, { nRisposte: st.righe.length, contate: Date.now() }, { quiet: true }).catch(() => {});
+    if (ocViste(c.id) !== st.righe.length) salvaPrefs({ ocViste: { [c.id]: st.righe.length } }).catch(() => {});
+  } catch (e) { console.warn(e); st.err = e; }
+  st.loading = false; scheduleRender();
+}
+function spiegaFoglio(e) {
+  const m = (e && e.message) || "";
+  if (/not found|Requested entity/i.test(m)) return "Non trovo il foglio delle risposte: controlla il link o che il tuo account possa aprirlo.";
+  if (/permission|caller does not have/i.test(m)) return "Il tuo account Google non può aprire il foglio delle risposte: fattelo condividere o spostalo nel Drive condiviso.";
+  return spiegaMcp(e);
+}
+route("oc", (id) => {
+  const c = S.opencall[id];
+  if (!c || !ocVede(c)) return `<div class="wrap">${backLink("opencall", "Open call")}${empty("Open call non trovata")}</div>`;
+  const ev = c.evento && S.cal[c.evento];
+  const puo = ocRisposte(c);
+  const st = S.ocUi[id] || {};
+  const q = norm(S.ui.ocQ || "");
+  let corpo = "";
+  if (puo && !c.foglio) corpo = `<div class="notice">Manca il foglio delle risposte: nel modulo vai su Risposte → Collega a Fogli, poi incolla qui il link.${isCouncil() ? ` <button class="btn sm" data-act="oc-mod" data-id="${id}">Aggiungi il foglio</button>` : ""}</div>`;
+  else if (puo && st.err) corpo = `<div class="notice bad">${esc(spiegaFoglio(st.err))}</div><div class="btns">${WEB && st.err.code === "needs_token" ? `<button class="btn pri" data-act="oc-collega" data-id="${id}">${ic("key")}Collega Google (fogli)</button>` : ""}<button class="btn" data-act="oc-ricarica" data-id="${id}">Riprova</button></div>`;
+  else if (puo && !st.righe) corpo = `<div class="loading">${omini()}<p class="eyebrow">Leggo le risposte…</p></div>`;
+  else if (puo) {
+    const testa = st.testa || [], righe = st.righe.filter((r) => !q || norm(r.join(" ")).includes(q));
+    const nuove = Math.max(0, st.righe.length - (st.vistePrima != null ? st.vistePrima : st.righe.length));
+    corpo = `<div class="row nw"><label class="sr" for="ocQ">Cerca</label><input class="in grow" id="ocQ" type="search" placeholder="Cerca nelle risposte" value="${esc(S.ui.ocQ || "")}" data-input="oc-q"><button class="btn" data-act="oc-csv" data-id="${id}">${ic("down")}CSV</button><button class="btn ghost" data-act="oc-ricarica" data-id="${id}" aria-label="Aggiorna">${ic("repeat")}</button></div>
+      <p class="small muted">${st.righe.length} ${st.righe.length === 1 ? "risposta" : "risposte"}${q ? ` · ${righe.length} trovate` : ""} · aggiornate ${esc(fTs(st.at))}${nuove ? ` · <b>${nuove} nuove</b>` : ""}</p>
+      <div class="ocrisp">${righe.slice(0, 200).map((r, i) => `<details class="panel" ${i === 0 && !q ? "open" : ""}><summary><span class="grow"><b>${esc(String(r[1] ?? r[0] ?? "Risposta"))}</b>${r[2] != null && testa.length > 2 ? `<br><span class="small muted">${esc(String(r[2]).slice(0, 80))}</span>` : ""}</span><span class="small muted">${esc(String(r[0] ?? "").slice(0, 16))}</span></summary>
+        <dl class="pb ocdl">${testa.map((h, j) => (String(r[j] ?? "").trim() ? `<dt>${esc(h || "Domanda " + (j + 1))}</dt><dd>${linkify(String(r[j]))}</dd>` : "")).join("")}</dl></details>`).join("") || `<div class="pb"><p class="small muted">${q ? "Nessuna risposta trovata." : "Ancora nessuna risposta."}</p></div>`}</div>`;
+  }
+  return { html: `<div class="wrap">${backLink("opencall", "Open call")}
+    <section class="evhead"><div class="band" style="background:var(--bosco);color:#fff"><span class="eyebrow">${ocAperta(c) ? (c.scadenza ? `Aperta fino al ${esc(fDataL(c.scadenza))}` : "Aperta") : "Chiusa"}</span><h1>${esc(c.titolo)}</h1>${c.descr ? `<p class="small" style="position:relative;max-width:52ch">${esc(c.descr)}</p>` : ""}${om(3, "deco")}</div>
+      <div class="facts">${ev ? `<div>${ic("cal")}<span><b><a href="#ev-${ev.id}">${esc(ev.titolo)}</a></b>${esc(fDataL(ev.data))}</span></div>` : ""}<div>${ic("people")}<span><b>${c.chi && c.chi !== "tutti" && GRUPPI[c.chi] ? esc(GRUPPI[c.chi].nome) : "Tutti i soci"}</b>la vedono nell'app</span></div></div></section>
+    <div class="btns"><a class="btn pri" href="${esc(c.formUrl)}" target="_blank" rel="noopener">${ic("form")}Apri il modulo</a><button class="btn" data-act="oc-copia" data-id="${id}">${ic("link")}Copia il link</button>${puo && c.foglioUrl ? `<a class="btn ghost" href="${esc(c.foglioUrl)}" target="_blank" rel="noopener">${ic("ext")}Foglio</a>` : ""}${isCouncil() ? `<button class="btn ghost" data-act="oc-mod" data-id="${id}">${ic("edit")}Modifica</button>` : ""}</div>
+    ${puo ? `<section class="stack s"><h3>Risposte</h3>${corpo}</section>` : `<p class="muted">Condividi il link con chi può essere interessato: le risposte le guarda ${c.gestisce && GRUPPI[c.gestisce] ? "il gruppo " + esc(GRUPPI[c.gestisce].nome) + " con il consiglio" : "il consiglio"}.</p>`}
+  </div>`, mount: () => { if (puo && c.foglio) { const s2 = S.ocUi[id] || (S.ocUi[id] = {}); if (s2.vistePrima == null) s2.vistePrima = ocViste(id); caricaRisposte(c); } } };
+});
+const linkify = (t) => esc(t).replace(/(https?:\/\/[^\s<]+)/g, (u) => `<a href="${u}" target="_blank" rel="noopener">${u.length > 60 ? u.slice(0, 57) + "…" : u}</a>`);
+ACT["oc-ricarica"] = (el) => { const c = S.opencall[el.dataset.id]; if (c) { S.ocUi[c.id] = { vistePrima: (S.ocUi[c.id] || {}).vistePrima }; caricaRisposte(c, true); } };
+ACT["oc-collega"] = (el) => vaiAGoogle([SCOPI.sheets], "#oc-" + el.dataset.id);
+ACT["oc-copia"] = async (el) => { const c = S.opencall[el.dataset.id]; if (!c) return; try { await navigator.clipboard.writeText(c.formUrl); toast("Link copiato: incollalo dove vuoi."); } catch (e) { toast(c.formUrl); } };
+ACT["oc-csv"] = async (el) => {
+  const c = S.opencall[el.dataset.id], st = S.ocUi[el.dataset.id]; if (!c || !st || !st.righe) return;
+  const q = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const csv = [st.testa, ...st.righe.slice().reverse()].map((r) => r.map(q).join(";")).join("\r\n");
+  await salvaFile(`Risposte ${c.titolo.replace(/[\\/:*?"<>|]/g, "")}.csv`, "﻿" + csv, "File pronto.");
+};
+document.addEventListener("input", (e) => { if (e.target.dataset.input === "oc-q") { S.ui.ocQ = e.target.value; clearTimeout(S._ocT); S._ocT = setTimeout(() => { const pos = e.target.selectionStart; render(true); const i = $("#ocQ"); if (i) { i.focus(); try { i.setSelectionRange(pos, pos); } catch (er) {} } }, 250); } });
+/* nella pagina di un appuntamento: le open call collegate */
+function openCallDiEvento(e) {
+  const cs = Object.values(S.opencall || {}).filter((c) => c.evento === e.id && ocVede(c));
+  return cs.length ? `<section class="stack s">${cs.map((c) => `<a class="occard ${ocAperta(c) ? "" : "chiusa"}" href="#oc-${c.id}"><span class="ic">${ic("megafono")}</span><span class="grow"><span class="t">Open call: ${esc(c.titolo)}</span><br><span class="s">${ocAperta(c) ? (c.scadenza ? "fino al " + esc(fData(c.scadenza)) : "aperta") : "chiusa"}</span></span>${ic("chev", "chev")}</a>`).join("")}</section>` : "";
+}
+
+/* ================= CALENDARIO EDITORIALE (gruppo marketing) ================= */
+const CANALI = {
+  post: ["Post Instagram", "#d6457a", "#ffffff"], reel: ["Reel", "#7b3fa0", "#ffffff"], storia: ["Storia", "#e07a1f", "#0b0c0b"],
+  tiktok: ["TikTok", "#0b0c0b", "#ffffff"], facebook: ["Facebook", "#1f7ac4", "#ffffff"], altro: ["Altro", "#4a5a66", "#ffffff"],
+};
+const STATI_POST = { idea: ["Idea", ""], lavorazione: ["In lavorazione", "warn"], pronto: ["Pronto", "ok"], pubblicato: ["Pubblicato", "solid"] };
+can.editoriale = () => isCouncil() || inGroup("marketing");
+const canale = (p) => CANALI[p.canale] || CANALI.altro;
+const postTutti = () => Object.values(S.post || {}).sort((a, b) => (a.data + (a.ora || "99")).localeCompare(b.data + (b.ora || "99")));
+function postMiei() { return postTutti().filter((p) => p.chi === ME() && p.stato !== "pubblicato" && p.data >= oggi() && giorniTra(oggi(), p.data) <= 2); }
+const chipPost = (p) => { const c = canale(p); return `<span class="pchip" style="background:${c[1]};color:${c[2]}" title="${esc(c[0])}: ${esc(p.titolo)}">${esc(p.titolo)}</span>`; };
+route("editoriale", (mese) => {
+  if (!can.editoriale()) return `<div class="wrap">${backLink("gr-marketing", "Marketing")}${empty("Calendario del gruppo Marketing", "Lo usano i membri del gruppo Marketing e il consiglio.")}</div>`;
+  const m = /^\d{4}-\d{2}$/.test(mese || "") ? mese : oggi().slice(0, 7);
+  const [y, mm] = m.split("-").map(Number);
+  const prima = isoOf(new Date(y, mm - 2, 1)).slice(0, 7), dopo = isoOf(new Date(y, mm, 1)).slice(0, 7);
+  const tutti = postTutti(), delMese = tutti.filter((p) => p.data.startsWith(m));
+  const primo = new Date(y, mm - 1, 1), off = (primo.getDay() + 6) % 7, nGiorni = new Date(y, mm, 0).getDate();
+  const celle = [];
+  for (let i = 0; i < off; i++) celle.push(`<div class="ecell vuota"></div>`);
+  for (let d = 1; d <= nGiorni; d++) {
+    const iso = `${m}-${pad(d)}`, ps = delMese.filter((p) => p.data === iso);
+    celle.push(`<button class="ecell ${iso === oggi() ? "oggi" : ""}" data-act="post-nuovo" data-d="${iso}" aria-label="${esc(fDataL(iso))}: ${ps.length ? ps.length + " post" : "aggiungi un post"}"><b>${d}</b>${ps.slice(0, 3).map(chipPost).join("")}${ps.length > 3 ? `<span class="small muted">+${ps.length - 3}</span>` : ""}</button>`);
+  }
+  const giorni = [...new Set(delMese.map((p) => p.data))];
+  const riga = (p) => { const c = canale(p), s = STATI_POST[p.stato] || STATI_POST.idea;
+    return `<button class="li" data-act="post-apri" data-id="${p.id}"><span class="psq" style="background:${c[1]}"></span><span class="grow"><span class="t">${esc(p.titolo)}</span><br><span class="s">${esc(c[0])}${p.ora ? " · " + esc(p.ora) : ""}${p.chi ? " · " + esc(primoNome(p.chi)) : ""}${p.evento && S.cal[p.evento] ? " · " + esc(S.cal[p.evento].titolo) : ""}</span></span><span class="pill ${s[1]}">${s[0]}</span></button>`; };
+  const daFare = tutti.filter((p) => p.data >= oggi() && p.stato !== "pubblicato").slice(0, 3);
+  return `<div class="wrap">${backLink("gr-marketing", "Marketing")}
+    <div class="pagehead"><div class="stack"><span class="eyebrow">Gruppo Marketing</span><h1>Calendario editoriale</h1></div><button class="btn pri" data-act="post-nuovo">${ic("plus")}Nuovo post</button></div>
+    ${daFare.length ? `<p class="small muted">Prossimi: ${daFare.map((p) => `<b>${esc(fData(p.data))}</b> ${esc(p.titolo)}`).join(" · ")}</p>` : ""}
+    <div class="row between"><a class="btn sm ghost" href="#editoriale-${prima}" aria-label="Mese prima">${ic("back")}</a><h2 class="disp" style="margin:0;text-transform:capitalize">${MESI[mm - 1]} ${y}</h2><a class="btn sm ghost" href="#editoriale-${dopo}" aria-label="Mese dopo" style="transform:scaleX(-1)">${ic("back")}</a></div>
+    <div class="ecal" role="grid">${["lun", "mar", "mer", "gio", "ven", "sab", "dom"].map((g) => `<span class="eg">${g}</span>`).join("")}${celle.join("")}</div>
+    <div class="chips">${Object.entries(CANALI).map(([, c]) => `<span class="pill"><i class="sq" style="background:${c[1]}"></i>${esc(c[0])}</span>`).join("")}</div>
+    <section class="panel"><div class="ph"><h3>Post di ${MESI[mm - 1]}</h3><span class="pill">${delMese.length}</span></div>
+      ${giorni.length ? giorni.map((g) => `<div class="wk">${esc(fDataL(g))}</div><div class="list">${delMese.filter((p) => p.data === g).map(riga).join("")}</div>`).join("") : `<div class="pb"><p class="small muted">Nessun post in calendario questo mese: tocca un giorno per aggiungerlo.</p></div>`}</section>
+  </div>`;
+});
+function formPost(p, pre = {}) {
+  const v = p || { data: pre.data || oggi(), canale: "post", stato: "idea", chi: ME() };
+  const evs = eventi().filter((e) => e.tipo === "evento" || e.tipo === "riunione" || e.aperto).filter((e) => !finito(e) || e.id === v.evento).sort(ordinaEv).slice(0, 40);
+  const marketing = [...new Set([...membriDi("marketing"), ...(v.chi ? [v.chi] : [])])].sort((a, b) => nm(a).localeCompare(nm(b), "it"));
+  openSheet({ title: p ? "Modifica post" : "Nuovo post", eyebrow: "Calendario editoriale", body: `<form data-form="post" data-id="${p ? p.id : ""}" id="fPo" class="stack">
+    <label class="field"><span>Di cosa parla</span><input class="in" name="titolo" required maxlength="90" value="${esc(v.titolo || "")}" placeholder="es. Countdown Fem Fest: -7" ${p ? "" : "autofocus"}></label>
+    <div class="field"><span>Dove esce</span><div class="opts">${Object.entries(CANALI).map(([k, c]) => radio("canale", k, `<i class="sq" style="background:${c[1]}"></i>${esc(c[0])}`, v.canale === k)).join("")}</div></div>
+    <div class="fields"><label class="field"><span>Giorno</span><input class="in" type="date" name="data" required value="${esc(v.data)}"></label><label class="field"><span>Ora</span><input class="in" type="time" name="ora" value="${esc(v.ora || "")}"></label>
+      <label class="field"><span>Chi lo pubblica</span><select class="in" name="chi">${opt("", "Da decidere")}${marketing.map((u) => opt(u, nm(u), v.chi === u)).join("")}</select></label></div>
+    <div class="field"><span>A che punto è</span><div class="opts">${Object.entries(STATI_POST).map(([k, s]) => radio("stato", k, s[0], (v.stato || "idea") === k)).join("")}</div></div>
+    ${evs.length ? `<label class="field"><span>Per quale evento</span><select class="in" name="evento">${opt("", "Nessuno")}${evs.map((e) => opt(e.id, `${fData(e.data)} · ${e.titolo}`, v.evento === e.id)).join("")}</select></label>` : ""}
+    <label class="field"><span>Testo, idea, hashtag</span><textarea class="in" name="testo" rows="4" maxlength="2200" placeholder="La didascalia o l'idea per il video">${esc(v.testo || "")}</textarea></label>
+    <label class="field"><span>Link (materiale o post pubblicato)</span><input class="in" type="url" name="link" value="${esc(v.link || "")}" placeholder="https://…"></label>
+    <p class="err" hidden></p></form>`,
+    foot: `${p ? `<button class="btn danger" data-act="post-del" data-id="${p.id}" aria-label="Elimina">${ic("trash")}</button>` : ""}<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fPo">${p ? "Salva" : "Aggiungi"}</button>` });
+}
+ACT["post-nuovo"] = (el) => { if (!can.editoriale()) return; formPost(null, { data: el.dataset.d }); };
+ACT["post-apri"] = (el) => { const p = S.post[el.dataset.id]; if (p) formPost(p); };
+FORMS.post = async (f) => {
+  const id = f.dataset.id || genId("po"), prima = S.post[f.dataset.id];
+  const d = { titolo: fv(f, "titolo"), canale: (f.querySelector('[name="canale"]:checked') || {}).value || "post", data: fv(f, "data"), ora: fv(f, "ora") || null, chi: fv(f, "chi") || null,
+    stato: (f.querySelector('[name="stato"]:checked') || {}).value || "idea", evento: fv(f, "evento") || null, testo: fv(f, "testo"), link: fv(f, "link"), agg: Date.now(), aggDa: ME() };
+  if (!d.titolo) return fErr(f, "Scrivi di cosa parla il post."); if (!d.data) return fErr(f, "Scegli il giorno.");
+  await wSet("post/" + id, { ...(prima ? strip(prima) : { creato: Date.now(), creatoDa: ME() }), ...d });
+  closeSheet(); toast(prima ? "Post salvato." : "Post in calendario.");
+};
+ACT["post-del"] = (el) => confirmSheet({ title: "Togliere il post dal calendario?", text: "Non si può recuperare.", ok: "Togli", danger: true, onOk: () => wDel("post/" + el.dataset.id) });
+/* nella pagina del gruppo Marketing */
+function bloccoEditoriale() {
+  const pross = postTutti().filter((p) => p.data >= oggi()).slice(0, 5);
+  return `<section class="panel"><div class="ph"><h3>Calendario editoriale</h3><a class="btn sm" href="#editoriale">${ic("cal")}Apri</a></div>
+    ${pross.length ? `<div class="list">${pross.map((p) => { const c = canale(p), s = STATI_POST[p.stato] || STATI_POST.idea; return `<button class="li" data-act="post-apri" data-id="${p.id}"><span class="psq" style="background:${c[1]}"></span><span class="grow"><span class="t">${esc(p.titolo)}</span><br><span class="s">${esc(fData(p.data))}${p.ora ? " · " + esc(p.ora) : ""} · ${esc(c[0])}${p.chi ? " · " + esc(primoNome(p.chi)) : ""}</span></span><span class="pill ${s[1]}">${s[0]}</span></button>`; }).join("")}</div>`
+      : `<div class="pb"><p class="small muted">Nessun post in programma.</p><button class="btn sm pri" data-act="post-nuovo">${ic("plus")}Aggiungi il primo</button></div>`}</section>`;
+}
+
+/* ================= STRUMENTI E BARRA IN BASSO: ognuno li sistema come gli servono ================= */
+const SEZIONI = { calendario: { h: "calendario", l: "Calendario", i: "cal" }, strumenti: { h: "strumenti", l: "Strumenti", i: "tools" }, gruppi: { h: "gruppi", l: "Gruppi", i: "people" }, mison: { h: "mison", l: "Mi son", i: "user" } };
+const MAX_BARRA = 4; // più la Home, sempre prima
+const prefStr = () => S.prefs.strumenti || {};
+/* gli strumenti nell'ordine scelto; quelli nuovi vanno in fondo */
+function strumentiOrdinati() {
+  const tutti = strumenti(), ord = prefStr().ordine || [];
+  const pos = (h) => { const i = ord.indexOf(h); return i < 0 ? 999 + tutti.findIndex((t) => t.h === h) : i; };
+  return tutti.slice().sort((a, b) => pos(a.h) - pos(b.h));
+}
+const nascosto = (h) => (prefStr().nascosti || []).includes(h);
+const mieiStrumenti = () => strumentiOrdinati().filter((t) => !nascosto(t.h));
+function barraBase() { return strumenti().length ? ["calendario", "strumenti", "gruppi", "mison"] : ["calendario", "gruppi", "mison"]; }
+/* cosa c'è nella barra: sezioni o strumenti scelti, solo se ancora disponibili */
+function vociBarra() {
+  const tools = strumenti(), scelta = prefStr().barra;
+  const voce = (h) => SEZIONI[h] ? (h === "strumenti" && !tools.length ? null : SEZIONI[h]) : tools.find((t) => t.h === h) || null;
+  let v = (Array.isArray(scelta) && scelta.length ? scelta : barraBase()).map(voce).filter(Boolean).slice(0, MAX_BARRA);
+  if (!v.length) v = barraBase().map(voce).filter(Boolean);
+  return [{ h: "home", l: "Home", i: "home" }, ...v];
+}
+const inBarra = (h) => vociBarra().some((x) => x.h === h);
+function tileStr(t, piccolo) { return `<a class="tool ${piccolo ? "mini" : ""}" href="#${t.h}">${ic(t.i)}<span><b>${esc(t.l)}</b>${piccolo ? "" : `<small>${esc(t.s)}</small>`}</span>${t.n ? `<span class="badge">${t.n}</span>` : ""}</a>`; }
+
+route("strumenti", () => {
+  const tutti = strumentiOrdinati();
+  if (S.ui.strEdit) return vistaPersonalizza(tutti);
+  const vis = tutti.filter((t) => !nascosto(t.h)), nas = tutti.filter((t) => nascosto(t.h));
+  const sezioni = Object.values(SEZIONI).filter((x) => x.h !== "strumenti" && !inBarra(x.h));
+  return `<div class="wrap">
+    <div class="pagehead"><div class="stack"><span class="eyebrow">Quello che usi tu</span><h1>Strumenti</h1></div><button class="btn" data-act="str-edit">${ic("edit")}Personalizza</button></div>
+    ${vis.length ? `<div class="tools">${vis.map((t) => tileStr(t)).join("")}</div>` : empty("Nessuno strumento in vista", "Li hai nascosti tutti: tocca Personalizza per rimetterli.")}
+    ${nas.length ? `<section class="panel"><div class="ph"><h3>Nascosti</h3><span class="pill">${nas.length}</span></div><div class="list">${nas.map((t) => `<a class="li" href="#${t.h}">${ic(t.i)}<span class="grow"><span class="t">${esc(t.l)}</span><br><span class="s">${esc(t.s)}</span></span>${t.n ? `<span class="badge">${t.n}</span>` : ic("chev", "chev")}</a>`).join("")}</div></section>` : ""}
+    ${sezioni.length ? `<section class="panel"><div class="ph"><h3>Le altre sezioni</h3></div><div class="list">${sezioni.map((x) => `<a class="li" href="#${x.h}">${ic(x.i)}<span class="grow t">${esc(x.l)}</span>${ic("chev", "chev")}</a>`).join("")}</div></section>` : ""}
+  </div>`;
+});
+function vistaPersonalizza(tutti) {
+  const barra = vociBarra().slice(1).map((x) => x.h), piena = barra.length >= MAX_BARRA;
+  const scelte = [...Object.values(SEZIONI).filter((x) => x.h !== "strumenti" || tutti.length), ...tutti];
+  const spunta = (h, l) => { const on = barra.includes(h); return `<label class="opt sbar"><input type="checkbox" data-act="str-barra" data-h="${h}" ${on ? "checked" : ""} ${!on && piena ? "disabled" : ""}><span>${l}</span></label>`; };
+  return `<div class="wrap">
+    <div class="pagehead"><div class="stack"><span class="eyebrow">Strumenti</span><h1>Personalizza</h1></div><button class="btn pri" data-act="str-fine">${ic("check")}Fatto</button></div>
+    <section class="stack s"><h3>La barra in basso</h3><p class="small muted">La Home c'è sempre. Scegli fino a ${MAX_BARRA} altre voci: sezioni o gli strumenti che apri più spesso.</p>
+      <div class="barprev" aria-hidden="true">${vociBarra().map((x) => `<span>${ic(x.i)}<small>${esc(x.l)}</small></span>`).join("")}</div>
+      <div class="opts">${scelte.map((x) => spunta(x.h, `${ic(x.i)}${esc(x.l)}`)).join("")}</div></section>
+    <section class="panel"><div class="ph"><h3>I tuoi strumenti</h3><span class="small muted">ordine e cosa vedi in Home</span></div>
+      <div class="list">${tutti.map((t, i) => `<div class="li sord ${nascosto(t.h) ? "off" : ""}">${ic(t.i)}<span class="grow"><span class="t">${esc(t.l)}</span><br><span class="s">${nascosto(t.h) ? "nascosto" : esc(t.s)}</span></span>
+        <button class="btn sm ghost" data-act="str-su" data-h="${t.h}" aria-label="Sposta su ${esc(t.l)}" ${i === 0 ? "disabled" : ""}>${ic("up")}</button><button class="btn sm ghost" data-act="str-giu" data-h="${t.h}" aria-label="Sposta giù ${esc(t.l)}" ${i === tutti.length - 1 ? "disabled" : ""}>${ic("down")}</button>
+        <button class="btn sm ${nascosto(t.h) ? "" : "ghost"}" data-act="str-vedi" data-h="${t.h}" aria-pressed="${!nascosto(t.h)}">${nascosto(t.h) ? "Mostra" : "Nascondi"}</button></div>`).join("")}</div></section>
+    <div class="btns"><button class="btn ghost" data-act="str-reset">Torna come prima</button></div>
+  </div>`;
+}
+const salvaStr = (patch) => { S.prefs = { ...S.prefs, strumenti: { ...prefStr(), ...patch } }; render(true); return salvaPrefs({ strumenti: { ...prefStr(), ...patch } }).catch(() => {}); };
+ACT["str-edit"] = () => { S.ui.strEdit = true; render(true); };
+ACT["str-fine"] = () => { S.ui.strEdit = false; render(true); toast("Fatto: gli strumenti sono come li vuoi tu."); };
+function sposta(h, d) { const ord = strumentiOrdinati().map((t) => t.h), i = ord.indexOf(h), j = i + d; if (i < 0 || j < 0 || j >= ord.length) return; [ord[i], ord[j]] = [ord[j], ord[i]]; salvaStr({ ordine: ord }); }
+ACT["str-su"] = (el) => sposta(el.dataset.h, -1);
+ACT["str-giu"] = (el) => sposta(el.dataset.h, 1);
+ACT["str-vedi"] = (el) => { const n = new Set(prefStr().nascosti || []); n.has(el.dataset.h) ? n.delete(el.dataset.h) : n.add(el.dataset.h); salvaStr({ nascosti: [...n] }); };
+ACT["str-barra"] = (el) => {
+  const b = vociBarra().slice(1).map((x) => x.h), h = el.dataset.h, i = b.indexOf(h);
+  if (i >= 0) b.splice(i, 1); else if (b.length < MAX_BARRA) b.push(h); else return;
+  if (!b.length) { toast("Tieni almeno una voce oltre alla Home."); render(true); return; }
+  salvaStr({ barra: b });
+};
+ACT["str-reset"] = () => confirmSheet({ title: "Tornare come prima?", text: "Ordine, strumenti nascosti e barra in basso tornano quelli di partenza.", ok: "Ripristina", onOk: () => salvaStr({ ordine: [], nascosti: [], barra: [] }) });
+
 /* ================= GOOGLE CALENDAR: gli appuntamenti arrivano nel calendario di ogni socio =================
    Un calendario «Bagaera» del consiglio: ogni appuntamento ci finisce con, come invitati, i soci che lo vedono
    nell'app. Google lo mette nel loro calendario e manda le notifiche. Lo allinea chi del consiglio ha collegato Google. */
@@ -4649,7 +5618,7 @@ async function entraConGoogle(u) {
   }
   if (!iscritto) { iscritto = true; iscrivi(); }
   iscriviPrefs(); S.route = parseHash(); render(true);
-  gcalDopoRitorno();
+  gcalDopoRitorno(); vbDopoRitorno(); tesDopoRitorno();
 }
 let richiestaUnsub = null;
 function avviaRichiesta(id) {
