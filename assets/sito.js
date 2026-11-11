@@ -29,8 +29,13 @@
       const cls = t === "locandina" ? " is-poster" : t === "logo" ? " is-logo" : "";
       return `<div class="ev-card__media${cls}"><img src="assets/img/${esc(e.img)}" alt="" loading="lazy" width="760" height="570">${dataBox(e)}</div>`;
     }
+    function quando(e) {
+      if (!e.data) { const [y, m] = e.mese.split("-"); return MESI[+m - 1] + " " + y; }
+      const [y, m, d] = e.data.split("-");
+      return String(+d) + (e.fine && e.fine !== e.data ? "–" + (+e.fine.split("-")[2]) : "") + " " + MESI[+m - 1] + " " + y;
+    }
     function card(e) {
-      const meta = [e.ora, e.luogo].filter(Boolean).map(x => `<span>${esc(x)}</span>`).join("");
+      const meta = `<span class="ev-card__when">${quando(e)}</span>` + [e.ora, e.luogo].filter(Boolean).map(x => `<span>${esc(x)}</span>`).join("");
       return `<li class="ev-card" data-tema="${esc(e.tema || "serata")}">${media(e)}
         <div class="ev-card__body">
           <div class="ev-card__meta"><b>${esc(e.tag || "Evento")}</b>${meta}</div>
@@ -41,7 +46,12 @@
         </div></li>`;
     }
     const lim = +($("ev-grid").dataset.limit || 0);
-    function fillGrid(list) { $("ev-grid").innerHTML = (lim ? list.slice(0, lim) : list).map(card).join(""); }
+    let lista = [];
+    function disegna(tag) {
+      const l = tag === "Tutti" ? lista : lista.filter(e => (e.tag || "Evento") === tag);
+      $("ev-grid").innerHTML = (lim ? l.slice(0, lim) : l).map(card).join("") || `<li class="ev-empty">Nessun evento di questo tipo, per ora.</li>`;
+    }
+    function fillGrid(list) { lista = list; disegna("Tutti"); }
     const next = $("ev-next");
     if (prossimi.length) {
       const p = prossimi[0];
@@ -56,6 +66,16 @@
       fillGrid(passati);
     }
     if ($("ev-count")) $("ev-count").textContent = passati.length + " eventi dal 2024";
+    const ef = $("ev-filters");
+    if (ef) {
+      const tipi = ["Tutti", ...Array.from(new Set(lista.map(e => e.tag || "Evento")))];
+      ef.innerHTML = tipi.map((t, i) => `<button type="button" data-t="${esc(t)}" aria-pressed="${i === 0}">${esc(t)}</button>`).join("");
+      ef.addEventListener("click", ev => {
+        const b = ev.target.closest("button"); if (!b) return;
+        ef.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+        disegna(b.dataset.t);
+      });
+    }
     const chip = $("next-chip-text");
     if (chip) chip.innerHTML = prossimi.length ? `Prossimo: <b>${esc(prossimi[0].titolo)}</b>` : `Ultimo: <b>${esc(passati[0].titolo)}</b>`;
   }
@@ -67,13 +87,28 @@
     const ul = $("friends-list"), filt = $("filters");
     const show = p => {
       ul.innerHTML = FRIENDS.filter(f => p === "Tutti" || f.paese === p).map(f => `<li class="friend">
-        <h3>${esc(f.nome)}</h3><span class="where">${esc(f.tipo)} · ${esc(f.paese)}</span>
-        <span class="perk ${f.sconto ? "" : "tbd"}">${esc(f.sconto || "Sconto in arrivo")}</span></li>`).join("");
+        <h2 class="h3">${esc(f.nome)}</h2><span class="where">${esc(f.tipo)} · ${esc(f.paese)}</span>
+        <span class="perk ${f.sconto ? "" : "tbd"}">${esc(f.sconto || "Sconto in arrivo")}</span>
+        <a class="friend__map" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(f.nome + ", " + f.paese)}" target="_blank" rel="noopener" aria-label="${esc(f.nome)}: apri in Google Maps">Dove si trova</a></li>`).join("");
       filt.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.p === p)));
     };
     filt.innerHTML = paesi.map((p, i) => `<button type="button" id="f-${i}" data-p="${esc(p)}" aria-pressed="false">${esc(p)}</button>`).join("");
     filt.addEventListener("click", ev => { const b = ev.target.closest("button"); if (b) show(b.dataset.p); });
     show("Tutti");
+  }
+
+  /* ---------- statuto: apri/chiudi articoli ---------- */
+  const sa = $("st-all");
+  if (sa) {
+    const arts = [...document.querySelectorAll("details.st-art")];
+    sa.addEventListener("click", () => {
+      const o = sa.getAttribute("aria-pressed") !== "true";
+      arts.forEach(d => { d.open = o; });
+      sa.setAttribute("aria-pressed", String(o));
+      sa.textContent = o ? "Chiudi tutti gli articoli" : "Apri tutti gli articoli";
+    });
+    const apri = () => { const d = location.hash ? document.getElementById(location.hash.slice(1)) : null; if (d && d.tagName === "DETAILS") { d.open = true; d.scrollIntoView(); } };
+    addEventListener("hashchange", apri); apri();
   }
 
   /* ---------- menu mobile ---------- */

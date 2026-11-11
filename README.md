@@ -13,6 +13,7 @@ Pubblicato con GitHub Pages sul dominio `bagaera.it` (file `CNAME`).
 | `friends.html` | Bagaera's friends, con filtro per paese |
 | `diventa-un-bagai.html` | socio e tesserato |
 | `contatti.html` | email, PEC, Instagram |
+| `statuto.html` | lo statuto, un articolo per riga da aprire |
 | `fem-fest.html` | la pagina del Fem Fest: una sezione a tema e una galleria per ogni edizione |
 | `assets/dati.js` | **eventi e Bagaera's friends**: è l'unico file da toccare per aggiornarli |
 | `assets/sito.css` | grafica |
