@@ -1092,7 +1092,6 @@ img.mb { display: block; object-fit: contain; user-select: none; }
 <nav class="tabs" id="tabs" aria-label="Sezioni"></nav>
 <div id="sheetRoot"></div>
 <div class="toast" id="toast" role="status" hidden></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 "use strict";
 /* ================= BagaeraPP: nucleo ================= */
@@ -1423,12 +1422,22 @@ function nomePagina(h) {
 
 /* ================= render ================= */
 let rq = false, deferred = false;
-function scheduleRender() { if (rq) return; rq = true; requestAnimationFrame(() => { rq = false; render(); }); }
+function scheduleRender() { if (rq) return; rq = true; requestAnimationFrame(() => { rq = false; render(false, true); }); }
+/* scrive nel DOM solo se è cambiato qualcosa: i dati arrivano a ondate e quasi sempre la pagina resta uguale */
+function setHtml(el, html) { if (el.__h === html) return false; el.__h = html; el.innerHTML = html; return true; }
+/* la pagina è «intatta» se nessuno l'ha toccata dopo l'ultimo disegno (un bottone disattivato, un conto alla rovescia…) */
+let vistaToccata = false, vistaObs = null, vistaHtml = null;
+function osservaVista(view) {
+  if (vistaObs || !window.MutationObserver) return;
+  vistaObs = new MutationObserver(() => { vistaToccata = true; });
+  vistaObs.observe(view, { childList: true, subtree: true, attributes: true, characterData: true });
+}
 const typing = (root) => { const a = document.activeElement; return !!(a && root && root.contains(a) && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName) && a.type !== "checkbox" && a.type !== "radio"); };
 document.addEventListener("focusout", () => setTimeout(() => { if (deferred && !typing($("#view"))) render(); if (S.sheet && S.sheet._dirty && !typing($("#sheetRoot"))) { S.sheet._dirty = false; drawSheet(); } }, 0));
-function render(force) {
+function render(force, pigro) {
   renderChrome();
   const view = $("#view");
+  osservaVista(view);
   if (!force && typing(view)) deferred = true;
   else {
     deferred = false;
@@ -1436,10 +1445,15 @@ function render(force) {
     let out;
     try { out = WEB && !S.authUser ? (S.authPronto ? vLogin() : vCaricamento()) : WEB && !ME() ? vLogin() : !pronto() ? vCaricamento() : !ME() && !S.noRuntime ? vLogin() : fn(S.route.arg); } catch (e) { console.error(e); out = `<div class="notice bad">Qualcosa non ha funzionato in questa schermata: ${esc(e.message || e)}. Torna alla <a href="#home">home</a>.</div>`; }
     const html = typeof out === "string" ? out : out.html;
-    view.innerHTML = html;
-    riapriDetails(view);
+    /* ridisegno chiesto dai dati che arrivano: se la pagina verrebbe identica e nessuno l'ha toccata, resta com'è (niente sfarfallio, i campi scritti restano) */
+    if (vistaObs) vistaObs.takeRecords().length && (vistaToccata = true);
+    if (!(pigro && vistaObs && !vistaToccata && html === vistaHtml)) {
+      view.innerHTML = html; vistaHtml = html;
+      riapriDetails(view);
+      if (out && out.mount) try { out.mount(view); } catch (e) { console.error(e); }
+      if (vistaObs) { vistaObs.takeRecords(); vistaToccata = false; }
+    }
     controllaNotte();
-    if (out && out.mount) try { out.mount(view); } catch (e) { console.error(e); }
   }
   if (S.sheet && S.sheet.live) { if (typing($("#sheetRoot"))) S.sheet._dirty = true; else drawSheet(); }
 }
@@ -1537,7 +1551,7 @@ function strumenti() {
 function renderChrome() {
   const dentro = !!ME() && pronto();
   document.body.classList.toggle("fuori", !dentro);
-  if (!dentro) { $("#tabs").innerHTML = ""; $("#side").innerHTML = ""; $("#bell").innerHTML = ""; $("#meBtn").innerHTML = ""; return; }
+  if (!dentro) { setHtml($("#tabs"), ""); setHtml($("#side"), ""); setHtml($("#bell"), ""); setHtml($("#meBtn"), ""); return; }
   postaAuto();
   if (WEB) gcalAuto();
   const cur = S.route.name;
@@ -1551,12 +1565,12 @@ function renderChrome() {
   const nStr = st.filter((t) => !inB(t.h)).reduce((n, t) => n + (t.n || 0), 0);
   const nDi = (it) => (it.h === "home" ? nAv : it.h === "strumenti" ? nStr : it.n || 0);
   const link = (it, side) => `<a href="#${it.h}" ${sec === it.h || (side && figlio === it.h) ? 'aria-current="page"' : ""}>${ic(it.i)}<span>${esc(it.l)}</span>${(side ? it.n : nDi(it)) ? `<span class="badge" ${it.nt ? `title="${esc(it.nt)}"` : ""}>${side ? it.n : nDi(it)}</span>` : ""}</a>`;
-  $("#tabs").innerHTML = barra.map((x) => link(x, false)).join("");
+  setHtml($("#tabs"), barra.map((x) => link(x, false)).join(""));
   $("#tabs").style.gridTemplateColumns = `repeat(${barra.length}, minmax(0, 1fr))`;
   const mie = !S.noRuntime ? mieiStrumenti() : [];
-  $("#side").innerHTML = navItems().map((x) => link(x, true)).join("") + (st.length ? (mie.length > 4 && perCategoria(mie).length > 1 ? perCategoria(mie).map((c) => `<div class="sh">${esc(c.l)}</div>` + c.items.map((x) => link(x, true)).join("")).join("") : `<div class="sh">Strumenti</div>` + mie.map((x) => link(x, true)).join("")) + `<a href="#strumenti" ${cur === "strumenti" ? 'aria-current="page"' : ""}>${ic("tools")}<span>${mie.length < st.length ? "Tutti gli strumenti" : "Personalizza"}</span></a>` : "");
-  $("#bell").innerHTML = ic("bell") + (nAv ? `<span class="badge">${nAv}</span>` : "");
-  $("#meBtn").innerHTML = av(ME());
+  setHtml($("#side"), navItems().map((x) => link(x, true)).join("") + (st.length ? (mie.length > 4 && perCategoria(mie).length > 1 ? perCategoria(mie).map((c) => `<div class="sh">${esc(c.l)}</div>` + c.items.map((x) => link(x, true)).join("")).join("") : `<div class="sh">Strumenti</div>` + mie.map((x) => link(x, true)).join("")) + `<a href="#strumenti" ${cur === "strumenti" ? 'aria-current="page"' : ""}>${ic("tools")}<span>${mie.length < st.length ? "Tutti gli strumenti" : "Personalizza"}</span></a>` : ""));
+  setHtml($("#bell"), ic("bell") + (nAv ? `<span class="badge">${nAv}</span>` : ""));
+  setHtml($("#meBtn"), av(ME()));
 }
 
 /* ================= azioni ================= */
@@ -1829,7 +1843,11 @@ function avviaWeb() {
   S.db = { doc: (p) => docW(fsdb.doc(p)), collection: (p) => colW(fsdb.collection(p)) };
   S.downloads = downloadsWeb; S.mcp = mcpWeb;
   S.loaded.accessi = true;
-  if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
+  if ("serviceWorker" in navigator && location.protocol === "https:") {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+    /* l'app parte dalla copia salvata: quando ne arriva una nuova lo dico, e al prossimo avvio c'è comunque */
+    navigator.serviceWorker.addEventListener("message", (e) => { if (e.data && e.data.tipo === "versione-nuova") toast("C'è una versione nuova dell'app.", { label: "Aggiorna", fn: () => location.reload() }); });
+  }
   ritornoDaGoogle().catch((e) => console.warn(e)).finally(() => {
     firebase.auth().onAuthStateChanged((u) => { S.authPronto = true; entraConGoogle(u); });
   });
@@ -1997,9 +2015,22 @@ function forma(k, cx, cy, r) {
   if (k === 4) return poly(pts(4));
   return poly(pts(16, -Math.PI / 2, (i) => (i % 2 ? r * .86 : r)));
 }
+/* le immagini delle medaglie arrivano dall'archivio come testo lungo: le trasformo una volta sola in un indirizzo corto,
+   così le pagine restano leggere e il telefono non le ridecodifica a ogni ridisegno */
+const medUrl = new Map();
+function urlMedaglia(id, dati) {
+  const c = medUrl.get(id); if (c && c.dati === dati) return c.url;
+  let url = dati;
+  try {
+    const m = /^data:([^;,]+)(;base64)?,(.*)$/s.exec(dati);
+    if (m && m[2] && window.URL && URL.createObjectURL) { const bin = atob(m[3]), b = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i); url = URL.createObjectURL(new Blob([b], { type: m[1] })); }
+  } catch (e) { url = dati; }
+  if (c && c.url !== c.dati) try { URL.revokeObjectURL(c.url); } catch (e) {}
+  medUrl.set(id, { dati, url }); return url;
+}
 function medaglia(ev, { lock = false } = {}) {
   const mp = ev.id && S.medaglie && S.medaglie[ev.id];
-  if (mp && mp.img) return `<img class="mb mbimg" src="${esc(mp.img)}" alt="" draggable="false">`;
+  if (mp && mp.img) return `<img class="mb mbimg" src="${esc(urlMedaglia(ev.id, mp.img))}" alt="" draggable="false" decoding="async">`;
   const h = hash(ev.id || ev.titolo);
   const col = lock ? "var(--bg-3)" : COLORI_MEDAGLIA[ev.colore] || ["#2a952d", "#7b3fa0", "#e07a1f", "#1f7ac4", "#d4a017", "#c0392b"][h % 6];
   const k = ev.forma != null ? ev.forma : h % 6;
@@ -2209,18 +2240,47 @@ function interoInLettere(n) {
 }
 function inLettere(importo) { const c = Math.round(Number(importo) * 100); return `${interoInLettere(Math.floor(c / 100))}/${String(c % 100).padStart(2, "0")}`; }
 const numRicevuta = (r) => (r ? `${String(r.numero).padStart(3, "0")}/${r.anno}` : "—");
+/* testi delle ricevute (Bagaera è un'APS iscritta al RUNTS: D.Lgs. 117/2017) */
 const TIPI_RIC = {
-  liberale: { t: "Erogazione liberale", causale: "Contributo liberale a sostegno delle attività dell'associazione", dich: "Il versamento è effettuato a titolo di erogazione liberale, senza alcun corrispettivo o controprestazione da parte dell'associazione." },
-  sponsor: { t: "Sponsorizzazione", causale: "Sponsorizzazione delle iniziative dell'associazione", dich: "Il contributo è versato a titolo di sponsorizzazione, a fronte della visibilità del nome o del marchio del sostenitore nelle iniziative dell'associazione." },
+  liberale: { t: "Erogazione liberale", causale: "Erogazione liberale a sostegno delle attività istituzionali dell'associazione", dich: "Erogazione liberale in denaro, effettuata spontaneamente e senza alcun corrispettivo o controprestazione da parte dell'associazione, che la destina allo svolgimento delle proprie attività statutarie." },
+  sponsor: { t: "Sponsorizzazione", causale: "Sponsorizzazione delle iniziative dell'associazione", dich: "Si attesta il ricevimento dell'importo a titolo di sponsorizzazione, a fronte della visibilità del nome o del marchio dello sponsor nelle iniziative dell'associazione. Il presente documento non sostituisce la fattura, ove dovuta." },
   quota: { t: "Quota associativa", causale: "Quota associativa", dich: "Versamento della quota associativa annuale, che non dà diritto a corrispettivi." },
 };
-const ASSOC_BASE = { nome: "Bagaera APS", indirizzo: "Via Cavour 29/A, 22040 Lurago d'Erba (CO)", cf: "93020690132", email: "info@bagaera.it", luogo: "Lurago d'Erba", firmatario: "", bollo: false };
-const assoc = () => ({ ...ASSOC_BASE, ...cfg("associazione") });
+const TRACCIABILE = (metodo) => !!metodo && !/contant/i.test(metodo);
+const eLiberale = (c) => c.tipo === "liberale" || !c.tipo;
+/* frase d'apertura, come nel modulo cartaceo del consiglio */
+function fraseRicevuta(c, a) {
+  const chi = `L'Associazione ${a.nome}${a.firmatario ? `, nella persona del suo legale rappresentante ${a.firmatario},` : ""}`;
+  if (eLiberale(c)) return `${chi} dichiara di aver ricevuto quale erogazione liberale la somma indicata qui sotto.`;
+  if (c.tipo === "quota") return `${chi} dichiara di aver ricevuto la quota associativa indicata qui sotto.`;
+  return `${chi} dichiara di aver ricevuto la somma indicata qui sotto.`;
+}
+/* righe in fondo alla ricevuta: ente non commerciale, agevolazioni per chi dona, bollo */
+function noteRicevuta(c, a) {
+  const out = [];
+  if (eLiberale(c)) {
+    out.push(`L'Associazione ${a.nome} è ente non commerciale iscritto nel RUNTS (Registro Unico Nazionale del Terzo Settore) di cui all'art. 45 del D.Lgs. 117/2017${a.runtsDal ? " in data " + a.runtsDal : ""}.`);
+    out.push("Per le persone fisiche l'erogazione liberale è detraibile al 30% fino a 30.000 € (art. 83, c. 1, D.Lgs. 117/2017) o, in alternativa, deducibile nel limite del 10% del reddito complessivo dichiarato (art. 83, c. 2). Per enti e aziende è deducibile nel limite del 10% del reddito complessivo dichiarato (art. 83, c. 2).");
+    out.push(TRACCIABILE(c.metodo)
+      ? "È condizione di detraibilità o deducibilità che l'erogazione sia fatta tramite banca, posta o altro sistema tracciabile previsto dalle norme."
+      : "È condizione di detraibilità o deducibilità che l'erogazione sia fatta tramite banca, posta o altro sistema tracciabile previsto dalle norme: questo versamento, in contanti, non ne dà diritto.");
+  }
+  if (a.esenteBollo !== false && c.tipo !== "sponsor") out.push("La presente ricevuta è esente da imposta di bollo ai sensi dell'art. 82, c. 5, del D.Lgs. 117/2017.");
+  return out;
+}
+const PRIVACY_RIC = "I dati personali indicati in questa ricevuta sono trattati nel rispetto del Regolamento UE 2016/679 (GDPR) e del D.Lgs. 196/2003. Per l'informativa completa si rimanda alla privacy policy sui canali istituzionali dell'associazione.";
+const RUNTS_BASE = "APS iscritta al RUNTS, sezione Associazioni di Promozione Sociale (Provincia di Como, det. n. 728 del 18/06/2025)";
+const ASSOC_BASE = { nome: "Bagaera APS", indirizzo: "Via Cavour 29/A, 22040 Lurago d'Erba (CO)", cf: "93020690132", email: "info@bagaera.it", luogo: "Lurago d'Erba", firmatario: "", runts: RUNTS_BASE, runtsDal: "18/06/2025", esenteBollo: true };
+/* chi firma: quello scritto nelle impostazioni, altrimenti il presidente (legale rappresentante) */
+const presidenteNome = () => { const p = Object.values(S.soci || {}).find((s) => s.ruolo === "presidente" && s.attivo !== false); return (p && p.nome) || ""; };
+const assoc = () => { const a = { ...ASSOC_BASE, ...cfg("associazione") }; if (!a.firmatario) a.firmatario = presidenteNome(); return a; };
 
 /* numero di ricevuta: una serie unica per anno, prenotata con un lease per non avere doppioni */
 async function prenotaNumero(anno, refId) {
   const presi = [...Object.values(S.contributi).map((c) => c.ricevuta), ...Object.values(S.tessere).map((t) => t.ricevuta)].filter((r) => r && Number(r.anno) === anno).map((r) => r.numero);
-  let n = (presi.length ? Math.max(...presi) : 0) + 1;
+  /* ricevute fatte a mano fuori dall'app: la numerazione riparte dopo l'ultima */
+  const aMano = Number(((cfg("associazione").ultimoAMano) || {})[anno]) || 0;
+  let n = Math.max(aMano, ...presi, 0) + 1;
   const holder = (ME() || "anon") + "-" + Math.random().toString(36).slice(2, 8);
   for (let i = 0; i < 40; i++, n++) {
     const ref = S.db.doc(`ricevute/${anno}-${String(n).padStart(4, "0")}`);
@@ -2235,15 +2295,17 @@ async function prenotaNumero(anno, refId) {
 }
 function htmlRicevuta(c) {
   const a = assoc(), it = c.intestatario || {}, T = TIPI_RIC[c.tipo] || TIPI_RIC.liberale;
-  const bollo = a.bollo && c.importo > 77.47;
   return `<div class="foglio">${c.annullato ? `<div class="stamp">ANNULLATA</div>` : ""}
-    <div class="fh"><svg viewBox="44.2 205.0 1261.5 670.0" aria-label="Bagaera"><use href="#s-picto" x="269.6" y="205" width="810.8" height="440.4"/><use href="#s-word" x="44.2" y="711.6" width="1261.5" height="163.4"/></svg><div class="fa"><b style="color:#0b0c0b">${esc(a.nome)}</b><br>${esc(a.indirizzo)}<br>C.F. ${esc(a.cf)}</div></div>
+    <div class="fh"><svg viewBox="44.2 205.0 1261.5 670.0" aria-label="Bagaera"><use href="#s-picto" x="269.6" y="205" width="810.8" height="440.4"/><use href="#s-word" x="44.2" y="711.6" width="1261.5" height="163.4"/></svg><div class="fa"><b style="color:#0b0c0b">${esc(a.nome)}</b><br>${esc(a.indirizzo)}<br>C.F. ${esc(a.cf)}${a.runts ? `<br><small>${esc(a.runts)}</small>` : ""}</div></div>
     <div class="row between"><span class="disp" style="font-size:1.6rem">Ricevuta</span><span><b>N. ${esc(numRicevuta(c.ricevuta))}</b> del ${esc(fDataIt(c.ricevuta && c.ricevuta.emessa))}</span></div>
-    <div><span class="lab">Ricevuto da</span><br><b>${esc(it.nome || "")}</b>${it.indirizzo ? "<br>" + esc(it.indirizzo) : ""}${it.piva ? "<br>C.F./P.IVA " + esc(it.piva) : ""}</div>
+    <p class="small">${esc(fraseRicevuta(c, a))}</p>
+    <div><span class="lab">Ricevuto da</span><br><b>${esc(it.nome || "")}</b>${it.indirizzo ? "<br>" + esc(it.indirizzo) : ""}${it.piva ? "<br>C.F. / P.IVA " + esc(it.piva) : ""}</div>
     <div class="fs"><span class="lab" style="color:#0b0c0b">La somma di</span><div class="big">${esc(euro(c.importo))}</div><em>euro ${esc(inLettere(c.importo))}</em></div>
     <div class="row between" style="align-items:flex-start"><span><span class="lab">Pagamento</span><br><b>${esc(c.metodo)}</b> · ${esc(fDataIt(c.data))}</span><span><span class="lab">Tipo</span><br><b>${esc(T.t)}</b></span></div>
     <div><span class="lab">Causale</span><br>${esc(c.causale)}</div><small style="color:#545e55">${esc(T.dich)}</small>
-    ${bollo ? `<small><b>Ricordati la marca da bollo da 2,00 €</b> sulla copia stampata.</small>` : ""}</div>`;
+    ${noteRicevuta(c, a).map((n) => `<small style="color:#545e55">${esc(n)}</small>`).join("")}
+    <small style="color:#545e55">Il legale rappresentante: ${esc(a.firmatario || "________________")}</small>
+    <small style="color:#8a948b;font-size:.7rem">${esc(PRIVACY_RIC)}</small></div>`;
 }
 let logoPng = null;
 function preparaLogo() {
@@ -2257,8 +2319,15 @@ function preparaLogo() {
     img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   });
 }
+/* la libreria dei PDF pesa: si scarica solo la prima volta che serve un PDF, non a ogni avvio */
+let jsPdfAttesa = null;
+function jsPdfPronto() {
+  if (window.jspdf && window.jspdf.jsPDF) return Promise.resolve(window.jspdf.jsPDF);
+  jsPdfAttesa = jsPdfAttesa || caricaScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js").catch((e) => { jsPdfAttesa = null; throw e; });
+  return jsPdfAttesa.then(() => { if (!(window.jspdf && window.jspdf.jsPDF)) throw new Error("jspdf"); return window.jspdf.jsPDF; });
+}
 async function pdfRicevuta(c) {
-  const J = window.jspdf && window.jspdf.jsPDF; if (!J) throw new Error("jspdf");
+  const J = await jsPdfPronto();
   const a = assoc(), it = c.intestatario || {}, T = TIPI_RIC[c.tipo] || TIPI_RIC.liberale;
   const doc = new J({ unit: "mm", format: "a4" });
   const L = 20, R = 190, Wd = R - L, nero = [11, 12, 11], grigio = [84, 94, 85], verde = [42, 149, 45];
@@ -2266,32 +2335,37 @@ async function pdfRicevuta(c) {
   doc.setTextColor(...nero); doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.text(a.nome, R, 22, { align: "right" });
   doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(...grigio);
   let ya = 27; doc.splitTextToSize(a.indirizzo || "", 80).forEach((r) => { doc.text(r, R, ya, { align: "right" }); ya += 4.4; });
-  if (a.cf) { doc.text("C.F. " + a.cf, R, ya, { align: "right" }); ya += 4.4; } if (a.email) doc.text(a.email, R, ya, { align: "right" });
-  doc.setFillColor(...nero); doc.rect(L, 50, Wd, 1.4, "F");
-  doc.setTextColor(...nero); doc.setFont("helvetica", "bold"); doc.setFontSize(30); doc.text("RICEVUTA", L, 67);
-  doc.setFontSize(15); doc.text("N. " + numRicevuta(c.ricevuta), R, 61, { align: "right" });
-  doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(...grigio); doc.text("del " + fDataIt(c.ricevuta && c.ricevuta.emessa), R, 67, { align: "right" });
-  let y = 82;
+  if (a.cf) { doc.text("C.F. " + a.cf, R, ya, { align: "right" }); ya += 4.4; } if (a.email) { doc.text(a.email, R, ya, { align: "right" }); ya += 4.4; }
+  if (a.runts) { doc.setFontSize(7.5); doc.splitTextToSize(a.runts, 95).forEach((r) => { doc.text(r, R, ya, { align: "right" }); ya += 3.6; }); }
+  const yTop = Math.max(50, ya + 1);
+  doc.setFillColor(...nero); doc.rect(L, yTop, Wd, 1.4, "F");
+  doc.setTextColor(...nero); doc.setFont("helvetica", "bold"); doc.setFontSize(30); doc.text("RICEVUTA", L, yTop + 17);
+  doc.setFontSize(15); doc.text("N. " + numRicevuta(c.ricevuta), R, yTop + 11, { align: "right" });
+  doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(...grigio); doc.text("del " + fDataIt(c.ricevuta && c.ricevuta.emessa), R, yTop + 17, { align: "right" });
+  let y = yTop + 27;
+  if (eLiberale(c)) { doc.setFont("helvetica", "bold"); doc.setFontSize(8.5); doc.setTextColor(...verde); doc.text("PER EROGAZIONE LIBERALE A APS · DA PERSONE FISICHE, AZIENDE O ENTI", L, y - 2.5, { charSpace: 0.2 }); }
+  doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(...nero);
+  y += 4; doc.splitTextToSize(fraseRicevuta(c, a), Wd).forEach((r) => { doc.text(r, L, y); y += 5; }); y += 5;
   const et = (t, x, yy, col) => { doc.setFont("helvetica", "bold"); doc.setFontSize(7.5); doc.setTextColor(...(col || grigio)); doc.text(t.toUpperCase(), x, yy, { charSpace: 0.4 }); };
   et("Ricevuto da", L, y); doc.setTextColor(...nero); doc.setFont("helvetica", "bold"); doc.setFontSize(14);
   y += 7; doc.splitTextToSize(it.nome || "", Wd).forEach((r) => { doc.text(r, L, y); y += 6; });
   doc.setFont("helvetica", "normal"); doc.setFontSize(10);
   if (it.indirizzo) doc.splitTextToSize(it.indirizzo, Wd).forEach((r) => { doc.text(r, L, y); y += 5; });
-  if (it.piva) { doc.text("C.F./P.IVA " + it.piva, L, y); y += 5; }
-  y += 4; doc.setFillColor(...verde); doc.setDrawColor(...nero); doc.setLineWidth(0.7); doc.rect(L, y, Wd, 34, "FD");
-  et("La somma di", L + 6, y + 8, nero); doc.setTextColor(...nero); doc.setFont("helvetica", "bold"); doc.setFontSize(28); doc.text(euro(c.importo), L + 6, y + 21);
-  doc.setFont("helvetica", "normal"); doc.setFontSize(10.5); doc.text("euro " + inLettere(c.importo), L + 6, y + 29);
-  y += 46; et("Mezzo di pagamento", L, y); et("Data del pagamento", L + 62, y); et("Tipo", L + 118, y);
+  if (it.piva) { doc.text("C.F. / P.IVA " + it.piva, L, y); y += 5; }
+  y += 3; doc.setFillColor(...verde); doc.setDrawColor(...nero); doc.setLineWidth(0.7); doc.rect(L, y, Wd, 29, "FD");
+  et("La somma di", L + 6, y + 7, nero); doc.setTextColor(...nero); doc.setFont("helvetica", "bold"); doc.setFontSize(24); doc.text(euro(c.importo), L + 6, y + 18);
+  doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.text("euro " + inLettere(c.importo), L + 6, y + 25);
+  y += 38; et("Mezzo di pagamento", L, y); et("Data del pagamento", L + 62, y); et("Tipo", L + 118, y);
   doc.setTextColor(...nero); doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.text(c.metodo || "", L, y + 6); doc.text(fDataIt(c.data), L + 62, y + 6); doc.text(T.t, L + 118, y + 6);
-  y += 17; et("Causale", L, y); y += 6; doc.setTextColor(...nero); doc.setFont("helvetica", "normal"); doc.setFontSize(11);
-  doc.splitTextToSize(c.causale || "", Wd).forEach((r) => { doc.text(r, L, y); y += 5.4; });
-  y += 4; doc.setFontSize(9); doc.setTextColor(...grigio);
-  const bollo = a.bollo && c.importo > 77.47;
-  doc.splitTextToSize(T.dich, bollo ? Wd - 40 : Wd).forEach((r) => { doc.text(r, L, y); y += 4.4; });
-  if (bollo) { const bx = R - 30, by = y - 4; doc.setLineDashPattern([1.5, 1.2], 0); doc.setDrawColor(...grigio); doc.setLineWidth(0.3); doc.rect(bx, by, 30, 30); doc.setLineDashPattern([], 0); doc.setFontSize(7.5); doc.text(["Marca da bollo", "2,00 €"], bx + 15, by + 14, { align: "center" }); }
-  const yf = 252; doc.setTextColor(...nero); doc.setFont("helvetica", "normal"); doc.setFontSize(10.5); doc.text(`${a.luogo || ""}, ${fDataIt(c.ricevuta && c.ricevuta.emessa)}`, L, yf);
-  doc.setDrawColor(...nero); doc.setLineWidth(0.5); doc.line(R - 70, yf + 10, R, yf + 10); doc.setFontSize(8.5); doc.setTextColor(...grigio); doc.text("Firma", R - 70, yf + 14.5);
+  y += 15; et("Causale", L, y); y += 5.5; doc.setTextColor(...nero); doc.setFont("helvetica", "normal"); doc.setFontSize(10.5);
+  doc.splitTextToSize(c.causale || "", Wd).forEach((r) => { doc.text(r, L, y); y += 5; });
+  y += 3; doc.setFontSize(8.5); doc.setTextColor(...grigio);
+  doc.splitTextToSize(T.dich, Wd).forEach((r) => { doc.text(r, L, y); y += 4; });
+  noteRicevuta(c, a).forEach((n) => { y += 1.4; doc.splitTextToSize(n, Wd).forEach((r) => { doc.text(r, L, y); y += 4; }); });
+  const yf = Math.max(y + 10, 240); doc.setTextColor(...nero); doc.setFont("helvetica", "normal"); doc.setFontSize(10.5); doc.text(`${a.luogo || ""}, ${fDataIt(c.ricevuta && c.ricevuta.emessa)}`, L, yf);
+  doc.setDrawColor(...nero); doc.setLineWidth(0.5); doc.line(R - 70, yf + 10, R, yf + 10); doc.setFontSize(8.5); doc.setTextColor(...grigio); doc.text("Il legale rappresentante", R - 70, yf + 14.5);
   if (a.firmatario) { doc.setTextColor(...nero); doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.text(a.firmatario, R, yf + 14.5, { align: "right" }); }
+  doc.setFont("helvetica", "normal"); doc.setFontSize(6.8); doc.setTextColor(...grigio); doc.splitTextToSize(PRIVACY_RIC, Wd).forEach((r, i) => doc.text(r, L, 272 + i * 3));
   doc.setFillColor(...verde); doc.rect(L, 280, Wd, 0.9, "F"); doc.setFont("helvetica", "bold"); doc.setFontSize(8); doc.setTextColor(...verde);
   doc.text(c.tipo === "quota" ? "BENVENUTO TRA I BAGAI!" : "GRAZIE PER SOSTENERE BAGAERA!", L, 285.5, { charSpace: 0.5 });
   if (c.annullato) { try { doc.setGState(new doc.GState({ opacity: 0.55 })); } catch (e) {} doc.setTextColor(179, 38, 30); doc.setFont("helvetica", "bold"); doc.setFontSize(64); doc.text("ANNULLATA", 50, 215, { angle: 28 }); }
@@ -2302,7 +2376,7 @@ async function scaricaRicevuta(c) {
   catch (e) { console.warn(e); toast("Non sono riuscito a creare il PDF: controlla la connessione e riprova."); }
 }
 async function pdfVerbale(v) {
-  const J = window.jspdf && window.jspdf.jsPDF; if (!J) throw new Error("jspdf");
+  const J = await jsPdfPronto();
   const a = assoc(), doc = new J({ unit: "mm", format: "a4" });
   const L = 20, R = 190, Wd = R - L, nero = [11, 12, 11], grigio = [84, 94, 85], verde = [42, 149, 45];
   const logo = await preparaLogo(); if (logo) doc.addImage(logo, "PNG", L, 12, 42, 22);
@@ -2875,7 +2949,8 @@ function preparaMedaglia(file) {
         const w = img.naturalWidth || L, h = img.naturalHeight || L, k = Math.min(L / w, L / h);
         cv.getContext("2d").drawImage(img, (L - w * k) / 2, (L - h * k) / 2, w * k, h * k);
         let out = cv.toDataURL("image/png");
-        if (out.length > 350000) { const w2 = cv.toDataURL("image/webp", 0.9); out = w2.startsWith("data:image/webp") && w2.length < out.length ? w2 : out; }
+        /* WebP pesa molto meno del PNG (e tiene la trasparenza): se il telefono lo sa fare ed è più piccolo, uso quello */
+        { const w2 = cv.toDataURL("image/webp", 0.92); if (w2.startsWith("data:image/webp") && w2.length < out.length) out = w2; }
         if (out.length > 350000) { const c2 = document.createElement("canvas"); c2.width = c2.height = 240; c2.getContext("2d").drawImage(cv, 0, 0, 240, 240); out = c2.toDataURL("image/png"); }
         URL.revokeObjectURL(url);
         out.length > 700000 ? ko(new Error("troppo grande")) : ok(out);
@@ -5000,7 +5075,11 @@ function totaliGiro(g = giroAttuale()) {
 }
 const totSponsor = (id, g = giroAttuale()) => contribValidi(g).filter((c) => c.sponsorId === id).reduce((s, c) => s + (c.importo || 0), 0);
 const refDi = (s) => (s.referenti || []).filter(Boolean);
-const refNome = (r) => (String(r).startsWith("u_") ? nm(r) : r);
+/* referenti: un socio dell'app (id) → il suo nome e cognome; un nome scritto a mano resta com'è, ma «nome.cognome» diventa «Nome Cognome» */
+const eSocioRef = (r) => !!S.soci[r] || String(r).startsWith("u_");
+const bello = (r) => String(r).split(/[._]+/).filter(Boolean).map((p) => p.charAt(0).toUpperCase() + p.slice(1)).join(" ");
+const refNome = (r) => (eSocioRef(r) && nm(r) !== String(r) ? nm(r) : /^[a-zà-ú0-9]+([._][a-zà-ú0-9]+)+$/i.test(String(r)) && !/\s/.test(String(r)) ? bello(r) : String(r));
+const refPrimo = (r) => refNome(r).split(/\s+/)[0];
 route("sponsor", () => {
   if (!can.sponsor()) return `<div class="wrap">${empty("Sezione del gruppo Sponsor", "La usano il gruppo Sponsor e il consiglio.")}</div>`;
   const tab = S.ui.spTab || "sponsor";
@@ -5036,15 +5115,19 @@ route("sponsor", () => {
     const cl = Object.values(per).sort((a, b) => b.v - a.v || b.pagati - a.pagati);
     const orfani = sponsors().filter((s) => !isComm(s) && !refDi(s).length);
     corpo = `<p class="muted">Chi segue quali sponsor nel giro ${esc(g)} e quanto è arrivato. Se uno sponsor ha due referenti, conta per entrambi.</p>
-      <section class="panel">${cl.length ? `<div class="list">${cl.map((x, i) => `<div class="li"><span class="disp" style="font-size:1.6rem;width:1.4em;color:${i === 0 ? "var(--accent-ink)" : "inherit"}">${i + 1}</span>${String(x.r).startsWith("u_") ? av(x.r) : ""}<span class="grow"><span class="t">${esc(refNome(x.r))}</span><br><span class="s">${x.n} sponsor · ${x.pagati} hanno dato</span></span><span class="v">${esc(euroT(x.v))}</span></div>`).join("")}</div>` : empty("Ancora nessun referente", "Assegna chi va a chiedere nella scheda di ogni sponsor.")}</section>
+      <section class="panel">${cl.length ? `<div class="list">${cl.map((x, i) => `<div class="li"><span class="disp" style="font-size:1.6rem;width:1.4em;color:${i === 0 ? "var(--accent-ink)" : "inherit"}">${i + 1}</span>${eSocioRef(x.r) ? av(x.r) : ""}<span class="grow"><span class="t">${esc(refNome(x.r))}</span><br><span class="s">${x.n} sponsor · ${x.pagati} hanno dato</span></span><span class="v">${esc(euroT(x.v))}</span></div>`).join("")}</div>` : empty("Ancora nessun referente", "Assegna chi va a chiedere nella scheda di ogni sponsor.")}</section>
       ${orfani.length ? `<div class="notice warn">Senza referente: ${orfani.map((s) => `<a href="#" data-act="sp-apri" data-id="${s.id}">${esc(s.nome)}</a>`).join(", ")}.</div>` : ""}`;
   } else if (tab === "impostazioni" && isCouncil()) {
-    const a = assoc();
+    const a = { ...ASSOC_BASE, ...cfg("associazione") };
     corpo = `${needAdmin()}<form data-form="sp-config" class="stack l" style="max-width:760px">
       <section class="stack"><h3>Giro e obiettivo</h3><div class="fields"><label class="field"><span>Giro in corso</span><input class="in" name="giro" value="${esc(g)}" maxlength="9"></label><label class="field"><span>Obiettivo (€)</span><input class="in" name="obiettivo" inputmode="decimal" value="${esc(cfg("associazione").obiettivo || "")}"></label><label class="field"><span>Iniziativa (nella causale)</span><input class="in" name="campagna" value="${esc(cfg("associazione").campagna || "")}" placeholder="es. Stagione 2026/27"></label></div>
         <button type="button" class="btn sm" data-act="sp-nuovo-giro" style="align-self:flex-start">Inizia il giro ${Number(g) + 1 || ""}</button></section>
       <section class="stack"><h3>Dati sulle ricevute</h3><div class="fields">${[["nome", "Associazione"], ["cf", "Codice fiscale"], ["indirizzo", "Sede"], ["email", "Email"], ["luogo", "Luogo di emissione"], ["firmatario", "Chi firma"]].map(([k, l]) => `<label class="field"><span>${l}</span><input class="in" name="${k}" value="${esc(a[k] || "")}"></label>`).join("")}</div>
-        <label class="check"><input type="checkbox" name="bollo" ${a.bollo ? "checked" : ""}><span><b>Riquadro per la marca da bollo</b> sopra 77,47 €<br><small class="muted">Molti enti del Terzo settore iscritti al RUNTS ne sono esenti: chiedete a chi segue la vostra contabilità.</small></span></label></section>
+        <p class="small muted">Se «Chi firma» è vuoto, sulle ricevute va il presidente (legale rappresentante): ${esc(presidenteNome() || "non ancora indicato in Soci")}.</p>
+        <div class="fields"><label class="field"><span>Iscrizione al RUNTS (sotto i dati dell'associazione)</span><input class="in" name="runts" maxlength="200" value="${esc(a.runts || "")}"></label>
+          <label class="field"><span>Iscritta al RUNTS dal</span><input class="in" name="runtsDal" maxlength="20" value="${esc(a.runtsDal || "")}" placeholder="gg/mm/aaaa"></label></div>
+        <label class="field"><span>Ultimo numero di ricevuta fatto a mano nel ${new Date().getFullYear()}</span><input class="in" name="ultimoAMano" inputmode="numeric" value="${esc(((cfg("associazione").ultimoAMano || {})[new Date().getFullYear()]) || "")}" placeholder="es. 3"><small class="muted">L'app continua la numerazione dal numero dopo.</small></label>
+        <label class="check"><input type="checkbox" name="esenteBollo" ${a.esenteBollo !== false ? "checked" : ""}><span><b>Esente da imposta di bollo</b> (art. 82, c. 5, D.Lgs. 117/2017)<br><small class="muted">Le ricevute lo scrivono e non serve la marca da bollo: vale per gli enti iscritti al RUNTS come Bagaera.</small></span></label></section>
       <div class="btns"><button class="btn pri">Salva impostazioni</button></div></form>`;
   }
   return `<div class="wrap">${backLink(isCouncil() ? "gr-consiglio" : "gr-sponsor", isCouncil() ? "Consiglio" : "Gruppo Sponsor")}
@@ -5055,7 +5138,7 @@ route("sponsor", () => {
 function rigaSponsor(s) {
   const refs = refDi(s), tot = totSponsor(s.id);
   return `<button class="li" data-act="sp-apri" data-id="${s.id}"><span class="grow stack s" style="gap:3px"><span class="t disp" style="font-size:1.05rem">${esc(s.nome)}</span>
-    <span class="s">${refs.length ? "Va " + esc(refs.map((r) => (String(r).startsWith("u_") ? primoNome(r) : r)).join(" e ")) : `<b style="color:var(--bad)">nessun referente</b>`}${s.contattoNome ? " · " + esc(s.contattoNome) : ""}</span></span>
+    <span class="s">${refs.length ? "Va " + esc(refs.map(refPrimo).join(" e ")) : `<b style="color:var(--bad)">nessun referente</b>`}${s.contattoNome ? " · " + esc(s.contattoNome) : ""}</span></span>
     <span class="stack s" style="align-items:flex-end;gap:6px">${tot ? `<span class="v">${esc(euroT(tot))}</span>` : s.stato === "promesso" && s.promesso ? `<span class="v" style="color:var(--warn)">${esc(euroT(s.promesso))}</span>` : ""}<span class="pill ${s.stato === "pagato" ? "solid" : s.stato === "promesso" ? "warn" : ""}">${esc(STATO_SP[s.stato] || "")}</span></span></button>`;
 }
 ACT["sp-tab"] = (el) => { S.ui.spTab = el.dataset.v; render(true); };
@@ -5095,7 +5178,7 @@ function apriSponsor(id) {
         <label class="field"><span>Note</span><textarea class="in" name="note" maxlength="1000">${esc(s.note || "")}</textarea></label><div class="btns"><button class="btn sm">Salva i dati</button></div></form>
       <div class="stack s"><span class="eyebrow">Diario dei contatti</span>
         <form data-form="sp-diario" data-id="${id}" class="row nw"><label class="sr" for="spD">Nota</label><input class="in grow" id="spD" name="t" maxlength="300" placeholder="es. Passato in negozio, richiamare a fine mese"><button class="btn">${ic("plus")}</button></form>
-        ${(s.diario || []).length ? `<div class="list" style="border:2px solid var(--rule)">${[...s.diario].reverse().map((d) => `<div class="li"><span class="grow"><span class="t" style="font-weight:500">${esc(d.t)}</span><br><span class="s">${esc(d.chi ? (String(d.chi).startsWith("u_") ? primoNome(d.chi) : d.chi) : "")} · ${esc(fTs(d.at))}</span></span></div>`).join("")}</div>` : ""}</div>
+        ${(s.diario || []).length ? `<div class="list" style="border:2px solid var(--rule)">${[...s.diario].reverse().map((d) => `<div class="li"><span class="grow"><span class="t" style="font-weight:500">${esc(d.t)}</span><br><span class="s">${esc(d.chi ? (String(d.chi).startsWith("u_") || S.soci[d.chi] ? primoNome(d.chi) : refPrimo(d.chi)) : "")} · ${esc(fTs(d.at))}</span></span></div>`).join("")}</div>` : ""}</div>
       ${!cs.length ? `<button class="btn sm danger" data-act="sp-del" data-id="${id}" style="align-self:flex-start">${ic("trash")}Elimina ${isComm(s) ? "commerciante" : "sponsor"}</button>` : ""}`;
   } });
 }
@@ -5119,13 +5202,20 @@ ACT.contributo = (el) => {
     body: `<form data-form="contributo" id="fCo" data-seg="${seg ? seg.id : ""}" class="stack">
       <label class="field"><span>Chi ha dato</span><select class="in" name="sp" required>${opt("", "Scegli…")}${sponsors().sort((a, b) => a.nome.localeCompare(b.nome, "it")).map((s) => opt(s.id, s.nome + (isComm(s) ? " (commerciante)" : ""), s.id === spId)).join("")}</select></label>
       <label class="field"><span>Importo</span><span class="money"><b>€</b><input name="imp" inputmode="decimal" required value="${seg ? seg.importo : ""}" ${spId ? "autofocus" : ""}></span></label>
-      <div class="fields"><label class="field"><span>Data del pagamento</span><input class="in" type="date" name="data" value="${esc((seg && seg.data) || oggi())}" required></label><label class="field"><span>Tipo</span><select class="in" name="tipo">${opt("sponsor", "Sponsorizzazione", !seg || seg.tipo === "sponsor")}${opt("liberale", "Erogazione liberale", seg && seg.tipo === "liberale")}</select></label></div>
+      <div class="fields"><label class="field"><span>Data del pagamento</span><input class="in" type="date" name="data" value="${esc((seg && seg.data) || oggi())}" required></label><label class="field"><span>Tipo</span><select class="in" name="tipo">${opt("liberale", "Erogazione liberale (dono)", !seg || seg.tipo !== "sponsor")}${opt("sponsor", "Sponsorizzazione (in cambio di pubblicità)", seg && seg.tipo === "sponsor")}</select></label></div>
+      <p class="small notice" data-nota-tipo></p>
       <div class="field"><span>Mezzo</span><div class="opts">${METODI.map((m) => radio("metodo", m, m, (seg ? seg.metodo : "Contanti") === m)).join("")}</div></div>
       <div class="fields"><label class="field"><span>Intestata a</span><input class="in" name="intN" value="${esc(it.nome || s0.ragioneSociale || s0.nome || "")}" maxlength="120"></label><label class="field"><span>P. IVA / C.F.</span><input class="in" name="intP" value="${esc(it.piva || s0.piva || "")}" maxlength="30"></label><label class="field"><span>Indirizzo</span><input class="in" name="intI" value="${esc(it.indirizzo || s0.indirizzo || "")}" maxlength="120"></label></div>
       ${emette ? `<label class="field"><span>Causale</span><input class="in" name="causale" maxlength="200" placeholder="Lascia vuoto per quella standard" value="${esc((seg && seg.note) || "")}"></label>` : `<label class="field"><span>Evento o note</span><input class="in" name="note" maxlength="200" placeholder="es. Fem Fest Winter, consegnati a Vale"></label>`}
       <p class="err" hidden></p></form>`,
-    foot: `<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fCo">${emette ? "Registra e crea la ricevuta" : "Segnala al consiglio"}</button>` });
+    foot: `<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fCo">${emette ? "Registra e crea la ricevuta" : "Segnala al consiglio"}</button>`,
+    mount: (root) => { const f = root.querySelector("#fCo"), nota = f.querySelector("[data-nota-tipo]");
+      const sync = () => { const t = f.elements.tipo.value, m = (f.querySelector('[name="metodo"]:checked') || {}).value;
+        nota.className = "small notice" + (t === "sponsor" || !TRACCIABILE(m) ? " warn" : "");
+        nota.textContent = t === "sponsor" ? NOTA_SPONSOR : TRACCIABILE(m) ? "Erogazione liberale: un dono senza niente in cambio (un ringraziamento pubblico va bene). Pagato in modo tracciabile, chi dona può detrarlo o dedurlo (art. 83 del Codice del Terzo settore)." : "Erogazione liberale in contanti: la ricevuta va bene, ma chi dona non ha la detrazione. Se gli serve, meglio un bonifico."; };
+      f.addEventListener("change", sync); sync(); } });
 };
+const NOTA_SPONSOR = "Sponsorizzazione = soldi in cambio di pubblicità (logo, spazi, citazioni a pagamento). Per il fisco è un'attività commerciale e di norma va fatturata con IVA: Bagaera non ha partita IVA, quindi questa ricevuta non sostituisce la fattura. Prima di emetterla sentite il tesoriere o il commercialista.";
 FORMS.contributo = async (f) => {
   const s = S.sponsor[fv(f, "sp")], importo = leggiImporto(fv(f, "imp")), data = fv(f, "data"), metodo = (f.querySelector('[name="metodo"]:checked') || {}).value, tipo = fv(f, "tipo");
   const probl = []; if (!s) probl.push("scegli chi ha dato"); if (!(importo > 0)) probl.push("scrivi un importo maggiore di zero"); if (!data) probl.push("indica la data"); if (!metodo) probl.push("scegli il mezzo");
@@ -5165,8 +5255,10 @@ ACT["sp-csv"] = async () => {
   await salvaFile(`Contributi sponsor ${giroAttuale()}.csv`, "﻿" + csv, "File pronto.");
 };
 FORMS["sp-config"] = async (f) => {
-  const d = { ...strip(cfg("associazione")), giro: fv(f, "giro") || giroAttuale(), obiettivo: leggiImporto(fv(f, "obiettivo")) || 0, campagna: fv(f, "campagna"), bollo: fv(f, "bollo"), aggiornato: new Date().toISOString() };
-  ["nome", "cf", "indirizzo", "email", "luogo", "firmatario"].forEach((k) => { d[k] = fv(f, k); });
+  const d = { ...strip(cfg("associazione")), giro: fv(f, "giro") || giroAttuale(), obiettivo: leggiImporto(fv(f, "obiettivo")) || 0, campagna: fv(f, "campagna"), esenteBollo: !!f.elements.esenteBollo.checked, aggiornato: new Date().toISOString() };
+  delete d.bollo;
+  ["nome", "cf", "indirizzo", "email", "luogo", "firmatario", "runts", "runtsDal"].forEach((k) => { d[k] = fv(f, k); });
+  const am = parseInt(fv(f, "ultimoAMano"), 10); d.ultimoAMano = { ...(d.ultimoAMano || {}), [new Date().getFullYear()]: am > 0 ? am : 0 };
   await wSet("config/associazione", d); toast("Impostazioni salvate.");
 };
 ACT["sp-nuovo-giro"] = () => {
