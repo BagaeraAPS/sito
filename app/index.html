@@ -267,7 +267,7 @@ textarea.in { min-height: 84px; resize: vertical; line-height: 1.4; }
 .toast button { background: none; border: 0; color: var(--verde); font: 400 .8rem/1 var(--f-display); text-transform: uppercase; padding: 0; }
 
 /* ---------- home ---------- */
-.count svg, .pill svg, .notice svg, .eyebrow svg { width: 1.05em; height: 1.05em; vertical-align: -.18em; display: inline-block; }
+.count svg, .pill svg, .notice svg, .eyebrow svg, svg.inl { width: 1.05em; height: 1.05em; vertical-align: -.18em; display: inline-block; }
 .homecols { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
 .homecols > div { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
 @media (min-width: 900px) { .homecols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; } .hero .btns, .hero .count { position: relative; } }
@@ -1074,6 +1074,112 @@ img.mb { display: block; object-fit: contain; user-select: none; }
 .compitoli .pill { flex: none; }
 .compitoli .cbtns { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-top: 6px; }
 
+/* contatori della home: calendario e medaglia pieni, col «buco» del colore della scheda */
+.arco svg.glifo { width: 28px; height: 28px; --glifo-buco: var(--surf, #fff); }
+.arco.v svg.glifo { --glifo-buco: var(--verde-scuro, #1a6b20); }
+
+/* un'icona senza misura dentro un testo resta della misura del testo (mai a tutta pagina) */
+:where(p, small, li, label, .s, .small, .muted) > svg:not([class]) { width: 1.05em; height: 1.05em; vertical-align: -.18em; display: inline-block; }
+
+/* ================= cassa live (telefono e tablet) ================= */
+.modes.due { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.modes button[aria-pressed="true"][data-m="v"] { background: var(--verde); color: #fff; }
+.modes.due button[aria-pressed="true"][data-m="i"] { background: var(--amber); color: var(--nero); }
+.cassa-lay { display: grid; gap: 14px; align-items: start; }
+.conto { position: sticky; bottom: calc(var(--tab-h) + env(safe-area-inset-bottom, 0px) + 8px); z-index: 10; display: flex; flex-direction: column; gap: 10px; padding: 12px; background: color-mix(in srgb, var(--surf) 94%, transparent); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border: 1px solid var(--line); border-radius: var(--r-l); box-shadow: var(--sh-2); }
+.conto .ch { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 34px; }
+.conto .ch b { font: 700 1.05rem/1.1 var(--f-body); }
+.conto .crighe { display: none; flex-direction: column; gap: 2px; max-height: 32vh; overflow: auto; }
+.conto .cr { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: .95rem; }
+.conto .cr .ci { font-variant-numeric: tabular-nums; font-weight: 650; }
+.conto .cm { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line); background: var(--bg-2); color: var(--ink); font: 700 1.1rem/1 var(--f-body); flex: none; }
+.conto .ctotale { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.conto .ctotale span { color: var(--muted); font-weight: 600; font-size: .9rem; }
+.conto .ctotale b { font: 800 2rem/1 var(--f-display); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+.conto .cpaga { display: flex; flex-direction: column; gap: 6px; }
+.conto .cpaga > .l { display: none; font-size: .78rem; color: var(--muted); font-weight: 600; }
+.conto .banc { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.btn.big { min-height: 56px; font-size: 1.05rem; padding: 0 10px; }
+.btn.contanti { background: linear-gradient(180deg, var(--verde-forte), var(--verde-scuro)); color: #fff; border-color: transparent; font-variant-numeric: tabular-nums; }
+.btn.carta { background: var(--info); color: #fff; border-color: transparent; }
+.btn.big:disabled { opacity: .35; filter: grayscale(.6); }
+.conto .cfoot { display: flex; align-items: center; gap: 8px; }
+.conto .cfoot .grow { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.conto.int { gap: 6px; }
+/* chi paga: un tocco */
+.fasce { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 4px; background: var(--bg-3); border-radius: var(--r-p); }
+.fasce button { min-height: 44px; border: 0; border-radius: var(--r-p); background: transparent; color: var(--ink); font: 650 .95rem/1 var(--f-body); }
+.fasce button[aria-pressed="true"][data-f="n"] { background: var(--surf); box-shadow: var(--sh-1); }
+.fasce button[aria-pressed="true"][data-f="t"] { background: var(--info); color: #fff; }
+.fasce button[aria-pressed="true"][data-f="s"] { background: var(--amber); color: var(--nero); }
+.conto.f-t { box-shadow: 0 0 0 3px var(--info), var(--sh-2); }
+.conto.f-s { box-shadow: 0 0 0 3px var(--amber), var(--sh-2); }
+/* conto chiuso: il resto si legge da lontano */
+.esito { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-radius: var(--r-m); background: var(--verde-scuro); color: #fff; animation: esito .25s ease-out; }
+.esito .l { font-weight: 650; font-size: .9rem; opacity: .9; }
+.esito b { font: 800 2.6rem/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.esito.giusti b { font-size: 2rem; }
+.esito.carta { background: var(--info); }
+.esito .small { opacity: .85; }
+@keyframes esito { from { transform: scale(.96); opacity: .4; } to { transform: none; opacity: 1; } }
+.tagli { display: flex; flex-wrap: wrap; gap: 6px; }
+.in.big { font-size: 1.6rem; min-height: 60px; text-align: center; font-variant-numeric: tabular-nums; }
+.resto { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px; border-radius: var(--r-m); background: var(--bg-2); }
+.resto .l { font-size: .85rem; color: var(--muted); font-weight: 600; }
+.resto .n { font: 800 2.2rem/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.resto .n.bad { color: var(--bad); }
+/* telefono: il conto è una barra in basso, le righe si vedono sui tasti */
+@media (max-width: 899px) {
+  .conto { padding: 10px; gap: 8px; }
+  .conto .ch { display: none; }
+  .conto .ctotale b { font-size: 1.6rem; }
+  .conto .banc { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .conto .cpaga { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 1fr); align-items: stretch; }
+  .conto .cpaga .btn.carta { min-height: 100%; border-radius: var(--r-m); }
+  .conto:not(.pieno) .cpaga, .conto.pieno .cfoot { display: none; }
+  .conto:not(.pieno) .ctotale { display: none; }
+  .conto .fasce button { min-height: 38px; font-size: .85rem; }
+  .esito { padding: 10px 12px; } .esito b { font-size: 2rem; }
+  .conto .btn.big { min-height: 48px; }
+  .conto .cfoot .btn { min-height: 36px; }
+}
+/* tablet: prodotti a sinistra, conto fisso a destra */
+@media (min-width: 900px) {
+  .cassa-lay { grid-template-columns: minmax(0, 1fr) minmax(300px, 360px); }
+  .conto { position: sticky; top: calc(var(--top-h, 64px) + 14px); bottom: auto; }
+  .conto .crighe { display: flex; }
+  .conto .cpaga > .l { display: block; }
+  .conto .banc { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .cassa .tiles { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .cassa .tile { min-height: 116px; }
+  .cassa .tile .tn { font-size: 1.05rem; }
+}
+/* schermo cassa: niente menu, tutto lo schermo ai tasti */
+body.kiosk .top, body.kiosk .tabs, body.kiosk .side { display: none !important; }
+body.kiosk .shell { grid-template-columns: minmax(0, 1fr) !important; }
+body.kiosk main { padding-top: max(12px, env(safe-area-inset-top, 0px)); padding-bottom: max(16px, env(safe-area-inset-bottom, 0px)); }
+body.kiosk { --tab-h: 0px; --top-h: 0px; }
+body.kiosk .cassa .pagehead h1 { font-size: 1.5rem; }
+body.kiosk .wrap.cassa { max-width: none; gap: 12px; }
+body.kiosk .cassa .modes button { min-height: 44px; }
+body.kiosk .cassa .ctot div { padding: 6px 10px; }
+/* listino della cassa */
+.listino { display: flex; flex-direction: column; }
+.listino .lr { display: grid; grid-template-columns: minmax(0, 1fr) 78px 78px 78px auto; gap: 6px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.listino .lr.lh { font-size: .72rem; color: var(--muted); font-weight: 650; border-bottom: 0; padding-bottom: 0; }
+.listino .lr.off { opacity: .55; }
+.listino .lr.off .eur { visibility: hidden; }
+.listino .eur { display: flex; align-items: center; gap: 3px; }
+.listino .eur .in { min-height: 38px; padding: 0 6px; text-align: right; font-variant-numeric: tabular-nums; }
+.listino .su { display: flex; gap: 2px; }
+.listino .su .btn { min-height: 34px; width: 34px; padding: 0; }
+@media (max-width: 600px) { .listino .lr { grid-template-columns: minmax(0, 1fr) 62px 62px 62px; } .listino .lr .su { grid-column: 1 / -1; justify-content: flex-end; } .listino .lr.lh span:last-child { display: none; } .listino .lr .eur span { display: none; } }
+
+/* cassa di prova: si capisce subito che non è quella vera */
+.provabar { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: var(--r-m); color: var(--nero); font-size: .92rem;
+  background: repeating-linear-gradient(135deg, #f7ea23 0 14px, #f3dc1c 14px 28px); box-shadow: var(--sh-1); }
+.provabar svg { width: 20px; height: 20px; flex: none; }
+
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="s-picto" viewBox="269.6 205.0 810.8 440.4"><path d="M457.42,452.1c-20.6,7.13,5.64,36.68,17.82,61.08,12.18,24.39-20.1,38.9-48.45,40.88-28.35,1.98-18.46,5.93-25.05,42.2-7.1,39.07-29.7,21.74-33.68,18.34-.55-.47-1.1-.92-1.66-1.38-19.49-15.99-22.26-44.2,1.06-55.86,23.74-11.87,59.34-21.1,58.02-50.11-1.32-29.01-32.34-36.92-21.44-72.53,10.89-35.6,10.89-54.06-6.25-55.38-6.9-.53-11.88,6.42-17.34,15-7.77,12.2-19.16,20.77-35.37,20.77-18.11,0-43.08-3.22-63.7-26.82-18.79-21.5-15.6-44.93,13.05-45.59,34.68-.8,15.1,17.06,27.35,38.64,6.81,12,20.94,26.93,29.21,9.21,9.23-19.78,27.03-66.59,58.02-51.43,30.99,15.16,21.48,39.42,48.72,49.17,15.24,5.45-2.97,10.25-9.55-50.96-1.55-14.44-4.91-58.21,27.08-58.21s58.01,1.98,55.22,28.35c-2.79,26.37-44.33,60-43.01,85.71,1.32,25.71,13.16,35.22,31.19,23.74,0,0,31.49-31.29,66.66-28.95,35.16,2.34,43.66,31.65,63,24.18,0,0,27.03-10.33,35.52-26.21,11.68-21.85-74.24-19.22-54.52-51.81,19.72-32.59,75.91-51.88,88.03-19.81,12.12,32.06-14.15,67.66-14.16,67.66,0,0,32.39-26.37,45.82-14.51,13.43,11.87,15.8,32.97,23.85,34.28,8.04,1.32,17.01-25.05,32.31-19.78,15.3,5.27,57.25,19.78,85.73,9.23,28.47-10.55,43.39-14.5,43.4-14.51,0,0-51.91-.32-59.35-23.46-6.93-21.56-2.2-63.57,59.35-45.11,61.56,18.46,81.34,28.91,64.19,50.72-17.14,21.81-52.75,32.35-31.65,46.86,0,0,42.17,33.08,61.94,10.24,17-19.63,47.96-94.13-18.43-114.42-46.02-14.06-47.47-68.25-15.82-87.53,31.65-19.28,89.67-4.79,85.71,17.63-3.96,22.43-15.82,11.79-36.92,12.49-21.1.7-38.24,13.89,0,38.94,38.24,25.05,39.38,94.49,17.14,130.55-17.3,28.06-36.92,46.15-69.89,35.6-32.97-10.55-65.93-42.2-65.93-5.27s60.66,27.69,47.47,71.21c-13.19,43.52-51.43,51.43-2.64,61.98s32.97,51.43-19.78,56.7c-52.75,5.27-94.53,7.91-88.8-39.56,5.73-47.47,14.58-66.32,30-50.11,22.44,23.58-34.89,58.8,12.33,65.21,48.18,6.54,53.53-15.17,31.07-29.61-22.48-14.46-26.79-34.28-14.92-55.38,11.87-21.1,2.31-43.17-16.65-46.64-18.96-3.47-96.67-19.29-79.57,9.72,17.1,29.01,25.81,48.79,8.93,56.7-16.88,7.91-59.39-3.96-65.17-19.78-5.78-15.82,10.71-35.6,25.54-23.74,14.84,11.87,18.52-10.21,12.72-22.91-5.8-12.7-8.96-46.98,26.91-43.03,35.86,3.96,32.58-19.88,21.03-21.1-41.35-4.38-65.24,20.65-72.47,29.75-2.3,2.9-5.81,4.68-9.5,4.54-13.94-.54-10.36-25.06-22.11-43.52-13.43-21.1-41.95,3.96-27.05,30.33,10.06,17.8,3.35,40.41-5.69,58.09-13.42,26.24-2.79,58.49,23.45,71.91,11.78,6.02,27.31,11.34,47.76,15.05,26.1,4.74-11.85,52.75-24.5,55.38-12.65,2.64-19-6.59-4.24-25.05,12.38-15.49-3.62-18.91-31.69-15.72-17.07,1.94-34.27-4.1-45.9-16.75-11.85-12.89-15.94-30.38-.19-58.52,4.27-7.63-33.24-1.32-41.16,19.78-7.91,21.1,9.23,54.06-25.05,84.39-34.28,30.33-63.3,15.82-81.09,13.19-17.8-2.64.66-30.33,33.62-25.05,32.97,5.27,39.26-14.58,25.47-64.44-11.6-41.93,19.63-77.62,64.24-66.02,41.34,10.75,9.16-31.48-24.32-37.01-33.67-5.55-34.25-24.77-54.68-24.77-47.16,0-50.08,68.07-50.05,72.2,0,.13,0,.26-.02.39-2.37,27.46,3.64,21.54,10.7,45.21,7.08,23.74-17.53,41.47-36.65,46.75-19.12,5.27-3.96,18.46,10.71,39.56,14.67,21.1-37.74,25.05-50.93,20.44-13.19-4.62-13.19-16.48,5.27-17.99,18.46-1.5,9.89-16.96-5.93-26.19-11.87-6.92-3.36-22.96,16.68-32.33,20.79-9.73,24.56-23.74,18.52-54.85-5.1-26.27-14.29-68.77-38.85-60.27Z"/></symbol><symbol id="s-word" viewBox="44.2 711.6 1261.5 163.4"><path d="M44.23,714.98h98.68c29.98,0,50.8,13.65,50.8,39.16,0,15-7.16,24.84-22.15,30.21,21.26,4.92,32.22,18.12,32.22,38.49,0,29.09-22.38,48.78-64,48.78H44.23v-156.64ZM127.25,777.64c16.33,0,26.18-7.61,26.18-19.69s-9.18-18.35-26.18-18.35h-38.27v38.04h38.27ZM134.41,844.77c18.35,0,29.09-8.06,29.09-23.05s-10.29-22.83-29.09-22.83h-45.43v45.88h45.43ZM393.08,871.62h-44.76l-10.52-26.41h-71.38l-10.52,26.41h-44.76l68.03-156.64h45.87l68.03,156.64ZM328.86,822.84l-26.63-67.36-26.86,67.36h53.48ZM569.62,763.54l-34.01,12.98c-10.07-19.24-25.51-32.89-50.12-32.89-29.09,0-44.08,18.8-44.08,47.89,0,32,18.12,50.13,50.35,50.13,27.53,0,42.07-13.2,46.1-28.64h-53.93v-24.62h90.85v83.24h-35.81v-39.16c-9.4,29.09-29.76,42.52-59.3,42.52-46.77,0-78.77-33.34-78.77-82.12s30.88-81.23,87.94-81.23c47.66,0,73.62,23.27,80.78,51.91ZM768.09,871.62h-44.76l-10.52-26.41h-71.38l-10.52,26.41h-44.76l68.03-156.64h45.87l68.03,156.64ZM703.86,822.84l-26.63-67.36-26.86,67.36h53.48ZM924.49,871.62h-139.41v-156.64h134.94v26.85h-90.18v37.37h81.23v22.38h-81.23v42.07h94.66v27.97ZM1110.65,759.07c0,22.15-13.2,38.71-31.55,45.43l37.37,67.13h-46.99l-33.12-63.77h-38.27v63.77h-44.76v-156.64h106.52c29.98,0,50.79,15.89,50.79,44.08ZM1038.15,785.47c19.92,0,29.99-9.17,29.99-22.38s-9.62-21.26-29.99-21.26h-40.05v43.64h40.05ZM1305.77,871.62h-44.76l-10.52-26.41h-71.38l-10.52,26.41h-44.76l68.03-156.64h45.87l68.03,156.64ZM1241.55,822.84l-26.63-67.36-26.86,67.36h53.48Z"/></symbol><symbol id="s-o1" viewBox="0 0 99.8 129.8"><path d="M49.2,129.6C42.4,128.7 39.7,125.8 39.8,119.3C39.8,114.4 41.4,105.1 42.8,102.5C44.2,99.6 46.3,99.5 48.2,102.3C49.9,104.5 49.8,106.7 48.2,110.9C46.4,115.7 46.2,116.4 46.2,117.4C46.1,120.0 48.0,121.2 53.3,121.7C62.8,122.7 66.4,117.9 59.9,112.8C53.7,107.8 52.5,103.3 55.7,96.0C57.5,91.8 57.6,88.9 56.1,86.0C54.9,83.5 53.4,82.5 50.0,81.7C41.1,79.8 33.1,79.3 30.7,80.5C29.3,81.1 28.7,82.1 28.9,83.2C29.0,83.6 30.0,85.7 31.0,87.8C34.8,95.5 35.3,99.0 33.0,101.1C31.6,102.3 30.5,102.6 27.6,102.6C22.2,102.5 16.0,99.8 14.5,96.7C13.1,93.9 14.1,89.9 16.7,88.3C18.1,87.5 19.2,87.6 20.9,88.8C21.8,89.3 22.7,89.8 23.1,89.8C25.1,89.7 25.9,86.1 24.6,82.3C23.0,77.3 23.4,72.9 25.7,70.7C27.1,69.3 27.5,69.1 31.8,69.1C36.2,69.1 37.4,68.8 38.7,67.7C40.4,66.1 39.9,63.5 37.7,62.8C36.3,62.4 32.5,62.6 30.0,63.2C25.9,64.3 21.6,67.1 18.7,70.6C17.2,72.5 16.5,73.0 15.3,73.0C13.7,73.0 12.8,71.6 11.8,67.7C9.8,59.3 8.2,57.1 2.7,54.8C0.7,53.9 0.0,53.2 0.0,52.0C-0.0,50.1 3.1,48.2 6.4,48.0L8.3,47.9L9.6,49.3C10.9,50.6 11.3,51.3 13.9,56.9C15.2,59.7 16.2,59.6 18.9,56.4C20.8,53.9 22.1,53.0 23.4,53.0C23.8,53.0 25.7,53.6 27.7,54.3C32.9,56.0 36.2,56.7 40.1,56.9C44.0,57.1 45.3,56.9 48.9,55.5C50.4,54.9 53.4,53.8 55.5,53.0L59.3,51.6L56.5,51.3C50.1,50.6 45.5,48.5 44.0,45.5C43.1,43.7 42.7,39.4 43.3,36.7C43.7,34.7 44.9,32.6 46.3,31.5C49.7,28.8 54.4,29.0 63.4,32.1C81.7,38.6 83.1,41.9 71.7,51.9C65.8,57.0 65.6,58.0 70.2,61.4C75.1,65.0 79.6,66.4 82.8,65.4C87.5,63.8 92.6,50.2 91.5,42.3C90.6,35.7 87.3,31.6 80.9,29.1C74.0,26.5 70.5,21.6 70.5,14.8C70.5,11.8 70.8,10.1 71.9,7.8C73.5,4.5 76.3,2.1 80.1,0.8C82.9,-0.1 89.0,-0.2 92.1,0.7C95.4,1.6 97.7,3.1 98.9,4.8C100.3,6.9 99.6,10.9 97.7,11.9C97.0,12.3 96.6,12.3 94.8,12.1C87.5,11.3 83.9,12.4 83.6,15.3C83.3,17.5 84.9,19.7 88.6,22.6C95.4,27.9 98.1,34.4 98.1,45.2C98.1,54.2 96.6,59.5 92.0,66.3C88.7,71.3 85.1,73.9 81.0,74.2C77.3,74.4 74.7,73.6 67.9,69.9C62.0,66.7 60.4,66.2 59.0,66.9C57.7,67.5 57.4,68.5 57.4,71.5C57.4,73.9 57.4,74.3 58.1,75.5C59.0,77.4 61.0,79.2 64.2,81.2C67.2,83.1 68.8,84.4 69.6,85.9C71.8,89.6 70.4,95.3 65.5,103.0C63.3,106.5 63.0,107.1 63.0,108.1C63.0,109.6 64.1,110.3 68.7,111.6C75.0,113.4 77.3,115.5 77.4,119.1C77.4,123.0 73.1,127.0 67.2,128.3C63.7,129.2 52.2,130.0 49.2,129.6Z"/></symbol><symbol id="s-o2" viewBox="0 0 127.5 126.2"><path d="M62.2,126.0C59.3,125.6 57.5,124.5 57.1,122.7C56.8,121.3 58.3,120.0 60.7,119.5C64.1,118.9 64.8,118.4 64.8,116.8C64.8,115.1 63.4,113.2 60.4,110.8C57.8,108.8 57.5,107.5 58.8,104.8C59.6,103.1 61.8,101.0 64.6,99.4C72.1,95.0 73.0,90.9 69.9,75.7C67.2,62.7 63.2,57.3 58.2,59.8C55.0,61.4 55.6,64.4 61.0,74.3C64.6,81.1 65.1,82.3 64.9,84.5C64.7,87.7 62.7,90.1 58.6,92.1C55.7,93.5 53.5,94.1 49.3,94.6C42.7,95.4 42.5,95.6 42.0,102.6C41.7,106.9 40.9,111.2 40.3,113.2C38.3,118.8 34.2,119.3 29.5,114.4C25.3,109.9 24.2,104.2 26.6,99.7C27.7,97.5 29.1,96.5 34.8,93.6C45.0,88.5 47.7,85.8 48.5,80.4C49.0,77.1 48.0,73.9 44.8,68.6C40.7,61.8 40.5,59.7 42.5,51.4C44.0,45.1 44.3,42.6 44.2,40.0C44.0,36.8 42.8,35.0 40.6,34.6C38.7,34.2 37.2,35.4 35.0,39.0C31.2,45.2 28.2,47.0 21.7,46.7C13.5,46.3 7.0,42.7 2.6,36.2C-0.4,31.7 -0.9,27.0 1.4,24.2C2.9,22.5 6.7,21.5 10.2,22.0C13.8,22.5 14.4,23.3 14.7,28.2C15.0,32.2 15.5,34.2 17.0,36.5C19.7,40.8 22.3,42.1 24.1,40.2C24.6,39.7 25.4,38.1 26.1,36.3C29.1,29.1 31.3,25.2 34.0,22.5C37.1,19.4 39.8,18.8 43.4,20.6C46.7,22.2 48.9,24.7 51.3,29.4C54.0,34.5 55.4,36.1 58.9,37.6L60.3,38.2L59.9,37.7C58.6,35.6 57.1,30.2 56.2,24.1C55.5,19.2 55.4,10.3 56.1,7.7C56.9,4.3 58.6,1.8 60.7,0.7C61.8,0.1 62.0,0.1 66.9,0.1C73.9,0.1 77.0,0.9 79.3,2.9C80.8,4.3 81.3,5.5 81.4,7.9C81.7,12.0 80.5,14.8 74.4,24.3C68.6,33.5 67.5,36.7 68.3,41.8C69.5,49.7 73.6,51.2 79.3,45.9C83.0,42.5 87.9,39.5 92.0,38.2C93.6,37.7 94.4,37.6 97.5,37.6C102.8,37.6 104.9,38.5 110.4,42.9C113.8,45.6 114.9,46.1 116.9,46.0C122.5,45.7 125.3,46.9 126.9,50.4C128.9,54.7 125.4,56.8 116.4,56.8C110.9,56.7 107.7,55.5 103.1,51.6C100.2,49.1 99.0,48.5 97.0,48.3C87.4,47.4 80.8,58.5 80.7,75.5L80.6,79.9L81.4,81.8C84.2,88.4 84.7,90.3 84.3,93.1C83.5,97.9 79.4,102.3 73.4,104.6C70.9,105.6 70.5,105.9 70.0,106.7C69.3,108.0 70.1,109.7 73.8,115.3C76.7,119.6 77.1,120.5 76.4,122.1C75.3,124.8 68.2,126.7 62.2,126.0Z"/></symbol><symbol id="s-o3" viewBox="0 0 122.2 129.8"><path d="M17.0,129.4C12.9,128.7 8.0,127.3 7.3,126.7C5.8,125.3 7.2,121.9 10.2,120.0C13.2,118.1 16.2,117.6 20.8,118.1C26.2,118.8 28.8,117.8 30.4,114.6C32.0,111.6 31.9,105.8 30.1,97.9C28.4,89.9 28.4,90.4 28.6,86.5C28.7,82.4 29.1,80.8 30.5,77.9C34.3,69.9 41.6,66.7 50.9,68.9C55.8,70.0 57.8,69.6 57.8,67.5C57.7,63.0 49.9,56.6 42.2,54.9C38.8,54.1 35.7,52.7 33.1,50.6C27.2,46.1 22.8,46.0 16.3,49.9C2.9,58.1 -2.7,58.0 1.2,49.6C3.2,45.5 6.3,42.0 10.8,39.0C20.7,32.5 29.7,32.2 37.5,38.3C42.9,42.4 43.4,42.8 44.7,43.2C46.3,43.6 47.1,43.5 49.5,42.4C55.8,39.3 61.1,34.0 60.6,31.2C60.3,29.4 58.6,28.2 51.8,25.6C41.9,21.7 39.5,19.3 41.2,14.8C43.9,7.7 54.1,0.5 61.9,0.1C69.3,-0.3 72.9,3.9 72.8,13.1C72.8,18.4 71.7,22.7 69.0,28.2C68.0,30.0 67.7,30.9 68.0,30.7C73.2,27.0 75.8,25.6 78.3,25.2C82.1,24.5 83.9,26.2 87.4,33.9C90.1,39.9 91.0,40.3 93.8,36.8C98.6,30.8 99.1,30.6 106.1,33.1C108.3,33.8 111.9,34.9 114.1,35.3C120.1,36.7 122.2,37.9 122.2,39.8C122.3,41.0 121.4,42.0 119.8,42.8C118.8,43.3 118.1,43.4 114.6,43.5C109.9,43.7 107.7,44.2 104.3,45.9C100.3,47.8 97.1,50.3 94.2,54.0C92.1,56.5 90.5,57.1 88.7,55.9C87.5,55.1 86.9,53.6 85.9,49.5C84.4,43.4 83.3,40.7 81.7,38.9C78.5,35.2 73.2,38.1 72.2,44.2C71.8,46.3 72.2,48.6 73.5,51.6C74.8,54.7 75.1,55.9 75.1,59.2C75.1,63.6 74.0,67.8 71.6,73.2C70.1,76.7 69.7,78.7 69.7,82.5C69.7,86.4 70.2,88.6 71.6,91.7C74.9,98.7 80.6,102.3 92.7,105.4C97.6,106.6 98.3,107.0 98.8,108.8C99.6,112.0 96.1,119.3 91.3,124.3C88.6,127.0 86.3,127.9 84.5,126.8C82.3,125.5 82.8,122.1 86.0,117.5C87.4,115.4 87.7,114.3 87.1,113.2C86.1,111.5 83.1,111.1 74.7,111.6C71.6,111.8 70.8,111.8 69.2,111.4C63.2,110.1 57.8,105.1 56.4,99.6C55.4,95.6 56.1,90.8 58.6,85.0C59.7,82.4 59.7,82.3 57.7,82.3C54.9,82.2 50.5,84.3 48.0,86.8C45.2,89.6 44.5,92.1 44.5,100.1C44.5,107.8 44.0,111.2 42.1,115.1C40.9,117.8 39.4,119.9 36.9,122.4C30.9,128.4 24.3,130.7 17.0,129.4Z"/></symbol></defs></svg>
 <header class="top">
@@ -1189,6 +1295,7 @@ const I = {
   sparkle: '<path d="M12 3v5M12 16v5M3 12h5M16 12h5M6.5 6.5l2.5 2.5M15 15l2.5 2.5M6.5 17.5 9 15M15 9l2.5-2.5"/>',
   tools: '<rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/>',
   up: '<path d="M12 20V9"/><path d="m7 14 5-5 5 5"/><path d="M5 4h14"/>',
+  lock: '<rect x="5" y="11" width="14" height="10"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
   cloud: '<path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 8.5a4.5 4.5 0 0 1-.5 9.5z"/>',
   form: '<path d="M5 3h14v18H5z"/><path d="M9 8h7M9 12h7M9 16h4"/>',
   megafono: '<path d="M3 10v4h4l7 5V5L7 10z"/><path d="M17 9a4 4 0 0 1 0 6"/>',
@@ -1198,6 +1305,12 @@ const I = {
 const ic = (n, cls = "") => `<svg ${cls ? `class="${cls}" ` : ""}viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">${I[n] || ""}</svg>`;
 const OM = { 1: "0 0 99.8 129.8", 2: "0 0 127.5 126.2", 3: "0 0 122.2 129.8" };
 const om = (n, cls = "om") => `<svg class="${cls}" viewBox="${OM[n]}" aria-hidden="true"><use href="#s-o${n}"/></svg>`;
+/* simboli pieni per i contatori della home, nello stesso stile degli omini (le icone a linee, riempite, diventavano macchie) */
+const GLIFI = {
+  presenze: '<rect x="2.5" y="4" width="19" height="17.5" rx="3.5"/><rect x="6.5" y="1.5" width="3" height="5" rx="1.5"/><rect x="14.5" y="1.5" width="3" height="5" rx="1.5"/><path d="m7.4 13.6 3.1 3.1 6.2-6.4" fill="none" stroke="var(--glifo-buco, #fff)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>',
+  medaglia: '<path d="M6 1.5h4.2l2.3 5.2h-4.3zM18 1.5h-4.2l-2.3 5.2h4.3z"/><circle cx="12" cy="15" r="7.5"/><path d="m12 10.6 1.35 2.75 3.03.44-2.19 2.14.52 3.02L12 17.53l-2.71 1.42.52-3.02-2.19-2.14 3.03-.44z" fill="var(--glifo-buco, #fff)"/>',
+};
+const glifo = (n, cls = "om") => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true">${GLIFI[n] || ""}</svg>`;
 const omini = () => `<div class="om">${om(1, "")}${om(2, "")}${om(3, "")}</div>`;
 
 /* ================= dominio ================= */
@@ -1435,6 +1548,8 @@ function osservaVista(view) {
 const typing = (root) => { const a = document.activeElement; return !!(a && root && root.contains(a) && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName) && a.type !== "checkbox" && a.type !== "radio"); };
 document.addEventListener("focusout", () => setTimeout(() => { if (deferred && !typing($("#view"))) render(); if (S.sheet && S.sheet._dirty && !typing($("#sheetRoot"))) { S.sheet._dirty = false; drawSheet(); } }, 0));
 function render(force, pigro) {
+  /* schermo cassa: il tablet non esce dalla cassa */
+  if (typeof kioskAttivo === "function") { applicaKiosk(); if (kioskAttivo() && pronto() && S.route.name !== "cassa") { S.route = { name: "cassa", arg: "" }; try { history.replaceState(null, "", "#cassa"); } catch (e) {} } }
   renderChrome();
   const view = $("#view");
   osservaVista(view);
@@ -1922,7 +2037,7 @@ function curaTallies() {
   for (const id of aperte) if (!tallyUnsubs[id]) {
     S.tallies[id] = S.tallies[id] || {};
     tallyUnsubs[id] = S.db.collection(`serate/${id}/tallies`).onSnapshot((snap) => {
-      const t = {}; snap.docs.forEach((d) => { t[d.id] = d.data(); }); S.tallies[id] = t;
+      const t = {}; snap.docs.forEach((d) => { t[d.id] = d.data(); }); S.tallies[id] = typeof unisciMio === "function" ? unisciMio(id, t) : t;
       if (typeof cassaSync === "function") cassaSync(id);
     }, (err) => console.warn(err));
   }
@@ -2115,7 +2230,7 @@ function avvisi() {
     const mag = avvisiMagazzino();
     if (mag.length && haRuolo("vicepresidente")) add({ id: "mag", i: "box", t: `${mag.length} ${mag.length === 1 ? "lotto scaduto" : "lotti scaduti"} in magazzino`, s: [...new Set(mag.map((x) => x.p.name))].slice(0, 3).join(", "), h: "magazzino", azione: true, lv: "bad" });
     const verbaliDaFare = [...riunioniSenzaVerbale("assemblea"), ...riunioniSenzaVerbale("consiglio")];
-    if (verbaliDaFare.length && haRuolo("segretario")) add({ id: "verb", i: "doc", t: `Verbale da scrivere: ${verbaliDaFare[0].titolo}`, s: fData(verbaliDaFare[0].data), h: "verbali", azione: true });
+    if (verbaliDaFare.length && haRuolo("segretario")) add({ id: "verb", i: "doc", t: `Verbale da caricare: ${verbaliDaFare[0].titolo}`, s: fData(verbaliDaFare[0].data), h: "verbali", azione: true });
   }
   return A;
 }
@@ -2461,15 +2576,15 @@ route("home", () => {
     <div class="hello"><div class="stack s"><span class="eyebrow">${esc(fDataL(oggi()))}</span><h1><small class="ciao">${saluto()} <span>${esc(nomeMio())}</span>,</small>se fem?</h1></div>
       <button class="btn sm" data-act="nuovo-anticipo">${ic("euro")}Chiedi un rimborso</button></div>
     ${bannerCompiti()}
-    ${live.map((s) => `<a class="live" href="#cassa"><span class="dot"></span><span class="grow"><b class="disp">Cassa aperta: ${esc(s.name)}</b><br><span class="small">Tocca per vendere e segnare i consumi.</span></span>${ic("chev", "chev")}</a>`).join("")}
+    ${live.map((s) => `<a class="live" href="#cassa"><span class="dot"></span><span class="grow"><b class="disp">${s.prova ? "Cassa di prova" : "Cassa aperta"}: ${esc(s.name)}</b><br><span class="small">${s.prova ? "Per fare pratica: non tocca il magazzino." : "Tocca per vendere e segnare i consumi."}</span></span>${ic("chev", "chev")}</a>`).join("")}
     ${ominoIncoraggia()}
     ${invitoNotifiche()}
     ${heroProssimo()}
     <div class="homecols"><div>
     <section class="stats" aria-label="Le tue presenze">
       <a class="arco v" href="#mison"><svg class="om flame" viewBox="${OM[1]}" aria-hidden="true"><use href="#s-o1"/></svg><span class="n">${st.serie}</span><span class="l">${st.serie === 1 ? "assemblea" : "assemblee"} di fila</span></a>
-      <a class="arco" href="#mison">${ic("check", "om")}<span class="n">${st.presenzeAnno}</span><span class="l">presenze nel ${new Date().getFullYear()}</span></a>
-      <a class="arco" href="#medaglie">${ic("medal", "om")}<span class="n">${st.medaglie}</span><span class="l">${st.medaglie === 1 ? "medaglia" : "medaglie"}</span></a>
+      <a class="arco" href="#mison">${glifo("presenze", "om glifo")}<span class="n">${st.presenzeAnno}</span><span class="l">presenze nel ${new Date().getFullYear()}</span></a>
+      <a class="arco" href="#medaglie">${glifo("medaglia", "om glifo")}<span class="n">${st.medaglie}</span><span class="l">${st.medaglie === 1 ? "medaglia" : "medaglie"}</span></a>
     </section>
     ${av.length ? `<section class="panel todo"><div class="ph"><h3>Da fare e novità</h3><span class="pill">${av.length}</span></div><div class="list">${av.map((a) => `<a class="li ${a.lv || ""}" href="#${a.h}"><span class="ic">${ic(a.i)}</span><span class="grow"><span class="t">${esc(a.t)}</span>${a.s ? `<br><span class="s">${esc(a.s)}</span>` : ""}</span>${ic("chev", "chev")}</a>`).join("")}</div></section>` : ""}
     </div><div>
@@ -2669,7 +2784,7 @@ route("ev", (id) => {
   const g = e.tipo === "incontro" ? GRUPPI[e.gruppo] : null;
   const puoMat = org || (g ? inGroup(e.gruppo) : isCouncil()) || rsvp(e) === "si";
   const verbO = riunioneDiOrgano(e, "consiglio") ? "consiglio" : "assemblea";
-  const verb = [...Object.values(S.verbali), ...Object.values(S.verbalicd)].find((v) => v.riunioneId === e.id);
+  const verb = (e.tipo === "riunione" || riunioneDiOrgano(e, "consiglio")) ? verbaleDiRiunione(e) : null;
   const col = colEv(e), pj = e.progetto && S.progetti[e.progetto];
   const chiVede = e.visib === "consiglio" ? `Consiglio direttivo${(e.invitati || []).length ? ` + ${e.invitati.length} ${e.invitati.length === 1 ? "invitato" : "invitati"}` : ""}` : g ? g.nome : e.tipo === "riunione" ? "Tutti i soci" : "Tutta l'associazione";
   let pres;
@@ -2711,7 +2826,7 @@ route("ev", (id) => {
     </div>
     <div class="btns">
       <a class="btn" href="${linkGoogleCal(e)}" target="_blank" rel="noopener">${ic("cal")}Aggiungi a Google Calendar</a>
-      ${(e.tipo === "riunione" || riunioneDiOrgano(e, "consiglio")) && isCouncil() ? (verb ? `<a class="btn" href="#${ORGANI[verbO].r}-${verb.id}">${ic("doc")}Verbale</a>` : `<button class="btn" data-act="nuovo-verbale" data-id="${e.id}">${ic("doc")}Scrivi il verbale</button>`) : e.tipo === "riunione" && verb && pubblico(verb) ? `<a class="btn" href="#vb-${verb.id}">${ic("doc")}Verbale</a>` : ""}
+      ${(e.tipo === "riunione" || riunioneDiOrgano(e, "consiglio")) && isCouncil() ? (verb ? `<a class="btn" href="#${ORGANI[verbO].r}-${verb.id}">${ic("doc")}Verbale</a>` : finito(e) ? `<button class="btn" data-act="vb-carica" data-rid="${e.id}">${ic("up")}Carica il verbale</button>` : "") : e.tipo === "riunione" && verb && pubblico(verb) ? `<a class="btn" href="#vb-${verb.id}">${ic("doc")}Verbale</a>` : ""}
       ${isCouncil() && e.tipo !== "incontro" ? `<button class="btn" data-act="ev-invita" data-id="${e.id}">${ic("people")}Chi lo vede</button>` : ""}
       ${org ? `<button class="btn" data-act="modifica-evento" data-id="${e.id}">${ic("edit")}Modifica</button><button class="btn danger" data-act="annulla-evento" data-id="${e.id}">${ic("trash")}Annulla</button>` : ""}
     </div>
@@ -4558,12 +4673,14 @@ function packLabel(p, n) { const nm2 = p.packName || (p.track === "count" ? "con
 const tallyKey = () => (ME() ? ME().replace(/[^A-Za-z0-9_\-.~:@+]/g, "") + "-" : "") + device;
 function totaliSerata(sid) {
   const out = {};
-  for (const t of Object.values(S.tallies[sid] || {})) for (const [pid, c] of Object.entries(t.counts || {})) { const o = out[pid] || (out[pid] = { k: 0, c: 0, i: 0 }); o.k += c.k || 0; o.c += c.c || 0; o.i += c.i || 0; }
+  for (const t of Object.values(S.tallies[sid] || {})) for (const [pid, c] of Object.entries(t.counts || {})) { const o = out[pid] || (out[pid] = { k: 0, c: 0, i: 0, ek: 0, ec: 0 }); o.k += c.k || 0; o.c += c.c || 0; o.i += c.i || 0; const e = euroDi(t, pid); o.ek += e.k; o.ec += e.c; }
   return out;
 }
+/* incasso di un prodotto in un conteggio: i soldi segnati conto per conto (i conteggi vecchi: pezzi × prezzo) */
+function euroDi(t, pid) { const e = (t.euro || {})[pid], c = (t.counts || {})[pid] || {}, pr = Number((P(pid) || {}).price) || 0; return e ? { k: e.k || 0, c: e.c || 0 } : { k: (c.k || 0) * pr, c: (c.c || 0) * pr }; }
 function pendingMap() {
   const out = {};
-  for (const s of serateAperte()) for (const [pid, c] of Object.entries(totaliSerata(s.id))) {
+  for (const s of serateAperte().filter((x) => !x.prova)) for (const [pid, c] of Object.entries(totaliSerata(s.id))) {
     const q = (c.k || 0) + (c.c || 0) + (c.i || 0); if (!q) continue; const p = P(pid); if (!p) continue;
     if (p.track === "none") { for (const u of p.uses || []) if (u.pid) out[u.pid] = (out[u.pid] || 0) + q * (Number(u.n) || 1); } else out[pid] = (out[pid] || 0) + q;
   }
@@ -4689,7 +4806,8 @@ function formProdottoHtml(p) {
   return `<form data-form="prodotto" data-id="${p ? p.id : ""}" class="stack s" id="fPr">
     <div class="fields"><label class="field"><span>Nome</span><input class="in" name="name" required maxlength="60" value="${esc(v.name || "")}"></label><label class="field"><span>Formato</span><input class="in" name="cap" maxlength="20" value="${esc(v.cap || "")}" placeholder="33 cl, 1 l…"></label></div>
     <div class="fields"><label class="field"><span>Categoria</span><select class="in" name="cat">${Object.entries(CATS).map(([k, l]) => opt(k, l, v.cat === k)).join("")}</select></label><label class="field"><span>Come si conta</span><select class="in" name="track" ${p ? "disabled" : ""}>${Object.entries(TRACKS).map(([k, l]) => opt(k, l, v.track === k)).join("")}</select></label></div>
-    <div class="fields"><label class="field"><span>Prezzo al bar (€)</span><input class="in" name="price" inputmode="decimal" value="${v.price || 0}"></label><label class="field"><span>Pezzi per confezione</span><input class="in" name="pack" inputmode="numeric" value="${v.pack || 1}"></label><label class="field"><span>Scorta minima</span><input class="in" name="min" inputmode="numeric" value="${v.min || 0}"></label></div>
+    <div class="fields"><label class="field"><span>Prezzo al bar (€)</span><input class="in" name="price" inputmode="decimal" value="${v.price || 0}"></label><label class="field"><span>Tesserati (€)</span><input class="in" name="priceT" inputmode="decimal" value="${numO(v.priceT) ?? ""}" placeholder="come normale"></label><label class="field"><span>Soci (€)</span><input class="in" name="priceS" inputmode="decimal" value="${numO(v.priceS) ?? ""}" placeholder="come tesserati"></label></div>
+    <div class="fields"><label class="field"><span>Pezzi per confezione</span><input class="in" name="pack" inputmode="numeric" value="${v.pack || 1}"></label><label class="field"><span>Scorta minima</span><input class="in" name="min" inputmode="numeric" value="${v.min || 0}"></label></div>
     <label class="check"><input type="checkbox" name="sell" ${(v.sell ?? v.cat === "soft") ? "checked" : ""}><span>Si vende in cassa</span></label>
     <label class="check"><input type="checkbox" name="noOrder" ${v.noOrder ? "checked" : ""}><span>Non riordinarlo più</span></label>
     <p class="small muted" style="margin-top:-6px">Resta in magazzino e in cassa finché c'è, ma non finisce più nella lista della spesa e negli ordini.</p>
@@ -4699,7 +4817,8 @@ ACT["prod-nuovo"] = () => openSheet({ title: "Nuovo prodotto", body: formProdott
 FORMS.prodotto = async (f) => {
   const id = f.dataset.id || norm(fv(f, "name")).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) + "-" + Math.random().toString(36).slice(2, 5);
   const p = P(f.dataset.id);
-  const d = { name: fv(f, "name"), cap: fv(f, "cap"), cat: fv(f, "cat"), price: num(fv(f, "price")), pack: Math.max(1, parseInt(fv(f, "pack"), 10) || 1), min: parseInt(fv(f, "min"), 10) || 0, sell: fv(f, "sell"), noOrder: !!fv(f, "noOrder") };
+  const pT = fv(f, "priceT") ? leggiImporto(fv(f, "priceT")) : null, pS = fv(f, "priceS") ? leggiImporto(fv(f, "priceS")) : null;
+  const d = { name: fv(f, "name"), cap: fv(f, "cap"), cat: fv(f, "cat"), price: num(fv(f, "price")), priceT: isFinite(pT) ? pT : null, priceS: isFinite(pS) ? pS : null, pack: Math.max(1, parseInt(fv(f, "pack"), 10) || 1), min: parseInt(fv(f, "min"), 10) || 0, sell: fv(f, "sell"), noOrder: !!fv(f, "noOrder") };
   if (!d.name) return fErr(f, "Scrivi il nome.");
   if (p) await wUpd("products/" + p.id, d);
   else { const track = fv(f, "track"); await wSet("products/" + id, { ...d, track, active: true, order: 900, packName: track === "count" ? "confezione" : track === "bottles" ? "cassa" : "plateau", lots: [], qty: 0, closed: 0, open: 0, uses: [] }); closeSheet(); }
@@ -4914,9 +5033,11 @@ route("serata", (id) => {
     <div class="pagehead"><div class="stack"><span class="eyebrow">${s.kind === "riunione" ? "Consumi della riunione" : "Resoconto della serata"}</span><h1>${esc(s.name)}</h1><span class="small muted">${esc(s.date ? fDataL(s.date) : fTs(s.openedAt))}</span></div></div>
     ${s.manual ? `<div class="notice">${esc(s.note || "Serata inserita a mano.")}</div>` : `
     <div class="kpis"><div class="kpi v"><span class="l">Incasso</span><span class="n">${esc(euro((r.cash || 0) + (r.card || 0)))}</span><span class="s">contanti ${esc(euro(r.cash))} · carta ${esc(euro(r.card))}</span></div>
-      <div class="kpi"><span class="l">Pezzi venduti</span><span class="n">${int(r.pieces)}</span></div><div class="kpi"><span class="l">Uso interno</span><span class="n">${int(r.internalPieces)}</span><span class="s">valore ${esc(euro(r.internal))}</span></div>
+      <div class="kpi"><span class="l">Pezzi venduti</span><span class="n">${int(r.pieces)}</span>${r.conti ? `<span class="s">${int(r.conti)} conti · in media ${esc(euro(((r.cash || 0) + (r.card || 0)) / r.conti))}</span>` : ""}</div><div class="kpi"><span class="l">Uso interno</span><span class="n">${int(r.internalPieces)}</span><span class="s">valore ${esc(euro(r.internal))}</span></div>
       ${r.contato != null ? `<div class="kpi"><span class="l">Contanti contati</span><span class="n">${esc(euro(r.contato))}</span><span class="s">${r.fondo != null ? "fondo " + esc(euro(r.fondo)) + " · " : ""}differenza ${esc(euro((r.contato || 0) - (r.fondo || 0) - (r.cash || 0)))}</span></div>` : ""}</div>
-    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Prodotto</th><th class="r">Contanti</th><th class="r">Carta</th><th class="r">Interno</th><th class="r">Incasso</th></tr></thead><tbody>${lines.map((l) => `<tr><td>${esc(l.name)}</td><td class="r">${l.k || ""}</td><td class="r">${l.c || ""}</td><td class="r">${l.i || ""}</td><td class="r">${esc(euro(((l.k || 0) + (l.c || 0)) * (l.price || 0)))}</td></tr>`).join("")}</tbody></table></div>
+    ${r.fasce && Object.keys(r.fasce).some((f) => f !== "n" && r.fasce[f].pz) ? `<section class="panel"><div class="ph"><h3>Chi ha comprato</h3></div><div class="list">${Object.entries(FASCE).filter(([f]) => r.fasce[f] && r.fasce[f].pz).map(([f, x]) => `<div class="li"><span class="grow"><span class="t">${x.l}</span><br><span class="s">${int(r.fasce[f].conti)} conti · ${int(r.fasce[f].pz)} pezzi</span></span><span class="v">${esc(euro(r.fasce[f].imp))}</span></div>`).join("")}</div></section>` : ""}
+    ${(r.casse || []).length > 1 ? `<section class="panel"><div class="ph"><h3>Per cassa</h3></div><div class="list">${r.casse.map((c) => `<div class="li"><span class="grow"><span class="t">${esc(c.nome)}</span><br><span class="s">${int(c.conti)} conti · carta ${esc(euro(c.card))}</span></span><span class="v">${esc(euro(c.cash))}<small>contanti</small></span></div>`).join("")}</div></section>` : ""}
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Prodotto</th><th class="r">Contanti</th><th class="r">Carta</th><th class="r">Interno</th><th class="r">Incasso</th></tr></thead><tbody>${lines.map((l) => `<tr><td>${esc(l.name)}</td><td class="r">${l.k || ""}</td><td class="r">${l.c || ""}</td><td class="r">${l.i || ""}</td><td class="r">${esc(euro(l.imp != null ? l.imp : ((l.k || 0) + (l.c || 0)) * (l.price || 0)))}</td></tr>`).join("")}</tbody></table></div>
     ${(r.short || []).length ? `<div class="notice warn">Venduti più pezzi di quelli in magazzino: ${esc(r.short.map((x) => `${x.name} (${x.n})`).join(", "))}. Controlla le scorte.</div>` : ""}
     ${s.note ? `<p>${esc(s.note)}</p>` : ""}`}
     ${isCouncil() && !s.manual ? `<div class="btns"><button class="btn" data-act="serata-riapri" data-id="${id}">${ic("undo")}Riapri la cassa</button></div>` : ""}
@@ -4950,79 +5071,272 @@ ACT["setup-del"] = (el) => confirmSheet({ title: "Eliminare?", text: "Sparisce d
 
 /* ================= CASSA ================= */
 let tallyTimer = null, tallyInflight = false, tallyDirty = false;
+const BK = (sid) => "bagaera-cassa-" + sid;
 function mioConteggio(sid) { const t = (S.tallies[sid] || {})[tallyKey()]; return t ? clone(t) : { counts: {}, log: [] }; }
-function scheduleTally(sid) { tallyDirty = sid; clearTimeout(tallyTimer); tallyTimer = setTimeout(flushTally, 350); }
+/* il mio conteggio, sempre anche nella memoria del tablet: se cade la rete o si chiude l'app non si perde niente */
+function salvaCopia(sid) { const t = (S.tallies[sid] || {})[tallyKey()]; if (t) ls.set(BK(sid), JSON.stringify({ counts: t.counts, euro: t.euro || null, fasce: t.fasce || null, nome: t.nome || null, log: t.log, conti: t.conti || 0, at: t.at || Date.now() })); }
+function leggiCopia(sid) { try { return JSON.parse(ls.get(BK(sid)) || "null"); } catch (e) { return null; } }
+/* arrivano i conteggi dall'archivio: il mio resta quello più recente tra archivio, memoria e copia sul tablet */
+function unisciMio(sid, t) {
+  const k = tallyKey(), dalServer = t[k], inMemoria = (S.tallies[sid] || {})[k], copia = leggiCopia(sid);
+  let mio = dalServer;
+  for (const x of [inMemoria, copia]) if (x && (x.at || 0) > ((mio && mio.at) || 0)) mio = x;
+  if (mio) t[k] = mio;
+  if (mio && mio !== dalServer) scheduleTally(sid);
+  return t;
+}
+function scheduleTally(sid) { tallyDirty = sid; salvaCopia(sid); clearTimeout(tallyTimer); tallyTimer = setTimeout(flushTally, 350); }
 async function flushTally() {
   const sid = tallyDirty; if (tallyInflight || !sid) return;
   tallyInflight = true; tallyDirty = false;
   const body = (S.tallies[sid] || {})[tallyKey()] || { counts: {}, log: [] };
-  try { await wSet(`serate/${sid}/tallies/${tallyKey()}`, { counts: body.counts, log: body.log.slice(-40), by: ME(), at: Date.now() }); }
-  catch (e) { tallyDirty = sid; } finally { tallyInflight = false; if (tallyDirty) { clearTimeout(tallyTimer); tallyTimer = setTimeout(flushTally, 800); } }
+  const dati = { counts: body.counts, euro: body.euro || null, fasce: body.fasce || null, nome: body.nome || nomeCassa() || null, log: body.log.slice(-60), conti: body.conti || 0, by: ME(), at: body.at || Date.now() };
+  try {
+    /* l'archivio la tiene in locale subito e la manda appena c'è rete: non aspetto la conferma più di qualche secondo */
+    const p = dbCall(`serate/${sid}/tallies/${tallyKey()}`, "set", dati);
+    p.catch((e) => { console.warn(e); tallyDirty = tallyDirty || sid; if (e && e.code === "invalid_argument") toast("Non hai il permesso di usare questa cassa."); });
+    await Promise.race([p, new Promise((r) => setTimeout(r, 4000))]);
+  } catch (e) { tallyDirty = tallyDirty || sid; } finally { tallyInflight = false; if (tallyDirty) { clearTimeout(tallyTimer); tallyTimer = setTimeout(flushTally, 800); } }
 }
 async function flushTallyNow() { clearTimeout(tallyTimer); while (tallyInflight) await new Promise((r) => setTimeout(r, 50)); if (tallyDirty) await flushTally(); while (tallyInflight) await new Promise((r) => setTimeout(r, 50)); }
 function cassaSync() { if (S.route.name === "cassa") scheduleRender(); }
+/* incasso di ogni tablet, per contare i cassetti uno per uno */
+function perCassa(sid) {
+  return Object.entries(S.tallies[sid] || {}).map(([k, t], i) => { let cash = 0, card = 0; for (const pid of Object.keys(t.counts || {})) { const e = euroDi(t, pid); cash += e.k; card += e.c; } return { nome: t.nome || (t.by ? primoNome(t.by) : "Cassa " + (i + 1)), cash, card, conti: t.conti || 0 }; }).filter((c) => c.cash || c.card || c.conti);
+}
 function totaliCassa(sid) {
   const tot = totaliSerata(sid); let cash = 0, card = 0, internal = 0, pcs = 0, ipcs = 0;
-  for (const [pid, c] of Object.entries(tot)) { const pr = Number((P(pid) || {}).price) || 0; cash += c.k * pr; card += c.c * pr; internal += c.i * pr; pcs += c.k + c.c; ipcs += c.i; }
-  return { cash, card, internal, pcs, ipcs, tot };
+  for (const [pid, c] of Object.entries(tot)) { const pr = Number((P(pid) || {}).price) || 0; cash += c.ek; card += c.ec; internal += c.i * pr; pcs += c.k + c.c; ipcs += c.i; }
+  const conti = Object.values(S.tallies[sid] || {}).reduce((n, t) => n + (t.conti || 0), 0);
+  const fasce = {}; for (const t of Object.values(S.tallies[sid] || {})) for (const [f, x] of Object.entries(t.fasce || {})) { const o = fasce[f] || (fasce[f] = { pz: 0, imp: 0, conti: 0 }); o.pz += x.pz || 0; o.imp += x.imp || 0; o.conti += x.conti || 0; }
+  return { cash, card, internal, pcs, ipcs, tot, conti, fasce };
+}
+/* tre prezzi: normale, tesserato, socio. Se manca quello del tesserato vale il normale; se manca quello del socio vale quello del tesserato */
+const FASCE = { n: { l: "Normale", s: "prezzo pieno" }, t: { l: "Tesserato", s: "con la tessera" }, s: { l: "Socio", s: "prezzo soci" } };
+const numO = (v) => (v === "" || v == null || !isFinite(Number(v)) ? null : Number(v));
+function prezzoDi(p, f) { const n = Number(p && p.price) || 0, t = numO(p && p.priceT), so = numO(p && p.priceS); if (f === "s") return so ?? t ?? n; if (f === "t") return t ?? n; return n; }
+const fasciaOra = () => (FASCE[S.ui.fascia] ? S.ui.fascia : "n");
+/* tesserato e socio pagano meno: un tocco per sbaglio costerebbe soldi, quindi si conferma (e si vede quanto cambia il conto) */
+ACT["cassa-fascia"] = (el) => {
+  const f = el.dataset.f, sa = serateAperte()[0]; S.ui.esito = null;
+  if (f === "n" || !sa) { S.ui.fascia = "n"; return render(true); }
+  if (fasciaOra() === f) return;
+  const r = Object.entries(contoDi(sa.id)).filter(([pid, n]) => n > 0 && P(pid));
+  const da = r.reduce((x, [pid, n]) => x + n * prezzoDi(P(pid), fasciaOra()), 0), a = r.reduce((x, [pid, n]) => x + n * prezzoDi(P(pid), f), 0);
+  confirmSheet({ title: f === "t" ? "Ha la tessera?" : "È un socio?", text: `${f === "t" ? "Controlla la tessera dell'anno: " : "Solo per i soci dell'associazione: "}${r.length ? `il conto passa da ${euro(da)} a ${euro(a)}.` : "i prezzi scendono per questo cliente."} Vale solo per questo conto.`, ok: f === "t" ? "Sì, prezzo tesserati" : "Sì, prezzo soci", onOk: () => { S.ui.fascia = f; render(true); } });
+};
+/* il conto del cliente: si toccano i prodotti, esce il totale, si incassa in contanti (col resto) o con la carta */
+const MODI_CASSA = { v: { l: "Vendita", s: "conto e resto" }, i: { l: "Interno", s: "non si paga" } };
+let CONTO = (() => { try { return JSON.parse(ls.get("bagaera-conto") || "null") || { sid: null, r: {} }; } catch (e) { return { sid: null, r: {} }; } })();
+function contoDi(sid) { if (CONTO.sid !== sid) CONTO = { sid, r: {} }; return CONTO.r; }
+const salvaConto = () => ls.set("bagaera-conto", JSON.stringify(CONTO));
+function righeConto(sid) { const f = fasciaOra(); return Object.entries(contoDi(sid)).filter(([pid, n]) => n > 0 && P(pid)).map(([pid, n]) => ({ pid, n, p: P(pid), imp: Math.round(n * prezzoDi(P(pid), f) * 100) / 100 })); }
+const totConto = (sid) => righeConto(sid).reduce((x, r) => x + r.imp, 0);
+const pezziConto = (sid) => righeConto(sid).reduce((x, r) => x + r.n, 0);
+/* schermo sempre acceso finché la cassa è aperta davanti */
+let wakeLk = null;
+async function schermoAcceso(on) {
+  try {
+    if (on) { if (wakeLk || !navigator.wakeLock || document.visibilityState !== "visible") return; wakeLk = await navigator.wakeLock.request("screen"); wakeLk.addEventListener("release", () => { wakeLk = null; }); }
+    else if (wakeLk) { const w = wakeLk; wakeLk = null; await w.release(); }
+  } catch (e) { wakeLk = null; }
+}
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && S.route.name === "cassa" && serateAperte().length) schermoAcceso(true); });
+window.addEventListener("hashchange", () => { if (S.route.name !== "cassa") schermoAcceso(false); });
+/* «schermo cassa»: il tablet resta sulla cassa, senza menu, finché qualcuno non esce */
+const kioskAttivo = () => ls.get("bagaera-kiosk") === "1" && !!ME();
+function applicaKiosk() { document.body.classList.toggle("kiosk", kioskAttivo()); }
+ACT["kiosk-on"] = () => { ls.set("bagaera-kiosk", "1"); applicaKiosk(); render(true); toast("Schermo cassa: il tablet resta qui. Per uscire tocca «Esci»."); };
+ACT["kiosk-off"] = () => confirmSheet({ title: "Uscire dallo schermo cassa?", text: "Tornano i menu e il resto dell'app.", ok: "Esci", onOk: () => { ls.set("bagaera-kiosk", "0"); applicaKiosk(); render(true); } });
+
+/* il nome di questo tablet («Cassa 1», «Cassa 2»…): a fine serata ogni cassetto si conta per conto suo */
+const nomeCassa = () => ls.get("bagaera-cassa-nome") || "";
+ACT["cassa-nome"] = () => openSheet({ title: "Nome di questa cassa", body: `<form data-form="cassa-nome" id="fCn" class="stack"><label class="field"><span>Nome</span><input class="in" name="n" maxlength="24" value="${esc(nomeCassa())}" placeholder="es. Cassa 1"></label><div class="tagli">${["Cassa 1", "Cassa 2", "Cassa 3", "Bar"].map((x) => `<button type="button" class="btn" data-act="cassa-nome-usa" data-v="${x}">${x}</button>`).join("")}</div><p class="small muted">Serve a fine serata: per ogni cassa vedi quanti contanti devono esserci nel suo cassetto.</p></form>`, foot: `<button class="btn pri" type="submit" form="fCn">Salva</button>` });
+ACT["cassa-nome-usa"] = (el) => { const i = $("#fCn [name=n]"); if (i) i.value = el.dataset.v; };
+FORMS["cassa-nome"] = (f) => { ls.set("bagaera-cassa-nome", fv(f, "n")); const s = serateAperte()[0]; if (s) { const m = mioDoc(s); m.nome = fv(f, "n"); m.at = Date.now(); scheduleTally(s.id); } closeSheet(); render(true); };
+
+/* il pannello del conto: totale grande e incasso con un tocco (la banconota che ti danno = conto chiuso e resto sullo schermo) */
+function esitoHtml() {
+  const e = S.ui.esito; if (!e) return "";
+  if (e.m === "c") return `<div class="esito carta"><span class="l">Carta · batti sul POS</span><b>${esc(euro(e.tot))}</b><span class="small">Se il POS rifiuta: «Annulla».</span></div>`;
+  return `<div class="esito ${e.resto ? "" : "giusti"}"><span class="l">${e.resto ? `Resto da dare · ricevuti ${esc(euro(e.ricevuti))}` : "Contanti giusti"}</span><b>${e.resto ? esc(euro(e.resto)) : esc(euro(e.tot))}</b></div>`;
+}
+function barraCassa(s, mode, t, mine) {
+  const last = mine.log[mine.log.length - 1];
+  const ultimo = !last ? "" : last[4] ? (() => { const es = mine.log.filter((x) => x[4] === last[4]); const imp = es.reduce((x, e) => x + (e[5] != null ? e[5] : (e[3] || 1) * (Number((P(e[0]) || {}).price) || 0)), 0); return `Ultimo conto: ${euro(imp)} (${MODES[last[1]].l.toLowerCase()}${last[6] && last[6] !== "n" ? ", " + FASCE[last[6]].l.toLowerCase() : ""})`; })() : `Ultimo: ${(P(last[0]) || {}).name || ""} (${MODES[last[1]].l.toLowerCase()})`;
+  const undo = `<button class="btn sm" data-act="cassa-undo" ${last ? "" : "disabled"} title="Annulla l'ultima operazione">${ic("undo")}Annulla</button>`;
+  if (mode === "i") return `<aside class="conto int"><div class="ch"><b>Uso interno</b></div><p class="small muted">Tocca quello che consuma lo staff: esce dal magazzino ma non si paga.</p><div class="cfoot">${undo}<span class="grow small muted">${esc(ultimo)}</span></div></aside>`;
+  const righe = righeConto(s.id), tot = totConto(s.id), pz = pezziConto(s.id);
+  const tagli = tagliResto(tot).slice(0, 3);
+  const fa = fasciaOra();
+  return `<aside class="conto f-${fa} ${pz ? "pieno" : ""}" aria-label="Conto">
+    <div class="fasce" role="group" aria-label="Chi paga">${Object.entries(FASCE).map(([k, x]) => `<button data-act="cassa-fascia" data-f="${k}" aria-pressed="${fa === k}">${x.l}</button>`).join("")}</div>
+    ${!pz && S.ui.esito ? esitoHtml() : `<div class="ch"><b>${pz ? "Conto" : "Nuovo cliente"}</b>${righe.length ? `<button class="btn sm ghost" data-act="conto-svuota">${ic("x")}Svuota</button>` : ""}</div>
+    <div class="crighe">${righe.length ? righe.map((r) => `<div class="cr"><span class="grow"><b>${r.n}×</b> ${esc(r.p.name)}</span><span class="ci">${esc(euro(r.imp))}</span><button class="cm" data-act="conto-meno" data-id="${r.pid}" aria-label="Togli un ${esc(r.p.name)}">−</button></div>`).join("") : `<p class="small muted">Tocca i prodotti che prende il cliente.</p>`}</div>`}
+    <div class="ctotale"><span>${pz ? `${pz} ${pz === 1 ? "pezzo" : "pezzi"}` : "Totale"}${fa !== "n" ? ` · prezzo ${FASCE[fa].l.toLowerCase()}` : ""}</span><b>${esc(euro(tot))}</b></div>
+    <div class="cpaga" ${pz ? "" : "aria-disabled=\"true\""}>
+      <span class="l">Contanti: tocca quanto ti dà</span>
+      <div class="banc"><button class="btn big contanti" data-act="conto-incassa" data-m="k" data-v="${tot}" ${pz ? "" : "disabled"}>Giusti</button>${tagli.map((x) => `<button class="btn big contanti" data-act="conto-incassa" data-m="k" data-v="${x}" ${pz ? "" : "disabled"}>${x} €</button>`).join("")}<button class="btn big" data-act="conto-altro" ${pz ? "" : "disabled"}>Altro</button></div>
+      <button class="btn big carta" data-act="conto-incassa" data-m="c" ${pz ? "" : "disabled"}>${ic("card")}Carta</button>
+    </div>
+    <div class="cfoot">${undo}<span class="grow small muted">${esc(ultimo)}</span></div>
+  </aside>`;
 }
 route("cassa", () => {
   const ap = serateAperte();
-  if (!can.cassa()) return soloConsiglio();
+  const esci = kioskAttivo() ? `<button class="btn sm" data-act="kiosk-off">${ic("x")}Esci dallo schermo cassa</button>` : "";
+  if (!can.cassa()) return kioskAttivo() ? `<div class="wrap">${empty("Nessuna cassa aperta", "Quando il consiglio apre la cassa compare qui da sola.")}<div class="btns">${esci}</div></div>` : soloConsiglio();
   if (!ap.length) {
-    return `<div class="wrap">${isCouncil() ? backLink("magazzino", "Magazzino") : backLink("home", "Home")}
-      <div class="pagehead"><div class="stack"><span class="eyebrow">Vendite delle serate e consumi delle riunioni</span><h1>Cassa</h1></div></div>
-      ${isCouncil() ? navMag("cassa") : ""}
-      ${empty("Nessuna cassa aperta", "Apri la cassa all'inizio della serata: decidi tu chi la può usare dal suo telefono.", isCouncil() ? `<div class="btns"><button class="btn pri" data-act="cassa-apri" data-k="evento">${ic("reg")}Apri la cassa della serata</button><button class="btn" data-act="cassa-apri" data-k="riunione">Consumi di una riunione</button></div>` : "")}</div>`;
+    return `<div class="wrap">${kioskAttivo() ? "" : isCouncil() ? backLink("magazzino", "Magazzino") : backLink("home", "Home")}
+      <div class="pagehead"><div class="stack"><span class="eyebrow">Vendite delle serate e consumi delle riunioni</span><h1>Cassa</h1></div>${esci}</div>
+      ${isCouncil() && !kioskAttivo() ? navMag("cassa") : ""}
+      ${empty("Nessuna cassa aperta", "Apri la cassa all'inizio della serata: decidi tu chi la può usare dal suo telefono o dal tablet.", isCouncil() ? `<div class="btns"><button class="btn pri" data-act="cassa-apri" data-k="evento">${ic("reg")}Apri la cassa della serata</button><button class="btn" data-act="cassa-apri" data-k="riunione">Consumi di una riunione</button><button class="btn" data-act="cassa-apri" data-k="prova">${ic("sparkle")}Cassa di prova</button></div><p class="small muted">La cassa di prova serve a fare pratica e a provare i tablet: non tocca il magazzino e alla chiusura sparisce senza lasciare niente.</p>` : "")}</div>`;
   }
   const s = ap[0];
-  const mode = S.ui.mode || (s.kind === "riunione" ? "i" : "k"); S.ui.mode = mode;
+  let mode = S.ui.mode; if (mode !== "v" && mode !== "i") mode = s.kind === "riunione" ? "i" : "v"; S.ui.mode = mode;
   const t = totaliCassa(s.id);
   const mine = mioConteggio(s.id);
+  const conto = contoDi(s.id);
   const pend = pendingMap();
   const tiles = prodotti(sellsInCassa).sort((a, b) => (a.cat === "drink" ? 0 : 1) - (b.cat === "drink" ? 0 : 1) || (a.order ?? 999) - (b.order ?? 999));
-  const last = mine.log[mine.log.length - 1];
-  return `<div class="wrap">
-    <div class="pagehead"><div class="stack"><span class="eyebrow"><span class="dot" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--verde);margin-right:6px"></span>${s.kind === "riunione" ? "Consumi riunione" : "Cassa aperta"} · da ${esc(fTs(s.openedAt).split(" · ")[1])}</span><h1>${esc(s.name)}</h1></div>
-      ${isCouncil() ? `<div class="btns"><button class="btn sm" data-act="cassa-cassieri" data-id="${s.id}">${ic("people")}Cassieri (${(s.cassieri || []).length})</button><button class="btn sm dark" data-act="cassa-chiudi" data-id="${s.id}">Chiudi</button></div>` : ""}</div>
-    <div class="modes" role="group" aria-label="Modalità">${Object.entries(MODES).map(([k, m]) => `<button data-act="cassa-mode" data-m="${k}" aria-pressed="${mode === k}">${m.l}<small>${m.s}</small></button>`).join("")}</div>
+  const html = `<div class="wrap cassa">
+    <div class="pagehead"><div class="stack"><span class="eyebrow"><span class="dot" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--verde);margin-right:6px"></span>${s.prova ? "Cassa di prova" : s.kind === "riunione" ? "Consumi riunione" : "Cassa aperta"} · da ${esc(fTs(s.openedAt).split(" · ")[1])}</span><h1>${esc(s.name)}</h1></div>
+      <div class="btns"><button class="btn sm" data-act="cassa-nome" title="Nome di questo tablet">${ic("reg")}${esc(nomeCassa() || "Dai un nome")}</button>${kioskAttivo() ? esci : `<button class="btn sm" data-act="kiosk-on" title="Il tablet resta sulla cassa, senza menu">${ic("lock")}Schermo cassa</button>`}${can.magazzino() && !kioskAttivo() ? `<button class="btn sm" data-act="listino">${ic("tag")}Listino</button>` : ""}${isCouncil() && !kioskAttivo() ? `<button class="btn sm" data-act="cassa-cassieri" data-id="${s.id}">${ic("people")}Cassieri (${(s.cassieri || []).length})</button>${s.prova ? `<button class="btn sm" data-act="prova-azzera" data-id="${s.id}">${ic("undo")}Azzera</button>` : ""}<button class="btn sm dark" data-act="${s.prova ? "prova-chiudi" : "cassa-chiudi"}" data-id="${s.id}">${s.prova ? "Chiudi la prova" : "Chiudi"}</button>` : ""}</div></div>
+    ${s.prova ? `<div class="provabar">${ic("sparkle")}<span><b>Cassa di prova.</b> Vendi pure: niente esce dal magazzino e alla chiusura non resta niente.</span></div>` : ""}
+    <div class="modes due" role="group" aria-label="Modalità">${Object.entries(MODI_CASSA).map(([k, m]) => `<button data-act="cassa-mode" data-m="${k}" aria-pressed="${mode === k}">${m.l}<small>${m.s}</small></button>`).join("")}</div>
     <div class="ctot"><div><b>${esc(euro(t.cash))}</b><span>contanti</span></div><div><b>${esc(euro(t.card))}</b><span>carta</span></div><div><b>${int(t.pcs)}</b><span>pezzi venduti</span></div><div><b>${int(t.ipcs)}</b><span>uso interno</span></div></div>
-    <div class="tiles">${tiles.map((p) => { const mc = (mine.counts[p.id] || {})[mode] || 0; const tc = t.tot[p.id] || { k: 0, c: 0, i: 0 }; const left = p.track === "lots" ? lotsTotal(p) - (pend[p.id] || 0) : null;
-      return `<button class="tile ${left !== null && left <= 0 ? "out" : ""}" data-act="tap" data-id="${p.id}" aria-label="${esc(p.name)}: aggiungi uno"><span class="tn">${esc(p.name)}</span><span class="tp"><b>${esc(euroT(p.price))}</b>${tc.k + tc.c + tc.i ? `${tc.k + tc.c} venduti${tc.i ? ` · ${tc.i} int.` : ""}` : left !== null ? `${int(left)} in magazzino` : "&nbsp;"}</span>${mc ? `<span class="cnt">${mc}</span><span class="minus" data-act="untap" data-id="${p.id}" role="button" aria-label="Togli uno">−</span>` : ""}</button>`; }).join("")}</div>
+    <div class="cassa-lay">
+    <div class="tiles">${tiles.map((p) => { const mc = mode === "v" ? conto[p.id] || 0 : ((mine.counts[p.id] || {}).i || 0); const tc = t.tot[p.id] || { k: 0, c: 0, i: 0 }; const left = p.track === "lots" ? lotsTotal(p) - (pend[p.id] || 0) - (mode === "v" ? conto[p.id] || 0 : 0) : null;
+      return `<button class="tile ${left !== null && left <= 0 ? "out" : ""}" data-act="tap" data-id="${p.id}" aria-label="${esc(p.name)}: aggiungi uno"><span class="tn">${esc(p.name)}</span><span class="tp"><b>${esc(euroT(mode === "v" ? prezzoDi(p, fasciaOra()) : p.price))}</b>${tc.k + tc.c + tc.i ? `${tc.k + tc.c} ${tc.k + tc.c === 1 ? "venduto" : "venduti"}${tc.i ? ` · ${tc.i} int.` : ""}` : left !== null ? `${int(left)} in magazzino` : "&nbsp;"}</span>${mc ? `<span class="cnt">${mc}</span><span class="minus" data-act="untap" data-id="${p.id}" role="button" aria-label="Togli uno">−</span>` : ""}</button>`; }).join("")}</div>
+    ${barraCassa(s, mode, t, mine)}
+    </div>
     ${(() => { const bt = prodotti((p) => p.track === "bottles" && ((p.closed || 0) + (p.open || 0) > 0)); return bt.length ? `<details class="panel"><summary class="ph" style="cursor:pointer"><h3>Bottiglie e fusti</h3><span class="pill">${bt.reduce((x, p) => x + (p.open || 0), 0)} aperti</span></summary><div class="list">${bt.map((p) => `<div class="li"><span class="grow"><span class="t">${esc(p.name)}</span><br><span class="s">${int(p.closed)} ${isKeg(p) ? "chiusi" : "chiuse"} · ${int(p.open)} ${isKeg(p) ? "attaccati" : "aperte"}</span></span><button class="btn sm" data-act="bott-apri" data-id="${p.id}" ${p.closed > 0 ? "" : "disabled"}>${isKeg(p) ? "Attacca" : "Apri"}</button><button class="btn sm ghost" data-act="bott-finita" data-id="${p.id}" ${p.open > 0 ? "" : "disabled"}>${isKeg(p) ? "Finito" : "Finita"}</button></div>`).join("")}</div></details>` : ""; })()}
-    <div class="regbar"><button class="btn sm" data-act="cassa-undo" ${last ? "" : "disabled"}>${ic("undo")}Annulla</button><span class="grow">${last ? `Ultimo: ${esc((P(last[0]) || {}).name || "")} (${esc(MODES[last[1]].l.toLowerCase())})` : "Tocca un prodotto per segnarlo"}</span><span class="small"><b>${esc(euro(t.cash + t.card))}</b></span></div>
   </div>`;
+  return { html, mount: () => schermoAcceso(true) };
 });
 ACT["cassa-mode"] = (el) => { S.ui.mode = el.dataset.m; render(true); };
+function mioDoc(s) { const all = S.tallies[s.id] || (S.tallies[s.id] = {}); return all[tallyKey()] || (all[tallyKey()] = { counts: {}, log: [] }); }
+function flashTile(pid) { const tl = $(`.tile[data-id="${pid}"]`); if (tl) { tl.classList.remove("flash"); void tl.offsetWidth; tl.classList.add("flash"); } }
 function tapProd(pid, delta) {
   const s = serateAperte()[0]; if (!s) return;
-  const mode = S.ui.mode || "k"; const key = tallyKey();
-  const all = S.tallies[s.id] || (S.tallies[s.id] = {});
-  const mine = all[key] || (all[key] = { counts: {}, log: [] });
+  if (S.ui.mode !== "i") { /* vendita: va nel conto, si conta solo quando è pagato */
+    const r = contoDi(s.id); r[pid] = Math.max(0, (r[pid] || 0) + delta); if (!r[pid]) delete r[pid]; salvaConto(); S.ui.esito = null;
+    const p = P(pid); if (delta > 0 && p && p.track === "lots" && lotsTotal(p) - (pendingMap()[pid] || 0) - r[pid] < 0) toast(`${p.name}: in magazzino risulta finito. Lo segno lo stesso, poi controllate le scorte.`);
+    render(true); if (delta > 0) flashTile(pid); return;
+  }
+  const mine = mioDoc(s);
   const c = mine.counts[pid] || (mine.counts[pid] = { k: 0, c: 0, i: 0 });
-  if (delta > 0) { c[mode] = (c[mode] || 0) + 1; mine.log.push([pid, mode, Date.now()]); if (mine.log.length > 40) mine.log.shift(); }
-  else { if (!(c[mode] > 0)) return; c[mode]--; for (let i = mine.log.length - 1; i >= 0; i--) if (mine.log[i][0] === pid && mine.log[i][1] === mode) { mine.log.splice(i, 1); break; } }
-  scheduleTally(s.id); render(true);
-  if (delta > 0) { const tl = $(`.tile[data-id="${pid}"]`); if (tl) { tl.classList.remove("flash"); void tl.offsetWidth; tl.classList.add("flash"); } }
+  if (delta > 0) { c.i = (c.i || 0) + 1; mine.log.push([pid, "i", Date.now()]); if (mine.log.length > 60) mine.log.shift(); }
+  else { if (!(c.i > 0)) return; c.i--; for (let i = mine.log.length - 1; i >= 0; i--) if (mine.log[i][0] === pid && mine.log[i][1] === "i" && !mine.log[i][4]) { mine.log.splice(i, 1); break; } }
+  mine.at = Date.now(); scheduleTally(s.id); render(true);
+  if (delta > 0) flashTile(pid);
 }
 ACT.tap = (el, e) => { if (e.target.closest(".minus")) return tapProd(el.dataset.id, -1); tapProd(el.dataset.id, 1); };
 ACT.untap = (el) => tapProd(el.dataset.id, -1);
-ACT["cassa-undo"] = () => { const s = serateAperte()[0]; const mine = s && (S.tallies[s.id] || {})[tallyKey()]; if (!mine || !mine.log.length) return; const [pid, mode] = mine.log.pop(); const c = mine.counts[pid]; if (c && c[mode] > 0) c[mode]--; scheduleTally(s.id); render(true); toast(`Tolto: ${(P(pid) || {}).name || ""}`); };
+ACT["conto-meno"] = (el) => { const s = serateAperte()[0]; if (!s) return; const r = contoDi(s.id); if (r[el.dataset.id] > 0) r[el.dataset.id]--; if (!r[el.dataset.id]) delete r[el.dataset.id]; salvaConto(); render(true); };
+ACT["conto-svuota"] = () => { const s = serateAperte()[0]; if (!s) return; CONTO = { sid: s.id, r: {} }; salvaConto(); render(true); };
+/* incasso: i pezzi del conto diventano vendite in contanti o con carta, il conto si chiude e si passa al prossimo */
+function registraConto(m, ricevuti) {
+  const s = serateAperte()[0]; if (!s) return;
+  const righe = righeConto(s.id); if (!righe.length) return closeSheet();
+  const tot = totConto(s.id), oid = genId("ct"), now = Date.now(), mine = mioDoc(s), f = fasciaOra();
+  mine.euro = mine.euro || {}; mine.fasce = mine.fasce || {};
+  for (const r of righe) {
+    if (!mine.euro[r.pid]) mine.euro[r.pid] = euroDi(mine, r.pid);
+    const c = mine.counts[r.pid] || (mine.counts[r.pid] = { k: 0, c: 0, i: 0 }); c[m] = (c[m] || 0) + r.n;
+    mine.euro[r.pid][m] = Math.round(((mine.euro[r.pid][m] || 0) + r.imp) * 100) / 100;
+    mine.log.push([r.pid, m, now, r.n, oid, r.imp, f]);
+  }
+  const fx = mine.fasce[f] || (mine.fasce[f] = { pz: 0, imp: 0, conti: 0 }); fx.pz += pezziConto(s.id); fx.imp = Math.round((fx.imp + tot) * 100) / 100; fx.conti++;
+  while (mine.log.length > 60) mine.log.shift();
+  mine.conti = (mine.conti || 0) + 1; mine.at = now; if (nomeCassa()) mine.nome = nomeCassa();
+  CONTO = { sid: s.id, r: {} }; salvaConto();
+  const ric = m === "k" && isFinite(ricevuti) ? Math.max(ricevuti, tot) : tot;
+  S.ui.fascia = "n"; /* il prossimo cliente parte dal prezzo pieno */
+  S.ui.esito = { m, f, tot, ricevuti: ric, resto: m === "k" ? Math.round((ric - tot) * 100) / 100 : 0, at: now };
+  scheduleTally(s.id); closeSheet(); render(true);
+}
+const tagliResto = (tot) => { const out = []; for (const x of [5, 10, 20, 50, 100]) if (x > tot + 0.001 && out.length < 4) out.push(x); return out; };
+ACT["conto-incassa"] = (el) => { const s = serateAperte()[0]; if (!s || !(pezziConto(s.id) > 0)) return; registraConto(el.dataset.m, Number(el.dataset.v)); };
+/* «Altro»: monete o importi strani, si scrive quanto ha dato */
+ACT["conto-altro"] = () => {
+  const s = serateAperte()[0]; if (!s || !(pezziConto(s.id) > 0)) return; const tot = totConto(s.id);
+  openSheet({ title: "Quanto ti dà il cliente?", eyebrow: `Totale ${esc(euro(tot))}`, body: `<form data-form="conto-altro" id="fRic" class="stack"><input class="in big" id="ricevutiIn" name="v" inputmode="decimal" placeholder="es. 12,50" autofocus><div class="resto" id="restoBox">${restoHtml(tot, null)}</div><p class="err" hidden></p></form>`,
+    foot: `<button class="btn ghost" data-act="sheet-close">Indietro</button><button class="btn pri big" type="submit" form="fRic">${ic("check")}Incassato</button>` });
+};
+FORMS["conto-altro"] = (f) => { const s = serateAperte()[0]; if (!s) return; const tot = totConto(s.id), v = leggiImporto(fv(f, "v")); if (!fv(f, "v")) return registraConto("k", tot); if (!isFinite(v)) return fErr(f, "Scrivi un importo."); if (v < tot - 0.001) return fErr(f, `Mancano ${euro(tot - v)}.`); registraConto("k", v); };
+function restoHtml(tot, r) { if (r == null || !isFinite(r)) return `<span class="small muted">Se lasci vuoto, sono giusti.</span>`; if (r < tot - 0.001) return `<span class="l">Mancano</span><b class="n bad">${esc(euro(tot - r))}</b>`; return `<span class="l">Resto da dare</span><b class="n">${esc(euro(r - tot))}</b>`; }
+document.addEventListener("input", (e) => { if (e.target && e.target.id === "ricevutiIn") { const s = serateAperte()[0]; const v = leggiImporto(e.target.value); const b = $("#restoBox"); if (b && s) b.innerHTML = restoHtml(totConto(s.id), isFinite(v) && e.target.value.trim() ? v : null); } });
+ACT["cassa-undo"] = () => {
+  const s = serateAperte()[0]; const mine = s && (S.tallies[s.id] || {})[tallyKey()]; if (!mine || !mine.log.length) return;
+  const last = mine.log[mine.log.length - 1];
+  const togli = (e) => { const c = mine.counts[e[0]]; if (c && c[e[1]] > 0) c[e[1]] = Math.max(0, c[e[1]] - (e[3] || 1));
+    if (e[5] != null && mine.euro && mine.euro[e[0]]) mine.euro[e[0]][e[1]] = Math.max(0, Math.round(((mine.euro[e[0]][e[1]] || 0) - e[5]) * 100) / 100);
+    if (e[6] && mine.fasce && mine.fasce[e[6]]) { const fx = mine.fasce[e[6]]; fx.pz = Math.max(0, fx.pz - (e[3] || 1)); fx.imp = Math.max(0, Math.round((fx.imp - (e[5] || 0)) * 100) / 100); } };
+  if (last[4]) { let imp = 0; while (mine.log.length && mine.log[mine.log.length - 1][4] === last[4]) { const e = mine.log.pop(); togli(e); imp += e[5] != null ? e[5] : (e[3] || 1) * (Number((P(e[0]) || {}).price) || 0); if (e[6] && mine.fasce && mine.fasce[e[6]] && e === last) mine.fasce[e[6]].conti = Math.max(0, (mine.fasce[e[6]].conti || 0) - 1); } mine.conti = Math.max(0, (mine.conti || 0) - 1); mine.at = Date.now(); S.ui.esito = null; scheduleTally(s.id); render(true); toast(`Annullato l'ultimo conto: ${euro(imp)}.`); return; }
+  const e = mine.log.pop(); togli(e); mine.at = Date.now(); scheduleTally(s.id); render(true); toast(`Tolto: ${(P(e[0]) || {}).name || ""}`);
+};
+/* listino: cosa compare in cassa, a che prezzo e in che ordine (l'ordine non cambia durante la serata: le mani imparano dove sono i tasti) */
+const vendibile = (p) => p.active !== false && (p.track === "none" || (p.track === "lots" && p.cat !== "consumo"));
+ACT.listino = () => {
+  if (!can.magazzino()) return;
+  const tutti = Object.values(S.products).filter(vendibile).sort((a, b) => (sellsInCassa(b) ? 1 : 0) - (sellsInCassa(a) ? 1 : 0) || (a.cat === "drink" ? 0 : 1) - (b.cat === "drink" ? 0 : 1) || (a.order ?? 999) - (b.order ?? 999) || a.name.localeCompare(b.name, "it"));
+  S.ui.listino = tutti.map((p) => ({ id: p.id, name: p.name, price: Number(p.price) || 0, priceT: numO(p.priceT), priceS: numO(p.priceS), sell: sellsInCassa(p), cat: p.cat }));
+  openSheet({ title: "Listino della cassa", eyebrow: "Cosa si vende e a quanto", wide: true, body: listinoHtml, live: true,
+    foot: `<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn" data-act="listino-nuovo">${ic("plus")}Prodotto nuovo</button><button class="btn pri" data-act="listino-salva">Salva</button>` });
+};
+function listinoHtml() {
+  const L = S.ui.listino || [];
+  const pin = (x, i, k, ph) => `<label class="eur"><input class="in" inputmode="decimal" data-li="${i}" data-k="${k}" value="${x[k] == null ? "" : esc(String(x[k]).replace(".", ","))}" placeholder="${ph}" aria-label="Prezzo ${k === "price" ? "normale" : k === "priceT" ? "tesserati" : "soci"} di ${esc(x.name)}"><span>€</span></label>`;
+  return `<p class="small muted">Spunta cosa si vende e metti in alto quello che si vende di più. Tre prezzi: <b>normale</b>, <b>tesserati</b> e <b>soci</b> (vuoto = come quello a sinistra; 0 = gratis). Le bibite si scalano dal magazzino da sole; un drink o un gettone «solo listino» scala quello che decidi nel magazzino.</p>
+  <div class="listino"><div class="lr lh"><span>Prodotto</span><span>Normale</span><span>Tesserati</span><span>Soci</span><span></span></div>${L.map((x, i) => `<div class="lr ${x.sell ? "" : "off"}"><label class="check"><input type="checkbox" data-li="${i}" data-k="sell" ${x.sell ? "checked" : ""}><span>${esc(x.name)}</span></label>${pin(x, i, "price", "0")}${pin(x, i, "priceT", "=")}${pin(x, i, "priceS", "=")}<span class="su"><button class="btn sm ghost" data-act="listino-su" data-i="${i}" ${i && x.sell ? "" : "disabled"} aria-label="Più in alto">↑</button><button class="btn sm ghost" data-act="listino-giu" data-i="${i}" ${x.sell && L[i + 1] && L[i + 1].sell ? "" : "disabled"} aria-label="Più in basso">↓</button></span></div>`).join("")}</div>`;
+}
+document.addEventListener("change", (e) => { const t = e.target; if (!t.dataset || t.dataset.li == null || !S.ui.listino) return; const x = S.ui.listino[+t.dataset.li]; if (!x) return; if (t.dataset.k === "sell") { x.sell = t.checked; S.ui.listino.sort((a, b) => (b.sell ? 1 : 0) - (a.sell ? 1 : 0)); drawSheet(); } else { const v = leggiImporto(t.value); if (t.dataset.k === "price") { if (isFinite(v)) x.price = v; } else x[t.dataset.k] = t.value.trim() && isFinite(v) ? v : null; } });
+const spostaListino = (i, d) => { const L = S.ui.listino; const j = i + d; if (!L || !L[j]) return; [L[i], L[j]] = [L[j], L[i]]; drawSheet(); };
+ACT["listino-su"] = (el) => spostaListino(+el.dataset.i, -1);
+ACT["listino-giu"] = (el) => spostaListino(+el.dataset.i, 1);
+ACT["listino-salva"] = async (el) => {
+  const L = S.ui.listino || []; $$("#sheetRoot input[data-li]:not([type=checkbox])").forEach((inp) => { const v = leggiImporto(inp.value), x = L[+inp.dataset.li]; if (inp.dataset.k === "price") { if (isFinite(v)) x.price = v; } else x[inp.dataset.k] = inp.value.trim() && isFinite(v) ? v : null; });
+  el.disabled = true; let n = 0;
+  for (const [i, x] of L.entries()) { const p = P(x.id); if (!p) continue; const d = {}; const ord = x.sell ? (i + 1) * 10 : p.order ?? 900; if ((Number(p.price) || 0) !== x.price) d.price = x.price; if (numO(p.priceT) !== x.priceT) d.priceT = x.priceT; if (numO(p.priceS) !== x.priceS) d.priceS = x.priceS; if (sellsInCassa(p) !== x.sell) d.sell = x.sell; if (x.sell && p.order !== ord) d.order = ord; if (p.track === "none" && !x.sell && p.active !== false && sellsInCassa(p)) d.active = false; if (Object.keys(d).length) { await wUpd("products/" + p.id, d, { quiet: true }); n++; } }
+  closeSheet(); toast(n ? "Listino salvato." : "Nessuna modifica.");
+};
+ACT["listino-nuovo"] = () => {
+  const ing = prodotti((p) => p.track !== "none").sort((a, b) => a.name.localeCompare(b.name, "it"));
+  openSheet({ title: "Prodotto nuovo in cassa", eyebrow: "Drink, gettone, panino…", body: `<form data-form="listino-nuovo" id="fLn" class="stack">
+    <label class="field"><span>Nome</span><input class="in" name="name" required maxlength="40" placeholder="es. Gin tonic"></label>
+    <div class="fields"><label class="field"><span>Prezzo normale (€)</span><input class="in" name="price" inputmode="decimal" required placeholder="es. 7"></label><label class="field"><span>Tesserati (€)</span><input class="in" name="priceT" inputmode="decimal" placeholder="come normale"></label><label class="field"><span>Soci (€)</span><input class="in" name="priceS" inputmode="decimal" placeholder="come tesserati"></label></div>
+    <div class="fields"><label class="field"><span>Ogni vendita scala (facoltativo)</span><select class="in" name="u1"><option value="">niente</option>${ing.map((p) => opt(p.id, p.name, false)).join("")}</select></label><label class="field"><span>Quanti</span><input class="in" name="n1" inputmode="decimal" value="1"></label></div>
+    <div class="fields"><label class="field"><span>E anche</span><select class="in" name="u2"><option value="">niente</option>${ing.map((p) => opt(p.id, p.name, false)).join("")}</select></label><label class="field"><span>Quanti</span><input class="in" name="n2" inputmode="decimal" value="1"></label></div>
+    <p class="small muted">Es. Gin tonic: 1 Schweppes Tonica. Le bottiglie aperte e finite si segnano a parte.</p><p class="err" hidden></p></form>`,
+    foot: `<button class="btn ghost" data-act="listino">Indietro</button><button class="btn pri" type="submit" form="fLn">Aggiungi alla cassa</button>` });
+};
+FORMS["listino-nuovo"] = async (f) => {
+  const name = fv(f, "name"), price = leggiImporto(fv(f, "price")); if (!name) return fErr(f, "Scrivi il nome."); if (!isFinite(price)) return fErr(f, "Scrivi il prezzo.");
+  const uses = [["u1", "n1"], ["u2", "n2"]].map(([u, n]) => ({ pid: fv(f, u), n: leggiImporto(fv(f, n)) || 1 })).filter((u) => u.pid);
+  const id = norm(name).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) + "-" + Math.random().toString(36).slice(2, 5);
+  const ord = Math.max(0, ...prodotti(sellsInCassa).map((p) => Number(p.order) || 0)) + 10;
+  const pT = fv(f, "priceT") ? leggiImporto(fv(f, "priceT")) : null, pS = fv(f, "priceS") ? leggiImporto(fv(f, "priceS")) : null;
+  await wSet("products/" + id, { name, price, priceT: isFinite(pT) ? pT : null, priceS: isFinite(pS) ? pS : null, cat: "drink", track: "none", sell: true, active: true, order: ord, uses, noOrder: true, lots: [], qty: 0, closed: 0, open: 0 });
+  closeSheet(); toast(`${name} aggiunto alla cassa.`);
+};
 ACT["cassa-apri"] = (el) => {
-  const k = el.dataset.k;
-  const ev = eventi().filter((e) => (k === "riunione" ? e.tipo !== "evento" : e.tipo === "evento") && (incorso(e) || e.data === oggi())).sort(ordinaEv)[0];
-  openSheet({ title: k === "riunione" ? "Consumi di una riunione" : "Apri la cassa", body: `<form data-form="cassa-apri" data-k="${k}" id="fCa" class="stack">
-    <label class="field"><span>Nome</span><input class="in" name="name" required maxlength="80" value="${esc(ev ? ev.titolo : k === "riunione" ? "Riunione del " + fDataIt(oggi()) : "Serata del " + fDataIt(oggi()))}"></label>
-    ${k !== "riunione" ? `<label class="field"><span>Fondo cassa iniziale (€)</span><input class="in" name="fondo" inputmode="decimal" placeholder="es. 100"></label>` : ""}
+  const k = el.dataset.k, prova = k === "prova";
+  const ev = prova ? null : eventi().filter((e) => (k === "riunione" ? e.tipo !== "evento" : e.tipo === "evento") && (incorso(e) || e.data === oggi())).sort(ordinaEv)[0];
+  openSheet({ title: prova ? "Cassa di prova" : k === "riunione" ? "Consumi di una riunione" : "Apri la cassa", body: `<form data-form="cassa-apri" data-k="${k}" id="fCa" class="stack">
+    ${prova ? `<p class="small muted">Funziona come quella vera, con i prezzi del listino, ma non scala il magazzino, non finisce nello storico e quando la chiudi si cancella. Scegli chi può provarla dal telefono o dal tablet.</p>` : ""}
+    <label class="field"><span>Nome</span><input class="in" name="name" required maxlength="80" value="${esc(prova ? "Prova cassa" : ev ? ev.titolo : k === "riunione" ? "Riunione del " + fDataIt(oggi()) : "Serata del " + fDataIt(oggi()))}"></label>
+    ${k === "evento" ? `<label class="field"><span>Fondo cassa iniziale (€)</span><input class="in" name="fondo" inputmode="decimal" placeholder="es. 100"></label>` : ""}
     <div class="field"><span>Chi può usare la cassa dal suo telefono</span><div class="opts" style="max-height:240px;overflow:auto">${tuttiSoci().sort((a, b) => nm(a).localeCompare(nm(b), "it")).map((u) => checkbox("c", u, esc(nm(u)), u === ME())).join("")}</div><small>Il consiglio la può usare sempre. I cassieri la vedono finché è aperta.</small></div>
     <input type="hidden" name="cal" value="${ev ? ev.id : ""}"><p class="err" hidden></p></form>`,
-    foot: `<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fCa">Apri</button>` });
+    foot: `<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fCa">${prova ? "Apri la prova" : "Apri"}</button>` });
 };
 FORMS["cassa-apri"] = async (f) => {
-  if (serateAperte().length) return fErr(f, "C'è già una cassa aperta.");
-  const id = genId("se");
-  await wSet("serate/" + id, { name: fv(f, "name"), kind: f.dataset.k, status: "aperto", openedAt: Date.now(), openedBy: ME(), date: oggi(), cassieri: fvAll(f, "c"), fondo: leggiImporto(fv(f, "fondo")) || null, calendarioId: fv(f, "cal") || null });
-  S.ui.mode = f.dataset.k === "riunione" ? "i" : "k"; closeSheet(); go("cassa"); toast("Cassa aperta.");
+  const ap = serateAperte()[0]; if (ap) return fErr(f, ap.prova ? "C'è ancora aperta la cassa di prova: chiudila prima (si cancella da sola)." : "C'è già una cassa aperta.");
+  S.ui.mode = null;
+  const id = genId("se"), prova = f.dataset.k === "prova";
+  await wSet("serate/" + id, { name: fv(f, "name"), kind: prova ? "evento" : f.dataset.k, ...(prova ? { prova: true } : {}), status: "aperto", openedAt: Date.now(), openedBy: ME(), date: oggi(), cassieri: fvAll(f, "c"), fondo: leggiImporto(fv(f, "fondo")) || null, calendarioId: fv(f, "cal") || null });
+  S.ui.mode = f.dataset.k === "riunione" ? "i" : "v"; S.ui.fascia = "n"; S.ui.esito = null; closeSheet(); go("cassa"); toast(prova ? "Cassa di prova aperta." : "Cassa aperta.");
 };
 ACT["cassa-cassieri"] = (el) => {
   const s = S.serate[el.dataset.id];
@@ -5030,10 +5344,25 @@ ACT["cassa-cassieri"] = (el) => {
     foot: `<button class="btn pri" type="submit" form="fCs">Salva</button>` });
 };
 FORMS.cassieri = async (f) => { await wUpd("serate/" + f.dataset.id, { cassieri: fvAll(f, "c") }); closeSheet(); toast("Cassieri aggiornati."); };
+/* la prova si chiude cancellando tutto: conteggi, copie sul tablet, la serata stessa */
+async function cancellaConteggi(sid) {
+  await flushTallyNow();
+  try { const snap = await S.db.collection(`serate/${sid}/tallies`).get(); for (const d of snap.docs) await wDel(`serate/${sid}/tallies/${d.id}`, { quiet: true }); } catch (e) { /* restano, non danno fastidio */ }
+  const mine = (S.tallies[sid] || {})[tallyKey()]; if (mine) { await wDel(`serate/${sid}/tallies/${tallyKey()}`, { quiet: true }).catch(() => {}); }
+  S.tallies[sid] = {}; try { localStorage.removeItem(BK(sid)); } catch (e) {}
+  CONTO = { sid, r: {} }; salvaConto(); S.ui.esito = null; S.ui.fascia = "n";
+}
+ACT["prova-azzera"] = (el) => confirmSheet({ title: "Azzerare la prova?", text: "Tutte le vendite di prova tornano a zero, su tutti i tablet. La cassa di prova resta aperta.", ok: "Azzera", onOk: async () => { await cancellaConteggi(el.dataset.id); render(true); toast("Prova azzerata."); } });
+ACT["prova-chiudi"] = (el) => {
+  const s = S.serate[el.dataset.id]; if (!s) return; const t = totaliCassa(s.id);
+  confirmSheet({ title: "Chiudere la cassa di prova?", text: `In prova: ${int(t.conti)} conti, ${euro(t.cash)} in contanti e ${euro(t.card)} con la carta. Si cancella tutto e il magazzino resta com'era.`, ok: "Chiudi e cancella", onOk: async () => {
+    await cancellaConteggi(s.id); await wDel("serate/" + s.id); go("cassa"); toast("Prova chiusa: non è stato registrato niente."); } });
+};
 ACT["cassa-chiudi"] = (el) => {
   const s = S.serate[el.dataset.id]; const t = totaliCassa(s.id);
   openSheet({ title: "Chiudi la cassa", eyebrow: esc(s.name), body: `<form data-form="cassa-chiudi" data-id="${s.id}" id="fCc" class="stack">
     <div class="ctot"><div><b>${esc(euro(t.cash))}</b><span>contanti</span></div><div><b>${esc(euro(t.card))}</b><span>carta</span></div><div><b>${int(t.pcs)}</b><span>venduti</span></div><div><b>${int(t.ipcs)}</b><span>interno</span></div></div>
+    ${perCassa(s.id).length > 1 ? `<div class="list">${perCassa(s.id).map((c) => `<div class="li"><span class="grow"><span class="t">${esc(c.nome)}</span><br><span class="s">${int(c.conti)} conti · carta ${esc(euro(c.card))}</span></span><span class="v">${esc(euro(c.cash))}<small>contanti</small></span></div>`).join("")}</div>` : ""}
     ${s.kind !== "riunione" ? `<div class="fields"><label class="field"><span>Fondo cassa (€)</span><input class="in" name="fondo" inputmode="decimal" value="${s.fondo ?? ""}"></label><label class="field"><span>Contanti contati (€)</span><input class="in" name="contato" inputmode="decimal" placeholder="facoltativo"></label><label class="field"><span>Persone (circa)</span><input class="in" name="persons" inputmode="numeric"></label></div>` : ""}
     <label class="field"><span>Note</span><input class="in" name="note" maxlength="300"></label>
     <p class="small muted">Alla chiusura i pezzi escono dal magazzino, prima quelli che scadono prima (l'uso interno consuma per primi quelli scaduti).</p><p class="err" hidden></p></form>`,
@@ -5048,13 +5377,14 @@ FORMS["cassa-chiudi"] = async (f) => {
   const take = (pid, n, o) => { const r = planConsume(sim, pid, n, o); deltas.push(...r.deltas); if (r.short) short[pid] = (short[pid] || 0) + r.short; };
   const entries = Object.entries(tot).filter(([, c]) => c.k + c.c + c.i > 0);
   for (const [pid, c] of entries) { const p = P(pid); if (!p) continue; if (p.track === "none") { for (const u of p.uses || []) if (u.pid && P(u.pid)) take(u.pid, c.i * (Number(u.n) || 1), { expiredFirst: true }); } else take(pid, c.i, { expiredFirst: true }); }
-  for (const [pid, c] of entries) { const p = P(pid); if (!p) continue; if (p.track === "none") { for (const u of p.uses || []) if (u.pid && P(u.pid)) take(u.pid, (c.k + c.c) * (Number(u.n) || 1), {}); } else take(pid, c.k + c.c, {}); lines.push({ pid, name: p.name, price: Number(p.price) || 0, k: c.k, c: c.c, i: c.i }); }
+  for (const [pid, c] of entries) { const p = P(pid); if (!p) continue; if (p.track === "none") { for (const u of p.uses || []) if (u.pid && P(u.pid)) take(u.pid, (c.k + c.c) * (Number(u.n) || 1), {}); } else take(pid, c.k + c.c, {}); lines.push({ pid, name: p.name, price: Number(p.price) || 0, k: c.k, c: c.c, i: c.i, imp: Math.round((c.ek + c.ec) * 100) / 100 }); }
   lines.sort((a, b) => b.k + b.c + b.i - (a.k + a.c + a.i));
   const t = totaliCassa(sid);
-  const report = { lines, cash: t.cash, card: t.card, internal: t.internal, pieces: t.pcs, internalPieces: t.ipcs, fondo: leggiImporto(fv(f, "fondo")) || null, contato: isFinite(leggiImporto(fv(f, "contato"))) ? leggiImporto(fv(f, "contato")) : null, short: Object.entries(short).map(([pid, n]) => ({ pid, name: (P(pid) || {}).name || pid, n })) };
+  const report = { lines, casse: perCassa(sid), fasce: t.fasce, conti: t.conti || 0, cash: t.cash, card: t.card, internal: t.internal, pieces: t.pcs, internalPieces: t.ipcs, fondo: leggiImporto(fv(f, "fondo")) || null, contato: isFinite(leggiImporto(fv(f, "contato"))) ? leggiImporto(fv(f, "contato")) : null, short: Object.entries(short).map(([pid, n]) => ({ pid, name: (P(pid) || {}).name || pid, n })) };
   const mid = await record(s.kind === "riunione" ? "riunione" : "evento", deltas, { eventId: sid, title: s.name });
   await wUpd("serate/" + sid, { status: "chiuso", closedAt: Date.now(), closedBy: ME(), report, movementId: mid, note: fv(f, "note"), persons: parseInt(fv(f, "persons"), 10) || null });
   try { const snap = await S.db.collection(`serate/${sid}/tallies`).get(); for (const d of snap.docs) await wDel(`serate/${sid}/tallies/${d.id}`, { quiet: true }); } catch (e) { /* restano, non danno fastidio */ }
+  try { localStorage.removeItem(BK(sid)); } catch (e) {}
   closeSheet(); go("serata-" + sid); toast("Cassa chiusa: resoconto salvato e magazzino aggiornato.");
 };
 
@@ -5336,9 +5666,14 @@ function verbaliDi(o) {
 }
 const verbaleDi = (o, id) => (S[ORGANI[o].key] || {})[id] || null;
 const riunioneDiOrgano = (e, o) => (o === "assemblea" ? e.tipo === "riunione" : e.tipo === "incontro" && e.gruppo === "consiglio");
-function riunioniSenzaVerbale(o, tutte = false) {
+/* il verbale di una riunione: collegato a mano, oppure dello stesso organo e dello stesso giorno (quelli portati dal Drive) */
+function verbaleDiRiunione(e) {
+  const o = riunioneDiOrgano(e, "consiglio") ? "consiglio" : "assemblea";
   const tutti = [...Object.values(S.verbali || {}), ...Object.values(S.verbalicd || {})];
-  return eventi().filter((e) => riunioneDiOrgano(e, o) && finito(e) && (tutte || e.data >= APP_START) && !tutti.some((v) => v.riunioneId === e.id)).sort(ordinaEv).reverse();
+  return tutti.find((v) => v.riunioneId === e.id) || Object.values(S[ORGANI[o].key] || {}).find((v) => !v.riunioneId && v.data && v.data === e.data) || null;
+}
+function riunioniSenzaVerbale(o, tutte = false) {
+  return eventi().filter((e) => riunioneDiOrgano(e, o) && finito(e) && (tutte || e.data >= APP_START) && !verbaleDiRiunione(e)).sort(ordinaEv).reverse();
 }
 const nomeVerbale = (v, o) => v.titolo || `${ORGANI[o].uno}${v.numero ? " n. " + v.numero : ""}`;
 const prossimoNumeroVerbale = (o, extra = []) => Math.max(0, ...Object.values(S[ORGANI[o].key] || {}).map((v) => Number(v.numero) || 0), ...extra) + 1;
@@ -5396,26 +5731,28 @@ route("verbali", () => {
   const daFare = isCouncil() ? riunioniSenzaVerbale(o, true).slice(0, 5) : [];
   const ctrl = (cfg("verbali").controllo || {})[o];
   const riga = (v) => `<a class="li" href="#${ORGANI[o].r}-${v.id}"><span class="vnum">${v.numero ? esc(String(v.numero)) : "—"}</span><span class="grow"><span class="t">${esc(nomeVerbale(v, o))}</span><br><span class="s">${esc(fDataL(v.data))}${v.pdf ? " · PDF" : (v.presenti || []).length ? ` · ${(v.presenti || []).length} presenti` : ""}${isCouncil() && v.drive ? " · sul Drive" : ""}</span></span>${isCouncil() ? `<span class="pill ${pubblico(v) ? "ok" : "warn"}">${pubblico(v) ? (v.pdf ? "PDF" : "approvato") : "bozza"}</span>` : ic("chev", "chev")}</a>`;
-  return `<div class="wrap">${isCouncil() ? backLink("gr-consiglio", "Consiglio") : backLink("home", "Home")}
+  return { mount: () => driveAuto(o), html: `<div class="wrap">${isCouncil() ? backLink("gr-consiglio", "Consiglio") : backLink("home", "Home")}
     <div class="pagehead"><div class="stack"><span class="eyebrow">${isCouncil() ? "Riunioni e decisioni · segretario" : "Le decisioni delle assemblee"}</span><h1>Verbali</h1></div>
-      ${isCouncil() ? `<div class="btns"><button class="btn" data-act="vb-carica" data-o="${o}">${ic("up")}Carica PDF</button><button class="btn pri" data-act="nuovo-verbale" data-o="${o}">${ic("plus")}Scrivi</button></div>` : ""}</div>
+      ${isCouncil() ? `<div class="btns"><button class="btn pri" data-act="vb-carica" data-o="${o}">${ic("up")}Carica PDF</button></div>` : ""}</div>
     ${isCouncil() ? `<div class="seg" role="group" aria-label="Quali verbali"><button data-act="vb-organo" data-v="assemblea" aria-pressed="${o === "assemblea"}">Assemblee generali</button><button data-act="vb-organo" data-v="consiglio" aria-pressed="${o === "consiglio"}">Consiglio direttivo</button></div>
-      <p class="small muted">${o === "assemblea" ? "Li vedono tutti i soci (le bozze no)." : "Li vede solo il consiglio."}</p>` : `<p class="muted">I verbali delle assemblee generali, approvati. Quelli del consiglio direttivo restano al consiglio.</p>`}
-    ${isCouncil() ? `<section class="drvbar"><span class="ic">${ic("cloud")}</span><span class="grow"><b>Drive condiviso · ${esc(ORGANI[o].cartella)}</b><br><span class="small muted">${ctrl ? `Controllato ${esc(fTs(ctrl.at))} da ${esc(primoNome(ctrl.da))}: ${ctrl.mancanti ? `<b>${ctrl.mancanti} da sistemare</b>` : "tutto allineato"}` : "Non ancora controllato"}</span></span>
-      ${WEB ? `<button class="btn sm" data-act="vb-drive" data-o="${o}">${ic("repeat")}Controlla col Drive</button>` : `<span class="small muted">Dal sito bagaera.it/app</span>`}</section>` : ""}
-    ${daFare.length ? `<section class="panel"><div class="ph"><h3>Riunioni senza verbale</h3></div><div class="list">${daFare.map((e) => `<button class="li" data-act="nuovo-verbale" data-o="${o}" data-id="${e.id}"><span class="grow"><span class="t">${esc(e.titolo)}</span><br><span class="s">${esc(fDataL(e.data))} · ${presentiDi(e).length} presenti</span></span><span class="btn sm">Scrivi</span></button>`).join("")}</div></section>` : ""}
+      <p class="small muted">${o === "assemblea" ? "Li vedono tutti i soci." : "Li vede solo il consiglio."} I verbali si scrivono fuori dall'app e vanno firmati: mettete il PDF firmato nella cartella del Drive (o caricatelo qui) e l'app lo porta dentro.</p>` : `<p class="muted">I verbali delle assemblee generali, approvati. Quelli del consiglio direttivo restano al consiglio.</p>`}
+    ${isCouncil() ? `<section class="drvbar"><span class="ic">${ic("cloud")}</span><span class="grow"><b>Drive condiviso · ${esc(ORGANI[o].cartella)}</b><br><span class="small muted">${nuoviDrive(o) ? `<b>${nuoviDrive(o)} ${nuoviDrive(o) === 1 ? "verbale nuovo" : "verbali nuovi"} sul Drive</b> da portare nell'app` : ctrl ? `Controllato ${esc(fTs(ctrl.at))} da ${esc(primoNome(ctrl.da))}: ${ctrl.mancanti ? `<b>${ctrl.mancanti} da sistemare</b>` : "tutto allineato"}` : "Non ancora controllato"}</span></span>
+      ${WEB ? `<button class="btn sm ${nuoviDrive(o) ? "pri" : ""}" data-act="vb-drive" data-o="${o}">${ic("repeat")}${nuoviDrive(o) ? "Porta nell'app" : "Controlla col Drive"}</button>` : `<span class="small muted">Dal sito bagaera.it/app</span>`}</section>` : ""}
+    ${daFare.length ? `<section class="panel"><div class="ph"><h3>Riunioni senza verbale</h3></div><div class="list">${daFare.map((e) => `<button class="li" data-act="vb-carica" data-o="${o}" data-rid="${e.id}"><span class="grow"><span class="t">${esc(e.titolo)}</span><br><span class="s">${esc(fDataL(e.data))} · ${presentiDi(e).length} presenti</span></span><span class="btn sm">Carica PDF</span></button>`).join("")}</div></section>` : ""}
     <section class="panel"><div class="ph"><h3>${esc(ORGANI[o].nome)}</h3><span class="pill">${vs.length}</span></div>${vs.length ? `<div class="list">${vs.map(riga).join("")}</div>` : `<div class="pb"><p class="small muted">${isCouncil() ? "Nessun verbale ancora: caricali in PDF o portali dal Drive." : "Nessun verbale pubblicato per ora."}</p></div>`}</section>
-  </div>`;
+  </div>` };
 });
+/* aprendo i verbali, se Google Drive è già collegato guardo in silenzio la cartella (al massimo ogni 10 minuti) */
+const DRV_AUTO = {};
+const nuoviDrive = (o) => { const d = DRV_AUTO[o]; return d && d.files ? abbinaDrive(o, d.files).soloDrive.length : 0; };
+function driveAuto(o) {
+  if (!WEB || !isCouncil() || typeof tokenValido !== "function" || !tokenValido(SCOPI.drive)) return;
+  const d = DRV_AUTO[o]; if (d && (d.inCorso || Date.now() - d.at < 6e5)) return;
+  DRV_AUTO[o] = { at: Date.now(), inCorso: true, files: d && d.files };
+  driveElenco(o).then((files) => { DRV_AUTO[o] = { at: Date.now(), files }; if (S.route.name === "verbali") scheduleRender(); })
+    .catch(() => { DRV_AUTO[o] = { at: Date.now(), files: d && d.files }; });
+}
 ACT["vb-organo"] = (el) => { S.ui.vbOrgano = el.dataset.v; render(true); };
-ACT["nuovo-verbale"] = async (el) => {
-  const e = el.dataset.id ? S.cal[el.dataset.id] : null;
-  const o = e ? (riunioneDiOrgano(e, "consiglio") ? "consiglio" : "assemblea") : el.dataset.o || "assemblea";
-  const id = genId("vb");
-  await wSet(`${ORGANI[o].coll}/${id}`, { organo: o, riunioneId: e ? e.id : null, titolo: e ? e.titolo : ORGANI[o].uno, numero: prossimoNumeroVerbale(o), data: e ? e.data : oggi(), ora: e ? e.ora || "" : "", luogo: e ? e.luogo || "" : "", presenti: e ? presentiDi(e) : [], odg: e && e.cosa ? e.cosa.split("\n").map((s) => s.replace(/^[-•\d.)\s]+/, "").trim()).filter(Boolean).slice(0, 20) : [], testo: "", decisioni: [], redattore: ME(), stato: "bozza", fonte: "app", creato: Date.now() });
-  go(`${ORGANI[o].r}-${id}`);
-};
-
 /* ---------- dettaglio ---------- */
 function vistaVerbale(o, id) {
   if (!vedeOrgano(o)) return soloConsiglio();
@@ -5426,31 +5763,17 @@ function vistaVerbale(o, id) {
     return { html: `<div class="wrap">${backLink("verbali", "Verbali")}
       <div class="pagehead"><div class="stack"><span class="eyebrow">${esc(ORGANI[o].uno)}${v.numero ? " · n. " + esc(String(v.numero)) : ""}</span><h1>${esc(nomeVerbale(v, o))}</h1><span class="muted">${esc(fDataL(v.data))}</span></div>
         <div class="btns"><button class="btn pri" data-act="vb-scarica" data-o="${o}" data-id="${v.id}">${ic("down")}Scarica PDF</button>${isCouncil() ? `<button class="btn" data-act="vb-dati" data-o="${o}" data-id="${v.id}">${ic("edit")}Dati</button>` : ""}</div></div>
-      ${isCouncil() ? `<p class="small muted">${v.drive ? `${ic("cloud")} Sul Drive come «${esc(v.drive.nome || "")}»` : "Non ancora sul Drive condiviso"}${v.caricatoDa ? ` · caricato da ${esc(primoNome(v.caricatoDa))}` : ""}</p>` : ""}
+      ${isCouncil() ? `<p class="small muted">${v.drive ? `${ic("cloud", "inl")} Sul Drive come «${esc(v.drive.nome || "")}»` : "Non ancora sul Drive condiviso"}${v.caricatoDa ? ` · caricato da ${esc(primoNome(v.caricatoDa))}` : ""}</p>` : ""}
       <section class="pdfv" aria-label="Pagine del verbale">${c.pagine ? c.pagine.map((src, i) => `<img src="${src}" alt="Pagina ${i + 1} di ${c.tot}" loading="lazy">`).join("") + (c.tot > c.pagine.length ? `<p class="small muted">Le altre pagine sono nel PDF.</p>` : "") : c.err ? `<div class="notice">${esc(c.err)}</div>` : `<div class="loading">${omini()}<p class="eyebrow">Apro il verbale…</p></div>`}</section>
     </div>`, mount: () => paginePdf(o, v) };
   }
-  if (!isCouncil()) return verbaleLettura(o, v);
-  const cand = [...new Set([...tuttiSoci().filter((u) => o === "assemblea" || isCouncil(u)), ...(v.presenti || [])])].sort((a, b) => nm(a).localeCompare(nm(b), "it"));
-  const r = v.riunioneId && S.cal[v.riunioneId];
-  return `<div class="wrap">${backLink("verbali", "Verbali")}
-    <form data-form="verbale" data-o="${o}" data-id="${v.id}" class="stack l" id="fVb">
-      <div class="pagehead"><div class="stack"><span class="eyebrow">${esc(ORGANI[o].uno)} · ${v.stato === "approvato" ? "approvato" : "in bozza"}</span><h1>${esc(nomeVerbale(v, o))}</h1></div>
-        <div class="btns"><button type="button" class="btn" data-act="verbale-pdf" data-o="${o}" data-id="${v.id}">${ic("down")}PDF</button><button class="btn pri">Salva</button></div></div>
-      <div class="fields"><label class="field"><span>Titolo</span><input class="in" name="titolo" value="${esc(v.titolo || "")}" maxlength="120"></label><label class="field"><span>Numero</span><input class="in" name="numero" inputmode="numeric" value="${esc(v.numero || "")}"></label><label class="field"><span>Data</span><input class="in" type="date" name="data" value="${esc(v.data || "")}"></label><label class="field"><span>Ora</span><input class="in" type="time" name="ora" value="${esc(v.ora || "")}"></label><label class="field"><span>Luogo</span><input class="in" name="luogo" value="${esc(v.luogo || "")}" maxlength="120"></label></div>
-      <section class="panel"><div class="ph"><h3>Presenti</h3><span class="row">${r ? `<button type="button" class="btn sm ghost" data-act="verbale-presenti" data-o="${o}" data-id="${v.id}">Prendi dal registro (${presentiDi(r).length})</button>` : ""}<span class="pill">${(v.presenti || []).length}</span></span></div>
-        <div class="pb"><div class="opts">${cand.map((u) => checkbox("p", u, esc(nm(u)), (v.presenti || []).includes(u))).join("") || `<p class="small muted">Nessun socio registrato.</p>`}</div></div></section>
-      <label class="field"><span>Ordine del giorno (un punto per riga)</span><textarea class="in" name="odg" rows="4">${esc((v.odg || []).join("\n"))}</textarea></label>
-      <label class="field"><span>Discussione</span><textarea class="in" name="testo" rows="10" placeholder="Cosa si è detto, punto per punto">${esc(v.testo || "")}</textarea></label>
-      <label class="field"><span>Decisioni prese (una per riga)</span><textarea class="in" name="decisioni" rows="4">${esc((v.decisioni || []).join("\n"))}</textarea></label>
-      <div class="row between"><label class="check"><input type="checkbox" name="appr" ${v.stato === "approvato" ? "checked" : ""}><span><b>Approvato</b>${o === "assemblea" ? "<br><small class='muted'>Da approvato lo vedono tutti i soci e va sul Drive al prossimo controllo.</small>" : ""}</span></label><button type="button" class="btn sm" data-act="vb-dati" data-o="${o}" data-id="${v.id}">${ic("edit")}Sposta o elimina</button></div>
-      <p class="err" hidden></p>
-    </form></div>`;
+  return verbaleLettura(o, v);
 }
 function verbaleLettura(o, v) {
   return `<div class="wrap">${backLink("verbali", "Verbali")}
-    <div class="pagehead"><div class="stack"><span class="eyebrow">${esc(ORGANI[o].uno)}${v.numero ? " · n. " + esc(String(v.numero)) : ""}</span><h1>${esc(nomeVerbale(v, o))}</h1><span class="muted">${esc(fDataL(v.data))}${v.ora ? " · " + esc(v.ora) : ""}${v.luogo ? " · " + esc(v.luogo) : ""}</span></div>
-      <button class="btn" data-act="verbale-pdf" data-o="${o}" data-id="${v.id}">${ic("down")}PDF</button></div>
+    <div class="pagehead"><div class="stack"><span class="eyebrow">${esc(ORGANI[o].uno)}${v.numero ? " · n. " + esc(String(v.numero)) : ""}${isCouncil() && !pubblico(v) ? " · bozza" : ""}</span><h1>${esc(nomeVerbale(v, o))}</h1><span class="muted">${esc(fDataL(v.data))}${v.ora ? " · " + esc(v.ora) : ""}${v.luogo ? " · " + esc(v.luogo) : ""}</span></div>
+      <div class="btns"><button class="btn" data-act="verbale-pdf" data-o="${o}" data-id="${v.id}">${ic("down")}PDF</button>${isCouncil() ? `<button class="btn" data-act="vb-dati" data-o="${o}" data-id="${v.id}">${ic("edit")}Dati</button>` : ""}</div></div>
+    ${isCouncil() ? `<div class="notice">Questo verbale era stato scritto nell'app. Quando avete il PDF firmato, caricatelo ed eliminate questo.</div>` : ""}
     <section class="panel"><div class="ph"><h3>Presenti</h3><span class="pill">${(v.presenti || []).length}</span></div><div class="pb">${avs(v.presenti || [], 20)}</div></section>
     ${(v.odg || []).length ? `<section class="panel"><div class="ph"><h3>Ordine del giorno</h3></div><ol class="pb vlist">${v.odg.map((x) => `<li>${esc(x)}</li>`).join("")}</ol></section>` : ""}
     ${v.testo ? `<section class="panel"><div class="ph"><h3>Discussione</h3></div><div class="pb vtesto">${esc(v.testo)}</div></section>` : ""}
@@ -5459,14 +5782,6 @@ function verbaleLettura(o, v) {
 }
 route("vb", (id) => vistaVerbale("assemblea", id));
 route("vc", (id) => vistaVerbale("consiglio", id));
-FORMS.verbale = async (f) => {
-  const o = f.dataset.o || "assemblea", lines = (n) => fv(f, n).split("\n").map((s) => s.trim()).filter(Boolean);
-  const v0 = verbaleDi(o, f.dataset.id);
-  if (o === "assemblea" && fv(f, "appr") && v0 && v0.stato !== "approvato") notifica("tutti", "Nuovo verbale", `${fv(f, "titolo") || "Assemblea generale"} del ${fDataL(fv(f, "data"))}`, "#vb-" + f.dataset.id, "verbali");
-  await wUpd(`${ORGANI[o].coll}/${f.dataset.id}`, { titolo: fv(f, "titolo"), numero: parseInt(fv(f, "numero"), 10) || null, data: fv(f, "data"), ora: fv(f, "ora"), luogo: fv(f, "luogo"), presenti: fvAll(f, "p"), odg: lines("odg"), testo: fv(f, "testo"), decisioni: lines("decisioni"), stato: fv(f, "appr") ? "approvato" : "bozza", agg: Date.now(), aggDa: ME() });
-  toast("Verbale salvato.");
-};
-ACT["verbale-presenti"] = async (el) => { const o = el.dataset.o, v = verbaleDi(o, el.dataset.id); const r = v && S.cal[v.riunioneId]; if (!r) return; await wUpd(`${ORGANI[o].coll}/${v.id}`, { presenti: presentiDi(r) }); render(true); toast("Presenti presi dal registro."); };
 const nomeFileVerbale = (o, v) => `Verbale ${o === "consiglio" ? "consiglio" : "assemblea"}${v.numero ? " " + v.numero : ""} ${fDataIt(v.data).replace(/\//g, "-")}.pdf`;
 ACT["verbale-pdf"] = async (el) => { const o = el.dataset.o || "assemblea", v = verbaleDi(o, el.dataset.id); if (!v) return; try { const b = await pdfVerbale(v); await salvaFile(nomeFileVerbale(o, v), b, "Verbale pronto."); } catch (e) { toast("Non sono riuscito a creare il PDF."); } };
 ACT["vb-scarica"] = async (el) => {
@@ -5477,12 +5792,13 @@ ACT["vb-scarica"] = async (el) => {
 
 /* ---------- caricare un verbale in PDF ---------- */
 ACT["vb-carica"] = (el) => {
-  const o = el.dataset.o || "assemblea";
-  openSheet({ title: "Carica un verbale in PDF", eyebrow: "Verbali", body: `<form data-form="vb-carica" id="fVc" class="stack">
+  const r = el.dataset.rid ? S.cal[el.dataset.rid] : null;
+  const o = r ? (riunioneDiOrgano(r, "consiglio") ? "consiglio" : "assemblea") : el.dataset.o || "assemblea";
+  openSheet({ title: "Carica un verbale in PDF", eyebrow: "Verbali", body: `<form data-form="vb-carica" id="fVc" class="stack" data-rid="${r ? r.id : ""}">${r ? `<p class="small muted">Per «${esc(r.titolo)}» del ${esc(fDataL(r.data))}.</p>` : ""}
     <div class="field"><span>Di cosa</span><div class="opts">${Object.entries(ORGANI).map(([k, x]) => radio("o", k, x.nome, k === o)).join("")}</div></div>
     <label class="field"><span>File PDF</span><input class="in" type="file" name="file" accept="application/pdf,.pdf" required data-act-change="vb-file"><small>Se si chiama come quelli del Drive («13) 19.02.2026.pdf») numero e data li prendo dal nome.</small></label>
-    <div class="fields"><label class="field"><span>Numero</span><input class="in" name="numero" inputmode="numeric" value="${prossimoNumeroVerbale(o)}"></label><label class="field"><span>Data della riunione</span><input class="in" type="date" name="data" value="${oggi()}" required></label></div>
-    <label class="field"><span>Titolo (facoltativo)</span><input class="in" name="titolo" maxlength="120" placeholder="es. Assemblea di approvazione del bilancio"></label>
+    <div class="fields"><label class="field"><span>Numero</span><input class="in" name="numero" inputmode="numeric" value="${prossimoNumeroVerbale(o)}"></label><label class="field"><span>Data della riunione</span><input class="in" type="date" name="data" value="${r ? r.data : oggi()}" required></label></div>
+    <label class="field"><span>Titolo (facoltativo)</span><input class="in" name="titolo" maxlength="120" value="${r ? esc(r.titolo) : ""}" placeholder="es. Assemblea di approvazione del bilancio"></label>
     <label class="check"><input type="checkbox" name="drive" ${WEB ? "checked" : "disabled"}><span><b>Mettilo anche sul Drive condiviso</b><br><small class="muted">${WEB ? "Nella cartella «Libro verbali digitale». Se Google non è collegato lo fai dopo con «Controlla col Drive»." : "Dal sito bagaera.it/app."}</small></span></label>
     <p class="err" hidden></p></form>`,
     foot: `<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fVc">Carica</button>` });
@@ -5509,17 +5825,17 @@ FORMS["vb-carica"] = async (f) => {
   const btn = document.querySelector('[form="fVc"]'); if (btn) { btn.disabled = true; btn.textContent = "Carico…"; }
   try {
     const bytes = new Uint8Array(await file.arrayBuffer());
-    const id = await nuovoVerbalePdf(o, { bytes, nome: file.name, numero, data, titolo: fv(f, "titolo"), fonte: "pdf" });
+    const id = await nuovoVerbalePdf(o, { bytes, nome: file.name, numero, data, titolo: fv(f, "titolo"), fonte: "pdf", riunioneId: f.dataset.rid || null });
     closeSheet(); toast("Verbale caricato.");
     if (fv(f, "drive") && WEB && tokenValido(SCOPI.drive)) { const v = verbaleDi(o, id) || { id, numero, data, pdf: { parti: 1 } }; mandaSulDrive(o, { ...v, id, numero, data }, bytes).then(() => toast("Messo anche sul Drive.")).catch((e) => toast(spiegaDrive(e))); }
     else if (fv(f, "drive") && WEB) toast("Caricato. Per metterlo sul Drive usa «Controlla col Drive».");
     go(`${ORGANI[o].r}-${id}`);
   } catch (e) { console.warn(e); if (btn) { btn.disabled = false; btn.textContent = "Carica"; } fErr(f, "Non sono riuscito a caricarlo. Controlla la connessione e riprova."); }
 };
-async function nuovoVerbalePdf(o, { bytes, nome, numero, data, titolo, fonte, drive }) {
+async function nuovoVerbalePdf(o, { bytes, nome, numero, data, titolo, fonte, drive, riunioneId }) {
   const id = genId("vb");
   const pdf = await salvaPdf(o, id, bytes);
-  await wSet(`${ORGANI[o].coll}/${id}`, { organo: o, titolo: titolo || "", numero: numero || null, data, stato: "approvato", fonte, pdf: { nome, ...pdf, at: Date.now() }, drive: drive || null, caricatoDa: ME(), creato: Date.now() });
+  await wSet(`${ORGANI[o].coll}/${id}`, { organo: o, titolo: titolo || "", numero: numero || null, data, stato: "approvato", fonte, riunioneId: riunioneId || null, pdf: { nome, ...pdf, at: Date.now() }, drive: drive || null, caricatoDa: ME(), creato: Date.now() });
   if (o === "assemblea" && fonte !== "drive") notifica("tutti", "Nuovo verbale", `${titolo || "Assemblea generale" + (numero ? " n. " + numero : "")} del ${fDataL(data)}`, "#vb-" + id, "verbali");
   return id;
 }
@@ -5646,7 +5962,7 @@ ACT["vb-drive"] = async (el) => {
     try { localStorage.setItem("bagaera-vb-dopo", o); } catch (e) {}
     if (!rinnovaGoogle(SCOPI.drive)) try { localStorage.removeItem("bagaera-vb-dopo"); } catch (e) {}
     return; }
-  try { S.drv.files = await driveElenco(o); const a = abbinaDrive(o, S.drv.files); salvaControllo(o, a.soloDrive.length + a.soloApp.length); }
+  try { S.drv.files = await driveElenco(o); DRV_AUTO[o] = { at: Date.now(), files: S.drv.files }; const a = abbinaDrive(o, S.drv.files); salvaControllo(o, a.soloDrive.length + a.soloApp.length); }
   catch (e) { console.warn(e); S.drv.err = spiegaDrive(e); }
   if (S.sheet) drawSheet();
 };
@@ -5674,6 +5990,7 @@ ACT["vb-allinea"] = async (el) => {
   }
   d.lavoro = null;
   try { d.files = await driveElenco(o); } catch (e) { /* resta l'elenco di prima */ }
+  DRV_AUTO[o] = { at: Date.now(), files: d.files };
   const dopo = abbinaDrive(o, d.files); salvaControllo(o, dopo.soloDrive.length + dopo.soloApp.length);
   if (S.sheet) drawSheet();
   toast(errori ? `${fatti} allineati, ${errori} non riusciti: ${d.ultimoErr}` : `Fatto: ${fatti} ${fatti === 1 ? "verbale allineato" : "verbali allineati"}.`);
