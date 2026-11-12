@@ -1814,6 +1814,28 @@ function vaiAGoogle(scopi = [], ritorno = location.hash || "#home", silenzioso =
   if (scopi.length) p.set("include_granted_scopes", "true");
   (window.__oauthNavigate || ((x) => location.assign(x)))("https://accounts.google.com/o/oauth2/v2/auth?" + p.toString());
 }
+/* permesso permanente (per la posta di ciascuno): Google torna con un codice che lo script del consiglio cambia e tiene a nome tuo */
+const CODICE_KEY = "bagaera-posta-codice";
+const redirectApp = () => location.origin + location.pathname.replace(/index\.html$/, "");
+function vaiAGoogleCodice(scopi, ritorno = location.hash || "#home") {
+  const state = casuale();
+  try { localStorage.setItem(OAUTH_KEY, JSON.stringify({ state, scopi, ritorno, at: Date.now(), codice: true })); } catch (e) {}
+  const u = firebase.auth().currentUser;
+  const p = new URLSearchParams({ client_id: window.GOOGLE_CLIENT_ID, redirect_uri: redirectApp(), response_type: "code", access_type: "offline", prompt: "consent",
+    scope: ["openid", "email", ...scopi].join(" "), state, hd: DOMINIO(), ...(u && u.email ? { login_hint: u.email } : {}) });
+  (window.__oauthNavigate || ((x) => location.assign(x)))("https://accounts.google.com/o/oauth2/v2/auth?" + p.toString());
+}
+/* al ritorno con ?code=…: lo metto da parte (lo manda allo script la pagina della posta, quando l'accesso all'app è pronto) e pulisco l'indirizzo */
+function ritornoConCodice() {
+  const q = new URLSearchParams(location.search || "");
+  if (!q.get("code") && !q.get("error")) return;
+  let st = null; try { st = JSON.parse(localStorage.getItem(OAUTH_KEY) || "null"); } catch (e) {}
+  if (!st || !st.codice) return;
+  try { localStorage.removeItem(OAUTH_KEY); } catch (e) {}
+  if (q.get("code") && st.state === q.get("state") && Date.now() - st.at < 15 * 60000) try { localStorage.setItem(CODICE_KEY, JSON.stringify({ code: q.get("code"), redirectUri: redirectApp(), at: Date.now() })); } catch (e) {}
+  history.replaceState(null, "", location.pathname + (st.ritorno || "#home"));
+  S.route = parseHash();
+}
 /* al ritorno da Google: l'indirizzo contiene #id_token=… */
 async function ritornoDaGoogle() {
   const h = location.hash || "";
@@ -1884,6 +1906,8 @@ ACT["google-collega"] = (el) => {
 };
 async function gapi(url, opts = {}, scope) {
   const legge = !opts.method || opts.method === "GET";
+  /* con lo script del consiglio niente permessi personali: la chiamata la fa lui, con l'account del consiglio */
+  if (scriptOn() && !opts.diretto) return scriptOp({ op: "rest", url, method: opts.method || "GET", body: opts.body ? JSON.parse(opts.body) : undefined }, !legge);
   const t = tokenValido(scope); if (!t) { if (legge) rinnovaGoogle(scope); throw { code: "needs_token", scope }; }
   const r = await fetch(url, { ...opts, headers: { Authorization: "Bearer " + t, "Content-Type": "application/json", ...(opts.headers || {}) } });
   if (r.status === 401) { dimenticaToken(); if (legge) rinnovaGoogle(scope); throw { code: "needs_token", scope }; }
@@ -1894,12 +1918,36 @@ async function gapi(url, opts = {}, scope) {
 /* ---------- Google Sheets: stessi comandi del connettore, via API ---------- */
 const SH = "https://sheets.googleapis.com/v4/spreadsheets/";
 const rng = (r) => encodeURIComponent(r);
+/* il foglio attraverso lo script del consiglio: lo script lo apre con l'account del consiglio, quindi nessuno deve collegare Google né rinnovare permessi */
+const scriptFoglio = () => { const u = String(cfg("finanze").script || "").trim(); return /^https:\/\/script\.google\.com\/(a\/[\w.-]+\/)?macros\/s\/[\w-]+\/exec$/.test(u) ? u : ""; };
+const scriptOn = () => !!scriptFoglio();
+const fogliOk = () => scriptOn() || !!tokenValido(SCOPI.sheets);
+/* si può usare questo servizio Google? con lo script sempre, altrimenti serve il permesso personale ancora valido */
+const collegato = (scope) => scriptOn() || !!tokenValido(scope);
+async function viaScript(url, tool, i) { return scriptCall(url, { tool, i }, tool !== "get_values" && tool !== "get_spreadsheet"); }
+async function scriptOp(payload, scrive) { return scriptCall(scriptFoglio(), payload, scrive); }
+async function scriptCall(url, payload, scrive) {
+  const u = firebase.auth().currentUser; if (!u || !u.getIdToken) throw { code: "needs_token" };
+  for (let giro = 0; giro < 2; giro++) {
+    let r;
+    try { r = await fetch(url, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ ...payload, idToken: await u.getIdToken(giro > 0) }) }); }
+    catch (e) { throw { code: "script", message: "Lo script del consiglio non risponde: controlla la connessione" + (scrive ? " e guarda il foglio prima di riprovare (la riga potrebbe essere stata scritta)." : " e riprova.") }; }
+    const j = await r.json().catch(() => null);
+    if (!j) throw { code: "script", message: "Lo script del consiglio non ha risposto come doveva: controlla che l'URL in Finanze sia quello dell'app web e che l'accesso sia «Chiunque»." };
+    if (j.ok) return j.data;
+    if (j.code === "needs_login" && giro === 0) continue; /* biglietto d'accesso scaduto: ne prendo uno nuovo e riprovo */
+    throw { code: "script", sub: j.code, message: j.code === "posta_da_collegare" ? j.message : "Lo script del consiglio dice: " + (j.message || j.code || "errore"), fallback: j.code === "non_permesso" || j.code === "no_accesso" };
+  }
+}
 async function sheetsTool(tool, i) {
-  const s = SCOPI.sheets;
-  if (tool === "get_values") return gapi(`${SH}${i.spreadsheetId}/values/${rng(i.range)}`, {}, s);
-  if (tool === "update_values" || tool === "update_formulas") return gapi(`${SH}${i.spreadsheetId}/values/${rng(i.range)}?valueInputOption=USER_ENTERED`, { method: "PUT", body: JSON.stringify({ range: i.range, values: i.values || i.formulas }) }, s);
-  if (tool === "get_spreadsheet") return gapi(`${SH}${i.spreadsheetId}?fields=sheets.properties(sheetId,title)`, {}, s);
-  if (tool === "insert_dimension") return gapi(`${SH}${i.spreadsheetId}:batchUpdate`, { method: "POST", body: JSON.stringify({ requests: [{ insertDimension: { range: { sheetId: i.sheetId, dimension: i.dimension, startIndex: i.startIndex, endIndex: i.endIndex }, inheritFromBefore: !!i.inheritFromBefore } }] }) }, s);
+  /* se c'è lo script uso lui; se il foglio non è suo (es. le risposte di un'open call) provo con il permesso personale */
+  const url = scriptFoglio();
+  if (url) { try { return await viaScript(url, tool, i); } catch (e) { if (!e || !e.fallback) throw e; } }
+  const s = SCOPI.sheets, d = { diretto: true };
+  if (tool === "get_values") return gapi(`${SH}${i.spreadsheetId}/values/${rng(i.range)}`, d, s);
+  if (tool === "update_values" || tool === "update_formulas") return gapi(`${SH}${i.spreadsheetId}/values/${rng(i.range)}?valueInputOption=USER_ENTERED`, { ...d, method: "PUT", body: JSON.stringify({ range: i.range, values: i.values || i.formulas }) }, s);
+  if (tool === "get_spreadsheet") return gapi(`${SH}${i.spreadsheetId}?fields=sheets.properties(sheetId,title)`, d, s);
+  if (tool === "insert_dimension") return gapi(`${SH}${i.spreadsheetId}:batchUpdate`, { ...d, method: "POST", body: JSON.stringify({ requests: [{ insertDimension: { range: { sheetId: i.sheetId, dimension: i.dimension, startIndex: i.startIndex, endIndex: i.endIndex }, inheritFromBefore: !!i.inheritFromBefore } }] }) }, s);
   throw { code: "not_in_manifest" };
 }
 /* ---------- Gmail: elenco e lettura delle conversazioni, nello stesso formato del connettore ---------- */
@@ -1913,6 +1961,10 @@ function messaggio(m, extra = {}) {
 }
 async function gmailTool(tool, i) {
   const s = SCOPI.gmail;
+  if (tool === "search_threads" && scriptOn()) {
+    const r = await scriptOp({ op: "gmail_cerca", q: i.query || "", max: i.pageSize || 25 });
+    return { threads: (r.threads || []).map((d) => { const ms = d.messages || []; return { id: d.id, messageCount: ms.length, messages: ms.slice(-1).map((m) => messaggio(m)) }; }) };
+  }
   if (tool === "search_threads") {
     const l = await gapi(`${GM}threads?maxResults=${i.pageSize || 25}&q=${encodeURIComponent(i.query || "")}`, {}, s);
     const threads = await Promise.all((l.threads || []).map(async (t) => {
@@ -1979,6 +2031,7 @@ function avviaWeb() {
     /* l'app parte dalla copia salvata: quando ne arriva una nuova lo dico, e al prossimo avvio c'è comunque */
     navigator.serviceWorker.addEventListener("message", (e) => { if (e.data && e.data.tipo === "versione-nuova") toast("C'è una versione nuova dell'app.", { label: "Aggiorna", fn: () => location.reload() }); });
   }
+  try { ritornoConCodice(); } catch (e) { console.warn(e); }
   ritornoDaGoogle().catch((e) => console.warn(e)).finally(() => {
     firebase.auth().onAuthStateChanged((u) => { S.authPronto = true; entraConGoogle(u); });
   });
@@ -2226,7 +2279,7 @@ function avvisi() {
   for (const p of pagamentiMiei()) add({ id: "pag" + p.id, i: "bank", t: `${p.metodo === "Bonifico" ? "Bonifico" : "Pagamento"} da fare: ${euro(p.importo)} a ${p.beneficiario}`, s: (p.scadenza ? `entro ${fData(p.scadenza)} (${traQuanto(p.scadenza)})` : "senza scadenza") + (p.causale ? " · " + p.causale : ""), h: "pagamenti", azione: true, lv: p.scadenza && p.scadenza < oggi() ? "bad" : "hot" });
   // ruoli
   if (isCouncil()) {
-    if (WEB && gcalOk() && gcalDaFare() && !tokenValido(SCOPI.calendar)) add({ id: "gcal", i: "cal", t: "Google Calendar da aggiornare", s: "Ci sono appuntamenti nuovi o cambiati: collega Google per mandarli ai soci", h: "calendario" });
+    if (WEB && gcalOk() && gcalDaFare() && !gcalPuo()) add({ id: "gcal", i: "cal", t: "Google Calendar da aggiornare", s: "Ci sono appuntamenti nuovi o cambiati: collega Google per mandarli ai soci", h: "calendario" });
     const pn = proposteNuove();
     if (pn.length) add({ id: "posta", i: "mail", t: `${pn.length} ${pn.length === 1 ? "appuntamento trovato" : "appuntamenti trovati"} nella posta`, s: "Controlla e aggiungili al calendario: " + pn.slice(0, 2).map((p) => p.titolo).join(", "), h: "posta", azione: true });
     const nuoveMail = mailNuove();
@@ -2275,6 +2328,7 @@ async function mcpPronto() {
 }
 function spiegaMcp(e) {
   const code = e && e.code;
+  if (code === "script") return e.message || "lo script del consiglio non ha risposto.";
   if (code === "needs_token") return e.scope && e.scope.includes("gmail") ? "serve il permesso di leggere la posta: tocca «Collega Google»." : "serve il permesso di usare il foglio Google: vai in Finanze e tocca «Collega Google», poi riprova.";
   if (code === "needs_reauth") return "Google Sheets va ricollegato: Impostazioni di claude.ai → Connettori.";
   if (code === "server_not_connected" || code === "selection_required") return "Google Sheets non è collegato al tuo account: aggiungilo da Impostazioni di claude.ai → Connettori.";
@@ -3524,12 +3578,36 @@ route("finanze", () => {
     <div class="pagehead"><div class="stack"><span class="eyebrow">Dal registro contabile · tesoriere</span><h1>Finanze</h1></div>
       <div class="btns"><div class="seg" role="group" aria-label="Anno">${anni.map((y) => `<button data-act="fin-anno" data-v="${y}" aria-pressed="${y === anno}">${y}</button>`).join("")}</div>
       <button class="btn pri" data-act="fin-registra">${ic("plus")}Registra</button></div></div>
-    <div id="finBox">${st && st.dati ? htmlFinanze(st.dati) : st && st.err ? `<div class="notice bad">${esc(st.err)}</div><div class="btns">${WEB && !tokenValido(SCOPI.sheets) ? bottoneGoogle("sheets") : ""}${WEB && !tokenValido(SCOPI.sheets) && motivoRinnovo() ? `<p class="small muted" style="flex-basis:100%">${esc(motivoRinnovo())}</p>` : ""}<button class="btn" data-act="fin-ricarica">Riprova</button></div>` : `<div class="loading">${omini()}<p class="eyebrow">Leggo il registro ${anno}…</p></div>`}</div>
+    <div id="finBox">${st && st.dati ? htmlFinanze(st.dati) : st && st.err ? `<div class="notice bad">${esc(st.err)}</div><div class="btns">${WEB && !fogliOk() ? bottoneGoogle("sheets") : ""}${WEB && !fogliOk() && motivoRinnovo() ? `<p class="small muted" style="flex-basis:100%">${esc(motivoRinnovo())}</p>` : ""}<button class="btn" data-act="fin-ricarica">Riprova</button></div>` : `<div class="loading">${omini()}<p class="eyebrow">Leggo il registro ${anno}…</p></div>`}</div>
     <div class="btns"><a class="btn sm" href="#pagamenti">${ic("bank")}Pagamenti da fare</a><a class="btn sm" href="#carte">${ic("card")}Carte e budget</a><a class="btn sm" href="#rimborsi">${ic("hand")}Rimborsi</a></div>
     <div class="btns"><button class="btn sm" data-act="fin-ricarica">${ic("undo")}Aggiorna</button><a class="btn sm" href="https://claude.ai/code/artifact/5d580d4d-17cd-485f-a4a1-61fab8352011" target="_blank" rel="noopener">${ic("ext")}Dashboard completa</a>${isAdmin() ? `<button class="btn sm ghost" data-act="fin-registri">Registri per anno</button>` : ""}</div>
-    <p class="small muted">I numeri arrivano dal foglio Google «Registrazioni Contabili» con il tuo account: ${WEB ? "la prima volta tocca «Collega Google» e dai il permesso; serve anche l'accesso al foglio." : "serve il connettore Google Sheets collegato e l'accesso al foglio."}</p>
+    ${WEB ? pannelloScript() : `<p class="small muted">I numeri arrivano dal foglio Google «Registrazioni Contabili» con il tuo account: serve il connettore Google Sheets collegato e l'accesso al foglio.</p>`}
   </div>`, mount: () => { if (!st || (!st.loading && !st.err && Date.now() - st.at > 120000)) caricaFinanze(anno); } };
 });
+/* foglio senza permessi: l'URL dell'app web dello script del consiglio.
+   Approvato il 12/11: vale per foglio, posta, Drive dei verbali e Google Calendar. */
+let PROPOSTA_SCRIPT = true;
+function pannelloScript() {
+  const u = scriptFoglio();
+  if (!u && !PROPOSTA_SCRIPT) return `<p class="small muted">I numeri arrivano dal foglio Google «Registrazioni Contabili» con il tuo account: la prima volta tocca «Collega Google» e dai il permesso; serve anche l'accesso al foglio.</p>`;
+  if (u) return `<section class="drvbar"><span class="ic">${ic("check")}</span><span class="grow"><b>Google collegato tramite lo script del consiglio</b><br><span class="small muted">Registro, posta, Drive dei verbali e Google Calendar li usa lo script con l'account del consiglio: nessuno deve più collegare Google e niente scade.</span></span><button class="btn sm" data-act="fin-script">Cambia</button></section>`;
+  return `<section class="drvbar"><span class="ic">${ic("key")}</span><span class="grow"><b>Stanco di ricollegare Google?</b><br><span class="small muted">Oggi foglio, posta, Drive e Calendar usano il permesso Google di ciascuno, che scade. Collega lo script del consiglio e non servirà più, in tutta l'app.</span></span>${isCouncil() ? `<button class="btn sm pri" data-act="fin-script">Collega lo script</button>` : ""}</section>`;
+}
+ACT["fin-script"] = () => openSheet({ title: "Google senza permessi", eyebrow: "Script del consiglio", body: `<form data-form="fin-script" id="fFs" class="stack">
+  <p class="small">Nello script «BagaeraPP notifiche» (account del consiglio): <b>Esegui il deployment → Nuovo deployment</b>, tipo <b>App web</b>, esegui come <b>Me</b>, accesso <b>Chiunque</b>. Copia l'<b>URL dell'app web</b> e incollalo qui.</p>
+  <label class="field"><span>URL dell'app web</span><input class="in" name="u" inputmode="url" value="${esc(cfg("finanze").script || "")}" placeholder="https://script.google.com/macros/s/…/exec"></label>
+  <p class="small muted">Vale per tutta l'app: registro, posta del consiglio, Drive dei verbali e Google Calendar. Lo script controlla chi chiede: queste cose le usa solo il consiglio (le risposte di un'open call anche il gruppo che la gestisce), come prima.</p><p class="err" hidden></p></form>`,
+  foot: `${cfg("finanze").script ? `<button class="btn ghost" data-act="fin-script-togli">Togli</button>` : ""}<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fFs">Prova e salva</button>` });
+FORMS["fin-script"] = async (f) => {
+  const u = fv(f, "u");
+  if (!/^https:\/\/script\.google\.com\/(a\/[\w.-]+\/)?macros\/s\/[\w-]+\/exec$/.test(u)) return fErr(f, "Deve essere l'URL dell'app web: inizia con https://script.google.com/macros/s/ e finisce con /exec.");
+  const btn = $('button[form="fFs"]'); if (btn) { btn.disabled = true; btn.textContent = "Provo…"; }
+  try { await viaScript(u, "get_spreadsheet", { spreadsheetId: registri()[S.ui.finAnno] || Object.values(registri()).pop() }); }
+  catch (e) { if (btn) { btn.disabled = false; btn.textContent = "Prova e salva"; } return fErr(f, "Non funziona ancora. " + ((e && e.message) || "Errore sconosciuto.")); }
+  await wSet("config/finanze", { ...strip(cfg("finanze")), script: u }); S.config.finanze = { ...cfg("finanze"), script: u }; closeSheet(); S.fin = {}; Object.keys(cache).forEach((k) => delete cache[k]);
+  toast("Fatto: Google ora passa dallo script del consiglio, niente più permessi da rinnovare."); S.postaUi.err = null; S.postaUi.threads = null; caricaFinanze(S.ui.finAnno, true);
+};
+ACT["fin-script-togli"] = async () => { const c = strip(cfg("finanze")); delete c.script; await wSet("config/finanze", c); S.config.finanze = c; closeSheet(); S.fin = {}; toast("Tolto: l'app torna a usare il permesso Google di ciascuno."); render(true); };
 async function caricaFinanze(anno, fresco) {
   S.fin[anno] = { ...(S.fin[anno] || {}), loading: true, err: null };
   try { const d = await leggiRegistro(anno, fresco); S.fin[anno] = { dati: d, at: Date.now(), loading: false }; }
@@ -3557,7 +3635,7 @@ function htmlFinanze(d) {
   const antReg = r.filter((x) => x.anticipo && !x.rimborso);
   return `<div class="stack l">
     <div class="kpis">
-      <div class="kpi v"><span class="l">Disponibili adesso</span><span class="n">${cassa != null && cc != null ? esc(euro(cassa + cc)) : "—"}</span><span class="s">cassa ${cassa != null ? esc(euro(cassa)) : "—"} · conto ${cc != null ? esc(euro(cc)) : "—"}</span></div>
+      <div class="kpi v"><span class="l">${Number(d.anno) < new Date().getFullYear() ? `Saldo a fine ${esc(String(d.anno))}` : "Disponibili adesso"}</span><span class="n">${cassa != null && cc != null ? esc(euro(cassa + cc)) : "—"}</span><span class="s">cassa ${cassa != null ? esc(euro(cassa)) : "—"} · conto ${cc != null ? esc(euro(cc)) : "—"}</span></div>
       <div class="kpi"><span class="l">Entrate ${d.anno}</span><span class="n">${esc(euro(ent))}</span><span class="s">${r.filter((x) => x.ce + x.be > 0).length} movimenti</span></div>
       <div class="kpi"><span class="l">Uscite ${d.anno}</span><span class="n">${esc(euro(usc))}</span><span class="s">${r.filter((x) => x.cu + x.bu > 0).length} movimenti</span></div>
       <div class="kpi"><span class="l">${ent - usc >= 0 ? "Avanzo" : "Disavanzo"}</span><span class="n" style="color:${ent - usc >= 0 ? "var(--accent-ink)" : "var(--bad)"}">${esc(euro(ent - usc))}</span></div></div>
@@ -3846,13 +3924,13 @@ async function registraQuota(t) {
     toast(`Tessera salvata e quota registrata in Finanze (movimento n. ${r.n}).`);
   } catch (e) {
     console.warn(e);
-    if (WEB && e && e.code === "needs_token") { toast("Tessera salvata. Per registrare la quota serve il foglio Google.", { label: "Collega", fn: () => { try { localStorage.setItem("bagaera-tes-entrata", t.id); } catch (er) {} vaiAGoogle([SCOPI.sheets], "#soci"); } }); return; }
+    if (WEB && e && e.code === "needs_token" && !scriptFoglio()) { toast("Tessera salvata. Per registrare la quota serve il foglio Google.", { label: "Collega", fn: () => { try { localStorage.setItem("bagaera-tes-entrata", t.id); } catch (er) {} vaiAGoogle([SCOPI.sheets], "#soci"); } }); return; }
     toast("Tessera salvata, ma la quota non è entrata in Finanze: " + spiegaMcp(e) + " Riapri la tessera e salva di nuovo con la spunta.");
   }
 }
 function tesDopoRitorno() {
   let id = null; try { id = localStorage.getItem("bagaera-tes-entrata"); localStorage.removeItem("bagaera-tes-entrata"); } catch (e) {}
-  if (!id || !WEB || !tokenValido(SCOPI.sheets)) return;
+  if (!id || !WEB || !fogliOk()) return;
   const prova = (n) => { const t = S.tessere[id]; if (t && !t.registro) registraQuota(t); else if (!t && n < 20) setTimeout(() => prova(n + 1), 500); };
   setTimeout(() => prova(0), 600);
 }
@@ -4416,11 +4494,11 @@ route("posta", () => {
     <div class="pagehead"><div class="stack"><span class="eyebrow">Appuntamenti dalle mail · consiglio</span><h1>Dalla posta</h1></div>
       <div class="btns">${isAdmin() ? `<button class="btn" data-act="posta-ricarica">${ic("undo")}Aggiorna</button>` : ""}<button class="btn" data-act="posta-file">${ic("doc")}Da un file o testo</button></div></div>
     ${isAdmin() ? "" : `<div class="notice warn">La posta del consiglio si legge solo aprendo BagaeraPP dall'account del consiglio. Da qui puoi confermare gli appuntamenti già trovati o leggerne uno da un file.</div>`}
-    <p class="muted small">${WEB ? `L'app legge le mail della tua casella (${esc(S.me.email || "")}): gli inviti .ics diventano appuntamenti da soli, dalle altre mail propone oggetto, data e ora che trova nel testo. Controlla sempre prima di aggiungere.` : "Claude legge le mail della casella del consiglio, con gli allegati, e propone gli appuntamenti che trova."} Niente va in calendario finché non lo confermate: quelli aggiunti li vede solo il consiglio, e poi potete invitare altri.</p>
+    <p class="muted small">${WEB ? `L'app legge le mail della tua casella (${esc(S.me.email || "")})${scriptOn() ? ", con il permesso di sola lettura che hai dato una volta" : ""}: gli inviti .ics diventano appuntamenti da soli, dalle altre mail propone oggetto, data e ora che trova nel testo. Controlla sempre prima di aggiungere.` : "Claude legge le mail della casella del consiglio, con gli allegati, e propone gli appuntamenti che trova."} Niente va in calendario finché non lo confermate: quelli aggiunti li vede solo il consiglio, e poi potete invitare altri.</p>
     ${prop.length ? `<section class="panel"><div class="ph"><h3>Da confermare</h3><span class="badge">${prop.length}</span></div><div class="list">${prop.map(rigaProposta).join("")}</div></section>` : ""}
     ${isAdmin() ? `<section class="panel"><div class="ph"><h3>Mail recenti</h3>${nuove.length > 1 ? `<button class="btn sm pri" data-act="posta-tutte">${ic("sparkle")}Cerca nelle ${Math.min(nuove.length, 8)} nuove</button>` : ""}</div>
-      ${st.loading && !threads.length ? `<div class="pb"><p class="small muted">Leggo la casella…</p></div>` : st.err ? `<div class="pb"><div class="notice bad">${esc(st.err)}</div>${WEB && !tokenValido(SCOPI.gmail) ? `<div class="btns">${bottoneGoogle("gmail")}</div>` : ""}</div>` : threads.length ? `<div class="list">${threads.map(riga).join("")}</div>` : `<div class="pb"><p class="small muted">Nessuna mail nella ricerca.</p></div>`}
-      <details class="pb" style="border-top:1px solid var(--line)"><summary class="small">Quali mail controllo</summary><form data-form="posta-query" class="stack s" style="padding-top:8px"><input class="in" name="q" value="${esc(cfg("posta").query || POSTA_QUERY)}" maxlength="300"><small class="muted">Ricerca di Gmail. Per esempio aggiungi <code>-from:newsletter</code> per saltare un mittente.</small><button class="btn sm" style="align-self:flex-start">Salva</button></form></details></section>` : ""}
+      ${st.loading && !threads.length ? `<div class="pb"><p class="small muted">Leggo la casella…</p></div>` : st.err ? `<div class="pb"><div class="notice ${st.daCollegare ? "" : "bad"}">${esc(st.err)}</div>${WEB && st.daCollegare ? `<div class="btns"><button class="btn pri" data-act="posta-collega">${ic("key")}Collega la tua posta</button></div><p class="small muted">Una volta sola: Google ti chiede il permesso di leggere la posta (non di mandarla né di cancellarla) e lo script del consiglio lo tiene a nome tuo. Lo togli quando vuoi.</p>` : WEB && !collegato(SCOPI.gmail) ? `<div class="btns">${bottoneGoogle("gmail")}</div>` : ""}</div>` : threads.length ? `<div class="list">${threads.map(riga).join("")}</div>` : `<div class="pb"><p class="small muted">Nessuna mail nella ricerca.</p></div>`}
+      <details class="pb" style="border-top:1px solid var(--line)"><summary class="small">Quali mail controllo</summary><form data-form="posta-query" class="stack s" style="padding-top:8px"><input class="in" name="q" value="${esc(cfg("posta").query || POSTA_QUERY)}" maxlength="300">${WEB && scriptOn() && !st.daCollegare ? `<button type="button" class="btn sm ghost" data-act="posta-scollega">Scollega la mia posta</button>` : ""}<small class="muted">Ricerca di Gmail. Per esempio aggiungi <code>-from:newsletter</code> per saltare un mittente.</small><button class="btn sm" style="align-self:flex-start">Salva</button></form></details></section>` : ""}
     ${vecchie.length ? `<details class="panel"><summary class="ph" style="cursor:pointer"><h3>Già lette</h3><span class="pill">${vecchie.length}</span></summary><div class="list">${vecchie.map((d) => `<div class="li"><span class="ic">${ic(d.fonte && d.fonte.tipo !== "mail" ? "doc" : "mail")}</span><span class="grow"><span class="t">${esc((d.fonte && (d.fonte.oggetto || d.fonte.nome)) || "")}</span><br><span class="s">${esc(fTs(d.at || 0))} · ${Object.keys(d.proposte || {}).length} trovati</span></span></div>`).join("")}</div></details>` : ""}
   </div>`, mount: () => { if (isAdmin() && !st.threads && !st.loading && !st.err) caricaPosta(); } };
 });
@@ -4434,7 +4512,8 @@ function rigaProposta(p) {
     <div class="btns">${p.data && !p.manuale ? `<button class="btn sm pri" data-act="prop-aggiungi" data-doc="${p.doc}" data-p="${p.pid}">${ic("plus")}Aggiungi</button>` : ""}<button class="btn sm ${p.manuale ? "pri" : ""}" data-act="prop-rivedi" data-doc="${p.doc}" data-p="${p.pid}">${ic("edit")}Rivedi e aggiungi</button><button class="btn sm ghost" data-act="prop-scarta" data-doc="${p.doc}" data-p="${p.pid}">Scarta</button></div></div>`;
 }
 async function caricaPosta(fresco) {
-  const st = S.postaUi; st.loading = true; st.err = null;
+  const st = S.postaUi; st.loading = true; st.err = null; st.daCollegare = false;
+  if (WEB && await postaCodicePendente()) fresco = true;
   if (S.route.name === "posta") render(true);
   try {
     const mcp = await mcpPronto();
@@ -4442,14 +4521,24 @@ async function caricaPosta(fresco) {
     st.threads = ((r && r.payload && r.payload.threads) || []).filter((t) => t && t.id);
     st.at = Date.now();
     if (!cfg("posta").attiva && isAdmin()) wSet("config/posta", { ...strip(cfg("posta")), attiva: true }, { quiet: true }).catch(() => {});
-  } catch (e) { st.err = "Non riesco a leggere la posta: " + erroreGmail(e); }
+  } catch (e) { st.daCollegare = !!(e && e.sub === "posta_da_collegare"); st.err = st.daCollegare ? e.message : "Non riesco a leggere la posta: " + erroreGmail(e); }
   st.loading = false;
   scheduleRender();
 }
+/* la posta di ciascuno con lo script: «Collega la tua posta» una volta, poi lo script la legge con quel permesso */
+ACT["posta-collega"] = () => vaiAGoogleCodice([SCOPI.gmail], "#posta");
+async function postaCodicePendente() {
+  let c = null; try { c = JSON.parse(localStorage.getItem(CODICE_KEY) || "null"); localStorage.removeItem(CODICE_KEY); } catch (e) {}
+  if (!c || !c.code || !scriptOn()) return false;
+  try { await scriptOp({ op: "posta_collega", code: c.code, redirectUri: c.redirectUri }, true); toast("Posta collegata: da ora la leggo da solo, senza chiederti più niente."); return true; }
+  catch (e) { toast("Non sono riuscito a collegare la posta: " + ((e && e.message) || "riprova") + ""); return false; }
+}
+ACT["posta-scollega"] = () => confirmSheet({ title: "Scollegare la tua posta?", text: "Lo script del consiglio cancella il permesso di leggere la tua casella e lo restituisce a Google. Le proposte già fatte restano.", ok: "Scollega", danger: true, onOk: async () => {
+  try { await scriptOp({ op: "posta_scollega" }, true); S.postaUi.threads = null; S.postaUi.err = "Posta scollegata."; S.postaUi.daCollegare = true; render(true); toast("Posta scollegata."); } catch (e) { toast("Non ci sono riuscito: " + ((e && e.message) || "riprova")); } } });
 /* all'apertura, dall'account del consiglio: conta le mail nuove (solo dopo il primo uso della pagina) */
 let postaAutoFatto = false;
 function postaAuto() {
-  if (postaAutoFatto || !isAdmin() || !cfg("posta").attiva || !pronto() || !ME() || (WEB && !tokenValido(SCOPI.gmail))) return;
+  if (postaAutoFatto || !isAdmin() || !cfg("posta").attiva || !pronto() || !ME() || (WEB && !collegato(SCOPI.gmail))) return;
   postaAutoFatto = true; setTimeout(() => { if (!S.postaUi.threads && !S.postaUi.loading) caricaPosta(); }, 2500);
 }
 ACT["posta-ricarica"] = () => caricaPosta(true);
@@ -5762,7 +5851,7 @@ route("verbali", () => {
 const DRV_AUTO = {};
 const nuoviDrive = (o) => { const d = DRV_AUTO[o]; return d && d.files ? abbinaDrive(o, d.files).soloDrive.length : 0; };
 function driveAuto(o) {
-  if (!WEB || !isCouncil() || typeof tokenValido !== "function" || !tokenValido(SCOPI.drive)) return;
+  if (!WEB || !isCouncil() || typeof collegato !== "function" || !collegato(SCOPI.drive)) return;
   const d = DRV_AUTO[o]; if (d && (d.inCorso || Date.now() - d.at < 6e5)) return;
   DRV_AUTO[o] = { at: Date.now(), inCorso: true, files: d && d.files };
   driveElenco(o).then((files) => { DRV_AUTO[o] = { at: Date.now(), files }; if (S.route.name === "verbali") scheduleRender(); })
@@ -5843,7 +5932,7 @@ FORMS["vb-carica"] = async (f) => {
     const bytes = new Uint8Array(await file.arrayBuffer());
     const id = await nuovoVerbalePdf(o, { bytes, nome: file.name, numero, data, titolo: fv(f, "titolo"), fonte: "pdf", riunioneId: f.dataset.rid || null });
     closeSheet(); toast("Verbale caricato.");
-    if (fv(f, "drive") && WEB && tokenValido(SCOPI.drive)) { const v = verbaleDi(o, id) || { id, numero, data, pdf: { parti: 1 } }; mandaSulDrive(o, { ...v, id, numero, data }, bytes).then(() => toast("Messo anche sul Drive.")).catch((e) => toast(spiegaDrive(e))); }
+    if (fv(f, "drive") && WEB && collegato(SCOPI.drive)) { const v = verbaleDi(o, id) || { id, numero, data, pdf: { parti: 1 } }; mandaSulDrive(o, { ...v, id, numero, data }, bytes).then(() => toast("Messo anche sul Drive.")).catch((e) => toast(spiegaDrive(e))); }
     else if (fv(f, "drive") && WEB) toast("Caricato. Per metterlo sul Drive usa «Controlla col Drive».");
     go(`${ORGANI[o].r}-${id}`);
   } catch (e) { console.warn(e); if (btn) { btn.disabled = false; btn.textContent = "Carica"; } fErr(f, "Non sono riuscito a caricarlo. Controlla la connessione e riprova."); }
@@ -5896,6 +5985,7 @@ function spiegaDrive(e) {
   const m = (e && e.message) || "";
   if (e && e.code === "needs_token") return "Collega Google per usare il Drive.";
   if (/has not been used|is disabled|accessNotConfigured/i.test(m)) return "L'API di Google Drive non è abilitata nel progetto Google Cloud: abilitala (come avete fatto per Calendar) e riprova.";
+  if (e && e.code === "script") return m;
   if (/not ?found|File not found/i.test(m)) return "Non trovo la cartella dei verbali sul Drive: hai accesso al Drive condiviso?";
   if (/insufficient|permission/i.test(m)) return "Il tuo account non può scrivere nella cartella dei verbali sul Drive condiviso.";
   return "Il Drive ha risposto con un errore: " + (m || "sconosciuto") + ".";
@@ -5906,6 +5996,7 @@ async function driveElenco(o) {
   return (r.files || []).map((f) => ({ ...f, ...infoDaNome(f.name) }));
 }
 async function driveScarica(id) {
+  if (scriptOn()) return b64Bytes((await scriptOp({ op: "drive_scarica", id })).b64);
   const t = tokenValido(SCOPI.drive); if (!t) throw { code: "needs_token" };
   const r = await fetch(`${DRV}files/${id}?alt=media&supportsAllDrives=true`, { headers: { Authorization: "Bearer " + t } });
   if (r.status === 401) { dimenticaToken(); throw { code: "needs_token" }; }
@@ -5913,6 +6004,7 @@ async function driveScarica(id) {
   return new Uint8Array(await r.arrayBuffer());
 }
 async function driveCarica(cartella, nome, bytes) {
+  if (scriptOn()) return scriptOp({ op: "drive_carica", cartella, nome, b64: bytesB64(bytes) }, true);
   const t = tokenValido(SCOPI.drive); if (!t) throw { code: "needs_token" };
   const conf = "bagaera" + casuale(), meta = JSON.stringify({ name: nome, parents: [cartella], mimeType: "application/pdf" });
   const body = new Blob([`--${conf}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${meta}\r\n--${conf}\r\nContent-Type: application/pdf\r\n\r\n`, bytes, `\r\n--${conf}--`]);
@@ -5947,7 +6039,7 @@ async function mandaSulDrive(o, v, bytes) {
 function sheetDrive() {
   const d = S.drv || {}, o = d.o || "assemblea";
   const body = () => {
-    if (!tokenValido(SCOPI.drive)) return `<p>Per confrontare i verbali con la cartella «${esc(ORGANI[o].cartella)}» del Drive condiviso serve il permesso di Google Drive.</p><div class="btns"><button class="btn pri" data-act="vb-drive-collega" data-o="${o}">${ic("key")}Collega Google Drive</button></div><p class="small muted">Basta collegarlo una volta: poi si rinnova da solo.</p>`;
+    if (!collegato(SCOPI.drive)) return `<p>Per confrontare i verbali con la cartella «${esc(ORGANI[o].cartella)}» del Drive condiviso serve il permesso di Google Drive.</p><div class="btns"><button class="btn pri" data-act="vb-drive-collega" data-o="${o}">${ic("key")}Collega Google Drive</button></div><p class="small muted">Basta collegarlo una volta: poi si rinnova da solo.</p>`;
     if (d.err) return `<div class="notice bad">${esc(d.err)}</div><div class="btns"><button class="btn" data-act="vb-drive" data-o="${o}">Riprova</button></div>`;
     if (!d.files) return `<div class="loading">${omini()}<p class="eyebrow">Guardo il Drive…</p></div>`;
     const a = abbinaDrive(o, d.files);
@@ -5960,7 +6052,7 @@ function sheetDrive() {
       ${!a.soloDrive.length && !a.soloApp.length ? `<div class="notice">${ic("check")} Tutto allineato: i ${a.entrambi.length} verbali dell'app sono anche sul Drive.</div>` : ""}`;
   };
   const foot = () => {
-    if (!tokenValido(SCOPI.drive) || !d.files || d.err) return `<button class="btn ghost" data-act="sheet-close">Chiudi</button>`;
+    if (!collegato(SCOPI.drive) || !d.files || d.err) return `<button class="btn ghost" data-act="sheet-close">Chiudi</button>`;
     const a = abbinaDrive(o, d.files);
     return `<button class="btn ghost" data-act="sheet-close">Chiudi</button>${a.soloDrive.length || a.soloApp.length ? `<button class="btn pri" data-act="vb-allinea" data-o="${o}" ${d.lavoro ? "disabled" : ""}>${ic("repeat")}Allinea ${a.soloDrive.length + a.soloApp.length}</button>` : ""}`;
   };
@@ -5974,7 +6066,7 @@ async function salvaControllo(o, mancanti) {
 ACT["vb-drive"] = async (el) => {
   const o = el.dataset.o || "assemblea";
   S.drv = { o }; sheetDrive();
-  if (!tokenValido(SCOPI.drive)) { /* permesso già dato ma scaduto: si rinnova da solo e si torna qui */
+  if (!collegato(SCOPI.drive)) { /* permesso già dato ma scaduto: si rinnova da solo e si torna qui */
     try { localStorage.setItem("bagaera-vb-dopo", o); } catch (e) {}
     if (!rinnovaGoogle(SCOPI.drive)) try { localStorage.removeItem("bagaera-vb-dopo"); } catch (e) {}
     return; }
@@ -5985,7 +6077,7 @@ ACT["vb-drive"] = async (el) => {
 ACT["vb-drive-collega"] = (el) => { try { localStorage.setItem("bagaera-vb-dopo", el.dataset.o || "assemblea"); } catch (e) {} vaiAGoogle([SCOPI.drive], "#verbali"); };
 function vbDopoRitorno() {
   let o = null; try { o = localStorage.getItem("bagaera-vb-dopo"); localStorage.removeItem("bagaera-vb-dopo"); } catch (e) {}
-  if (o && WEB && tokenValido(SCOPI.drive)) setTimeout(() => { S.ui.vbOrgano = o; ACT["vb-drive"]({ dataset: { o } }); }, 400);
+  if (o && WEB && collegato(SCOPI.drive)) setTimeout(() => { S.ui.vbOrgano = o; ACT["vb-drive"]({ dataset: { o } }); }, 400);
 }
 ACT["vb-allinea"] = async (el) => {
   const o = el.dataset.o, d = S.drv; if (!d || !d.files) return;
@@ -6646,13 +6738,17 @@ function firmaTutti() {
 }
 const gcalDaFare = () => gcalOk() && isCouncil() && firmaTutti() !== cfg("gcal").firma;
 async function gcalApi(url, opts = {}) { return gapi(url, opts, SCOPI.calendar); }
+/* con lo script il calendario lo aggiorna l'account del consiglio: deve poterci scrivere (se l'ha creato lui sì; se no, chi l'ha creato glielo dà una volta) */
+const gcalDelConsiglio = () => { const g = cfg("gcal"); return String(g.proprietario || "").toLowerCase() === ADMIN_EMAILS[0] || !!g.consiglioOk; };
+const gcalPuo = () => (scriptOn() ? !cfg("gcal").calendarId || gcalDelConsiglio() : !!tokenValido(SCOPI.calendar));
 /* crea il calendario «Bagaera» e dà il permesso di scriverci al consiglio */
 async function gcalCrea() {
   const cal = await gcalApi(GC + "calendars", { method: "POST", body: JSON.stringify({ summary: "Bagaera", description: "Gli appuntamenti di BagaeraPP (bagaera.it/app). Si aggiorna da solo: non modificarlo a mano.", timeZone: "Europe/Rome" }) });
-  await wSet("config/gcal", { calendarId: cal.id, proprietario: S.me.email, creato: Date.now(), scrittori: [] });
+  await wSet("config/gcal", { calendarId: cal.id, proprietario: scriptOn() ? ADMIN_EMAILS[0] : S.me.email, creato: Date.now(), scrittori: [] });
   return cal.id;
 }
 async function gcalPermessi() {
+  if (scriptOn()) return; /* con lo script scrive solo l'account del consiglio: niente permessi personali da dare */
   const g = cfg("gcal"); if (!g.calendarId || String(g.proprietario).toLowerCase() !== String(S.me.email).toLowerCase()) return;
   const voluti = tuttiSoci().filter((u) => isCouncil(u) && S.soci[u].email).map((u) => S.soci[u].email.toLowerCase()).filter((m) => m !== String(g.proprietario).toLowerCase());
   const prima = g.scrittori || [];
@@ -6688,7 +6784,7 @@ function gcalAllinea(avanza = () => {}) {
 /* in sottofondo: se c'è qualcosa da mandare e il consigliere ha già dato il permesso, allinea da solo */
 let gcalUltimoTentativo = 0, gcalTimer = null;
 function gcalAuto() {
-  if (!WEB || !gcalOk() || !pronto() || !isCouncil() || !tokenValido(SCOPI.calendar)) return;
+  if (!WEB || !gcalOk() || !pronto() || !isCouncil() || !gcalPuo()) return;
   if (gcalInCorso || Date.now() - gcalUltimoTentativo < 8000) { if (!gcalTimer) gcalTimer = setTimeout(() => { gcalTimer = null; gcalAuto(); }, 8000 - Math.min(8000, Date.now() - gcalUltimoTentativo) + 500); return; }
   if (!gcalDaFare()) return;
   gcalUltimoTentativo = Date.now();
@@ -6697,12 +6793,16 @@ function gcalAuto() {
 }
 function gcalErrore(e) {
   if (e && e.code === "needs_token") return "serve il permesso di Google Calendar: tocca «Collega Google Calendar».";
+  if (e && e.code === "script") return e.message;
   if (e && /has not been used|disabled/i.test(e.message || "")) return "l'API di Google Calendar non è abilitata nel progetto: abilitala in Google Cloud → API e servizi → Libreria.";
   if (e && /forbidden|insufficient|writer|notFound|Not Found/i.test(e.message || "")) return "non hai il permesso di scrivere nel calendario Bagaera: chiedi a " + (cfg("gcal").proprietario || "chi l'ha creato") + " di aprire l'app, così te lo dà.";
   return (e && e.message) || "errore sconosciuto.";
 }
 ACT["gcal-apri"] = () => openSheet({ title: "Google Calendar", eyebrow: "Notifiche degli appuntamenti", live: true, body: () => {
-  const g = cfg("gcal"), tok = tokenValido(SCOPI.calendar);
+  const g = cfg("gcal"), tok = gcalPuo();
+  if (scriptOn() && g.calendarId && !gcalDelConsiglio()) { gcalProvaScript(); return `<p>Ora Google Calendar lo aggiorna lo script con l'account del consiglio (${esc(ADMIN_EMAILS[0])}). Il calendario «Bagaera» però l'ha creato <b>${esc(g.proprietario || "un altro account")}</b>: serve che lo dia all'account del consiglio, una volta sola.</p>
+    ${String(g.proprietario || "").toLowerCase() === String(S.me.email || "").toLowerCase() ? `<button class="btn pri block" data-act="gcal-cedi">${ic("key")}Dai il calendario all'account del consiglio</button><p class="tiny muted">Google ti chiede il permesso un'ultima volta, poi non serve più.</p>` : `<div class="notice small">Chiedi a ${esc(g.proprietario || "chi l'ha creato")} di aprire qui (Calendario → Google Calendar) e toccare «Dai il calendario all'account del consiglio».</div>`}
+    ${S.ui.gcalStato ? `<p class="small" role="status">${esc(S.ui.gcalStato)}</p>` : ""}`; }
   const stato = S.ui.gcalStato || "";
   if (!g.calendarId) return `<p>Creo un calendario Google <b>Bagaera</b>. Ogni appuntamento dell'app ci finisce dentro, con come invitati i soci che lo vedono: compare da solo nel loro Google Calendar e Google manda le notifiche, come per qualsiasi invito. Nessuna mail di invito.</p>
     <div class="notice small">Gli eventi generali li ricevono tutti, gli incontri di un gruppo solo i suoi membri, gli appuntamenti del consiglio solo il consiglio e gli invitati.</div>
@@ -6716,6 +6816,21 @@ ACT["gcal-apri"] = () => openSheet({ title: "Google Calendar", eyebrow: "Notific
     ${tok ? `<button class="btn ${da ? "pri" : ""} block" data-act="gcal-allinea">${ic("repeat")}Aggiorna adesso</button>` : `<button class="btn pri block" data-act="gcal-collega">${ic("key")}Collega Google Calendar</button>`}
     <p class="tiny muted">Creato da ${esc(g.proprietario || "—")}. Per vederlo anche come calendario a parte: Google Calendar → Altri calendari → «Bagaera».</p>`;
 }, foot: `<button class="btn" data-act="sheet-close">Chiudi</button>` });
+/* passaggio unico: chi ha creato il calendario lo dà all'account del consiglio (con il suo permesso personale, un'ultima volta) */
+let gcalProvato = false;
+function gcalProvaScript() { /* magari l'account del consiglio lo vede già: provo e, se sì, segno che è a posto */
+  if (gcalProvato) return; gcalProvato = true;
+  scriptOp({ op: "rest", url: `${GC}calendars/${enc(cfg("gcal").calendarId)}`, method: "GET" }).then(() => wUpd("config/gcal", { consiglioOk: true }).then(() => { S.config.gcal = { ...cfg("gcal"), consiglioOk: true }; if (S.sheet) drawSheet(); gcalAuto(); })).catch(() => {});
+}
+ACT["gcal-cedi"] = async (el) => {
+  if (!tokenValido(SCOPI.calendar)) { try { localStorage.setItem("bagaera-gcal-dopo", "1"); } catch (e) {} return vaiAGoogle([SCOPI.calendar], "#calendario"); }
+  el.disabled = true; S.ui.gcalStato = "Do il calendario all'account del consiglio…"; drawSheet();
+  try {
+    await gapi(`${GC}calendars/${enc(cfg("gcal").calendarId)}/acl?sendNotifications=false`, { diretto: true, method: "POST", body: JSON.stringify({ role: "owner", scope: { type: "user", value: ADMIN_EMAILS[0] } }) }, SCOPI.calendar);
+    await wUpd("config/gcal", { consiglioOk: true }); S.config.gcal = { ...cfg("gcal"), consiglioOk: true };
+    S.ui.gcalStato = "Fatto: da ora il calendario lo aggiorna lo script."; drawSheet(); await esegui();
+  } catch (e) { S.ui.gcalStato = "Non ci sono riuscito: " + gcalErrore(e); el.disabled = false; drawSheet(); }
+};
 ACT["gcal-collega"] = () => { try { localStorage.setItem("bagaera-gcal-dopo", "1"); } catch (e) {} vaiAGoogle([SCOPI.calendar], "#calendario"); };
 ACT["gcal-crea"] = async (el) => {
   el.disabled = true; S.ui.gcalStato = "Creo il calendario…"; drawSheet();
@@ -6732,7 +6847,7 @@ async function esegui() {
 /* al ritorno da Google dopo «Collega»: riapre il pannello */
 function gcalDopoRitorno() {
   let x = null; try { x = localStorage.getItem("bagaera-gcal-dopo"); localStorage.removeItem("bagaera-gcal-dopo"); } catch (e) {}
-  if (x && tokenValido(SCOPI.calendar)) setTimeout(() => { if (ACT["gcal-apri"]) ACT["gcal-apri"](); }, 300);
+  if (x && (tokenValido(SCOPI.calendar) || scriptOn())) setTimeout(() => { if (ACT["gcal-apri"]) ACT["gcal-apri"](); }, 300);
 }
 
 /* ================= ACCESSO (sito): solo con l'account Google @bagaera.it ================= */
