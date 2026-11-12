@@ -1799,6 +1799,8 @@ const TOKEN_KEY = "bagaera-google";
 const OAUTH_KEY = "bagaera-oauth";
 const CONCESSI_KEY = "bagaera-google-concessi"; /* permessi già dati da chi usa questo telefono: si rinnovano da soli */
 const RINNOVO_KEY = "bagaera-google-rinnovo";
+const ESITO_KEY = "bagaera-google-esito"; /* com'è andato l'ultimo rinnovo automatico: se Google dice di no, si sa perché */
+const emailOra = () => String(((firebase.auth().currentUser || {}).email) || "").toLowerCase();
 const casuale = () => Array.from(crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, "0")).join("");
 function vaiAGoogle(scopi = [], ritorno = location.hash || "#home", silenzioso = false) {
   const state = casuale(), nonce = casuale();
@@ -1820,28 +1822,34 @@ async function ritornoDaGoogle() {
   let st = null; try { st = JSON.parse(localStorage.getItem(OAUTH_KEY) || "null"); localStorage.removeItem(OAUTH_KEY); } catch (e) {}
   history.replaceState(null, "", location.pathname + ((st && st.ritorno) || "#home"));
   S.route = parseHash();
+  if (st && st.silenzioso) try { localStorage.setItem(ESITO_KEY, JSON.stringify({ at: Date.now(), err: q.get("error") || "", scopi: st.scopi || [] })); } catch (e) {}
   if (q.get("error")) { if (!(st && st.silenzioso)) S.ui.loginErr = q.get("error") === "access_denied" ? "" : "Google non ha completato l'accesso (" + q.get("error") + ")."; return true; }
   if (!st || st.state !== q.get("state") || Date.now() - st.at > 15 * 60000) { S.ui.loginErr = "L'accesso è scaduto: riprova."; return true; }
   const id = q.get("id_token"), at = q.get("access_token");
-  if (at && st.scopi && st.scopi.length) salvaToken(at, [...new Set([...st.scopi, ...String(q.get("scope") || "").split(/\s+/).filter(Boolean)])], Number(q.get("expires_in")) || 3600);
-  try { await firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential(id, at || null)); }
+  let chi = "";
+  try { const r = await firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential(id, at || null)); chi = String((r && r.user && r.user.email) || "").toLowerCase(); }
   catch (e) { S.ui.loginErr = spiegaLogin(e); }
+  /* il permesso è di quell'account: se sullo stesso telefono entra qualcun altro non si mescolano */
+  if (at && st.scopi && st.scopi.length) salvaToken(at, [...new Set([...st.scopi, ...String(q.get("scope") || "").split(/\s+/).filter(Boolean)])], Number(q.get("expires_in")) || 3600, chi);
   if (at && st.scopi && st.scopi.length && !st.silenzioso) setTimeout(() => toast("Collegato a Google."), 800);
   return true;
 }
 /* il permesso di Google dura un'ora: resta salvato anche chiudendo l'app, e quando scade si rinnova da solo con un passaggio veloce da Google */
 function tokenValido(scope) {
-  for (const st of [localStorage, sessionStorage]) { try { const t = JSON.parse(st.getItem(TOKEN_KEY) || "{}"); if (t.exp > Date.now() + 60000 && (t.scopi || []).includes(scope)) return t.token; } catch (e) {} }
+  const io = emailOra();
+  for (const st of [localStorage, sessionStorage]) { try { const t = JSON.parse(st.getItem(TOKEN_KEY) || "{}"); if (t.exp > Date.now() + 60000 && (t.scopi || []).includes(scope) && (!t.email || !io || t.email === io)) return t.token; } catch (e) {} }
   return null;
 }
-function salvaToken(token, scopi, durata = 3600) {
-  try { localStorage.setItem(TOKEN_KEY, JSON.stringify({ token, scopi, exp: Date.now() + Math.min(durata, 3600) * 1000 - 5 * 60000 })); sessionStorage.removeItem(TOKEN_KEY); } catch (e) {}
-  try { localStorage.setItem(CONCESSI_KEY, JSON.stringify([...new Set([...concessiGoogle(), ...scopi])])); localStorage.removeItem(RINNOVO_KEY); } catch (e) {}
+function salvaToken(token, scopi, durata = 3600, email = emailOra()) {
+  try { localStorage.setItem(TOKEN_KEY, JSON.stringify({ token, scopi, email, exp: Date.now() + Math.min(durata, 3600) * 1000 - 5 * 60000 })); sessionStorage.removeItem(TOKEN_KEY); } catch (e) {}
+  try { const v = tuttiConcessi(); v[email] = [...new Set([...(v[email] || []), ...scopi])]; localStorage.setItem(CONCESSI_KEY, JSON.stringify(v)); localStorage.removeItem(RINNOVO_KEY); } catch (e) {}
 }
 function dimenticaToken(tutto) {
-  try { localStorage.removeItem(TOKEN_KEY); sessionStorage.removeItem(TOKEN_KEY); if (tutto) { localStorage.removeItem(CONCESSI_KEY); localStorage.removeItem(RINNOVO_KEY); } } catch (e) {}
+  try { localStorage.removeItem(TOKEN_KEY); sessionStorage.removeItem(TOKEN_KEY); if (tutto) { localStorage.removeItem(CONCESSI_KEY); localStorage.removeItem(RINNOVO_KEY); localStorage.removeItem(ESITO_KEY); } } catch (e) {}
 }
-function concessiGoogle() { try { return JSON.parse(localStorage.getItem(CONCESSI_KEY) || "[]"); } catch (e) { return []; } }
+/* permessi dati, account per account (prima era un elenco unico per telefono: lo tengo per chi c'è adesso) */
+function tuttiConcessi() { try { const v = JSON.parse(localStorage.getItem(CONCESSI_KEY) || "{}"); return Array.isArray(v) ? { [emailOra()]: v } : v || {}; } catch (e) { return {}; } }
+function concessiGoogle() { return tuttiConcessi()[emailOra()] || []; }
 /* se il permesso era già stato dato, va a prenderne uno nuovo senza chiedere (al massimo un tentativo ogni 5 minuti, così non gira a vuoto) */
 function rinnovaGoogle(scope) {
   const c = concessiGoogle();
@@ -1849,7 +1857,15 @@ function rinnovaGoogle(scope) {
   let ult = 0; try { ult = Number(localStorage.getItem(RINNOVO_KEY)) || 0; } catch (e) {}
   if (Date.now() - ult < 5 * 60000) return false;
   try { localStorage.setItem(RINNOVO_KEY, String(Date.now())); } catch (e) {}
-  vaiAGoogle(c, location.hash || "#home", true); return true;
+  /* chiedo solo il permesso che serve adesso: Google ridà comunque anche gli altri già concessi (include_granted_scopes) */
+  vaiAGoogle([scope], location.hash || "#home", true); return true;
+}
+/* perché è tornato il pulsante: per capirlo senza indovinare */
+function motivoRinnovo() {
+  let e = null; try { e = JSON.parse(localStorage.getItem(ESITO_KEY) || "null"); } catch (er) {}
+  if (!e || !e.err || Date.now() - e.at > 30 * 60000) return "";
+  const m = { interaction_required: "Google vuole che tu confermi qualcosa", login_required: "Google non trova il tuo accesso su questo telefono", consent_required: "Google vuole di nuovo il consenso", account_selection_required: "Google chiede quale account usare" }[e.err] || "Google ha risposto «" + e.err + "»";
+  return `Rinnovo automatico non riuscito alle ${new Date(e.at).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}: ${m} (${e.err}).`;
 }
 const bottoneGoogle = (s) => `<button class="btn pri" data-act="google-collega" data-s="${s}">${ic("key")}Collega Google ${s === "gmail" ? "(posta)" : "(foglio del registro)"}</button>`;
 ACT["google-collega"] = (el) => {
@@ -3508,7 +3524,7 @@ route("finanze", () => {
     <div class="pagehead"><div class="stack"><span class="eyebrow">Dal registro contabile · tesoriere</span><h1>Finanze</h1></div>
       <div class="btns"><div class="seg" role="group" aria-label="Anno">${anni.map((y) => `<button data-act="fin-anno" data-v="${y}" aria-pressed="${y === anno}">${y}</button>`).join("")}</div>
       <button class="btn pri" data-act="fin-registra">${ic("plus")}Registra</button></div></div>
-    <div id="finBox">${st && st.dati ? htmlFinanze(st.dati) : st && st.err ? `<div class="notice bad">${esc(st.err)}</div><div class="btns">${WEB && !tokenValido(SCOPI.sheets) ? bottoneGoogle("sheets") : ""}<button class="btn" data-act="fin-ricarica">Riprova</button></div>` : `<div class="loading">${omini()}<p class="eyebrow">Leggo il registro ${anno}…</p></div>`}</div>
+    <div id="finBox">${st && st.dati ? htmlFinanze(st.dati) : st && st.err ? `<div class="notice bad">${esc(st.err)}</div><div class="btns">${WEB && !tokenValido(SCOPI.sheets) ? bottoneGoogle("sheets") : ""}${WEB && !tokenValido(SCOPI.sheets) && motivoRinnovo() ? `<p class="small muted" style="flex-basis:100%">${esc(motivoRinnovo())}</p>` : ""}<button class="btn" data-act="fin-ricarica">Riprova</button></div>` : `<div class="loading">${omini()}<p class="eyebrow">Leggo il registro ${anno}…</p></div>`}</div>
     <div class="btns"><a class="btn sm" href="#pagamenti">${ic("bank")}Pagamenti da fare</a><a class="btn sm" href="#carte">${ic("card")}Carte e budget</a><a class="btn sm" href="#rimborsi">${ic("hand")}Rimborsi</a></div>
     <div class="btns"><button class="btn sm" data-act="fin-ricarica">${ic("undo")}Aggiorna</button><a class="btn sm" href="https://claude.ai/code/artifact/5d580d4d-17cd-485f-a4a1-61fab8352011" target="_blank" rel="noopener">${ic("ext")}Dashboard completa</a>${isAdmin() ? `<button class="btn sm ghost" data-act="fin-registri">Registri per anno</button>` : ""}</div>
     <p class="small muted">I numeri arrivano dal foglio Google «Registrazioni Contabili» con il tuo account: ${WEB ? "la prima volta tocca «Collega Google» e dai il permesso; serve anche l'accesso al foglio." : "serve il connettore Google Sheets collegato e l'accesso al foglio."}</p>
