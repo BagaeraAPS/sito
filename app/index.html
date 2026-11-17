@@ -207,13 +207,14 @@ a.li:hover, button.li:hover { background: var(--bg-2); }
 .av { width: 30px; height: 30px; border-radius: 50%; flex: none; object-fit: cover; display: inline-grid; place-items: center; font: 400 .7rem/1 var(--f-display); color: #fff; background: var(--muted); }
 .av.l { width: 54px; height: 54px; font-size: 1.1rem; }
 .av.xl { width: 120px; height: 120px; }
-.av svg { width: 64%; height: 64%; display: block; }
+.av svg { width: 58%; height: 58%; display: block; } /* gli omini nuovi sono più pieni: un filo più piccoli nel cerchio */
 .swatches { display: flex; flex-wrap: wrap; gap: 10px; }
 .sw { position: relative; cursor: pointer; }
 .sw input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
 .sw span { display: block; width: 44px; height: 44px; border-radius: 50%; border: 3px solid var(--bg); box-shadow: 0 0 0 2px var(--line); }
 .sw input:checked + span { box-shadow: 0 0 0 3px var(--ink); }
 .sw input:focus-visible + span { outline: 3px solid var(--verde); outline-offset: 3px; }
+.sw span.auto { display: grid; place-items: center; background: conic-gradient(#2a952d 0 25%, #f7ea23 0 50%, #37bfef 0 75%, #ffffff 0); font: 700 .9rem/1 var(--f-display); color: var(--nero); text-shadow: 0 0 3px #fff; }
 body.fuori .tabs, body.fuori .side { display: none; }
 @media (min-width: 900px) { body.fuori .shell { grid-template-columns: minmax(0, 1fr); } }
 .avs { display: flex; }
@@ -1180,8 +1181,71 @@ body.kiosk .cassa .ctot div { padding: 6px 10px; }
   background: repeating-linear-gradient(135deg, #f7ea23 0 14px, #f3dc1c 14px 28px); box-shadow: var(--sh-1); }
 .provabar svg { width: 20px; height: 20px; flex: none; }
 
+/* un'icona messa direttamente in una riga di elenco resta piccola (su Android si allargava a tutta la riga) */
+.li > svg:not([class]) { width: 20px; height: 20px; flex: none; }
+
+/* sponsorizzate: barra del consumato dentro la riga */
+.li.spons .grow { display: flex; flex-direction: column; gap: 3px; }
+.sbar2 { display: block; height: 6px; border-radius: 3px; background: var(--bg-3); overflow: hidden; margin: 3px 0 1px; }
+.sbar2 i { display: block; height: 100%; background: var(--verde); border-radius: 3px; }
+.pill.sm { font-size: .68rem; padding: 1px 6px; }
+
+/* ================= cassa: struttura (la parte sopra è un gruppo solo, i tasti hanno la loro colonna) ================= */
+.cassa .ctop { display: contents; }
+.cassa .ccol { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.btn .lungo { display: inline; }
+/* schermo cassa su tablet in orizzontale: una riga sopra, tasti grandi a sinistra, conto fisso a destra, niente da scorrere fuori dai tasti */
+@media (min-width: 900px) {
+  body.kiosk main { padding: max(10px, env(safe-area-inset-top, 0px)) max(14px, env(safe-area-inset-right, 0px)) max(10px, env(safe-area-inset-bottom, 0px)) max(14px, env(safe-area-inset-left, 0px)); }
+  body.kiosk .wrap.cassa { display: flex; flex-direction: column; gap: 10px; height: calc(100vh - 20px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); height: calc(100dvh - 20px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); max-width: none; }
+  body.kiosk .cassa .ctop { display: flex; align-items: center; gap: 12px; flex: none; min-width: 0; }
+  body.kiosk .cassa .pagehead { display: contents; }
+  body.kiosk .cassa .pagehead > .stack { order: 1; flex: 1 1 auto; min-width: 0; gap: 2px; }
+  body.kiosk .cassa .pagehead h1 { font-size: 1.2rem; line-height: 1.05; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  body.kiosk .cassa .pagehead .eyebrow { font-size: .72rem; white-space: nowrap; }
+  body.kiosk .cassa .modes { order: 2; flex: 0 0 236px; padding: 3px; }
+  body.kiosk .cassa .modes button { min-height: 40px; font-size: .86rem; }
+  body.kiosk .cassa .modes button small { display: none; }
+  body.kiosk .cassa .ctot { order: 3; display: flex; gap: 4px; flex: none; }
+  body.kiosk .cassa .ctot div { padding: 4px 9px; min-width: 64px; border-radius: 10px; }
+  body.kiosk .cassa .ctot b { font-size: .92rem; white-space: nowrap; }
+  body.kiosk .cassa .ctot span { font-size: .6rem; white-space: nowrap; }
+  body.kiosk .cassa .pagehead > .btns { order: 4; flex: none; flex-wrap: nowrap; gap: 6px; }
+  body.kiosk .cassa .pagehead > .btns .btn { min-height: 38px; padding: 0 12px; font-size: .82rem; }
+  body.kiosk .cassa .btn .lungo { display: none; }
+  body.kiosk .cassa .provabar { flex: none; padding: 5px 12px; font-size: .78rem; border-radius: 10px; }
+  body.kiosk .cassa .provabar svg { width: 16px; height: 16px; }
+  body.kiosk .cassa-lay { flex: 1 1 auto; min-height: 0; grid-template-columns: minmax(0, 1fr) minmax(310px, 340px); align-items: stretch; gap: 12px; }
+  body.kiosk .cassa .ccol { min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: 2px 4px 14px 2px; }
+  /* i tasti dei prodotti: grandi, si leggono e si prendono al volo */
+  body.kiosk .cassa .tiles { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+  body.kiosk .cassa .tile { min-height: 150px; padding: 14px 16px; border-radius: 20px; gap: 8px; }
+  body.kiosk .cassa .tile .tn { font-size: 1.35rem; line-height: 1.12; padding-right: 44px; }
+  body.kiosk .cassa .tile .tp { font-size: .82rem; padding-right: 50px; }
+  body.kiosk .cassa .tile .tp b { font-size: 1.9rem; margin-bottom: 3px; }
+  body.kiosk .cassa .tile .cnt { top: 10px; right: 10px; min-width: 40px; height: 40px; font-size: 1.3rem; }
+  body.kiosk .cassa .tile .minus { bottom: 10px; right: 10px; width: 44px; height: 44px; font-size: 1.4rem; background: var(--bg-3); color: var(--ink); box-shadow: inset 0 0 0 1px var(--rule); }
+  /* il conto: alto quanto lo schermo, i pulsanti per incassare sempre in fondo */
+  body.kiosk .cassa .conto { position: static; height: 100%; min-height: 0; overflow-y: auto; padding: 12px; gap: 8px; }
+  body.kiosk .cassa .conto .crighe { flex: 1 1 auto; max-height: none; min-height: 40px; }
+  body.kiosk .cassa .conto .cpaga { margin-top: auto; }
+  body.kiosk .cassa .conto .ctotale b { font-size: 2.3rem; }
+  body.kiosk .cassa .conto .btn.big { min-height: 58px; font-size: 1.15rem; }
+  body.kiosk .cassa .conto .fasce button { min-height: 42px; }
+  body.kiosk .cassa .esito b { font-size: 3rem; }
+}
+/* schermo cassa su tablet in verticale: tasti più grandi anche qui */
+@media (min-width: 600px) and (max-width: 899px) {
+  body.kiosk .cassa .tiles { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+  body.kiosk .cassa .tile { min-height: 132px; }
+  body.kiosk .cassa .tile .tn { font-size: 1.18rem; }
+  body.kiosk .cassa .tile .tp b { font-size: 1.55rem; }
+  body.kiosk .cassa .tile .minus { width: 40px; height: 40px; background: var(--bg-3); color: var(--ink); box-shadow: inset 0 0 0 1px var(--rule); }
+  body.kiosk .cassa .btn .lungo { display: none; }
+}
+
 </style>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="s-picto" viewBox="269.6 205.0 810.8 440.4"><path d="M457.42,452.1c-20.6,7.13,5.64,36.68,17.82,61.08,12.18,24.39-20.1,38.9-48.45,40.88-28.35,1.98-18.46,5.93-25.05,42.2-7.1,39.07-29.7,21.74-33.68,18.34-.55-.47-1.1-.92-1.66-1.38-19.49-15.99-22.26-44.2,1.06-55.86,23.74-11.87,59.34-21.1,58.02-50.11-1.32-29.01-32.34-36.92-21.44-72.53,10.89-35.6,10.89-54.06-6.25-55.38-6.9-.53-11.88,6.42-17.34,15-7.77,12.2-19.16,20.77-35.37,20.77-18.11,0-43.08-3.22-63.7-26.82-18.79-21.5-15.6-44.93,13.05-45.59,34.68-.8,15.1,17.06,27.35,38.64,6.81,12,20.94,26.93,29.21,9.21,9.23-19.78,27.03-66.59,58.02-51.43,30.99,15.16,21.48,39.42,48.72,49.17,15.24,5.45-2.97,10.25-9.55-50.96-1.55-14.44-4.91-58.21,27.08-58.21s58.01,1.98,55.22,28.35c-2.79,26.37-44.33,60-43.01,85.71,1.32,25.71,13.16,35.22,31.19,23.74,0,0,31.49-31.29,66.66-28.95,35.16,2.34,43.66,31.65,63,24.18,0,0,27.03-10.33,35.52-26.21,11.68-21.85-74.24-19.22-54.52-51.81,19.72-32.59,75.91-51.88,88.03-19.81,12.12,32.06-14.15,67.66-14.16,67.66,0,0,32.39-26.37,45.82-14.51,13.43,11.87,15.8,32.97,23.85,34.28,8.04,1.32,17.01-25.05,32.31-19.78,15.3,5.27,57.25,19.78,85.73,9.23,28.47-10.55,43.39-14.5,43.4-14.51,0,0-51.91-.32-59.35-23.46-6.93-21.56-2.2-63.57,59.35-45.11,61.56,18.46,81.34,28.91,64.19,50.72-17.14,21.81-52.75,32.35-31.65,46.86,0,0,42.17,33.08,61.94,10.24,17-19.63,47.96-94.13-18.43-114.42-46.02-14.06-47.47-68.25-15.82-87.53,31.65-19.28,89.67-4.79,85.71,17.63-3.96,22.43-15.82,11.79-36.92,12.49-21.1.7-38.24,13.89,0,38.94,38.24,25.05,39.38,94.49,17.14,130.55-17.3,28.06-36.92,46.15-69.89,35.6-32.97-10.55-65.93-42.2-65.93-5.27s60.66,27.69,47.47,71.21c-13.19,43.52-51.43,51.43-2.64,61.98s32.97,51.43-19.78,56.7c-52.75,5.27-94.53,7.91-88.8-39.56,5.73-47.47,14.58-66.32,30-50.11,22.44,23.58-34.89,58.8,12.33,65.21,48.18,6.54,53.53-15.17,31.07-29.61-22.48-14.46-26.79-34.28-14.92-55.38,11.87-21.1,2.31-43.17-16.65-46.64-18.96-3.47-96.67-19.29-79.57,9.72,17.1,29.01,25.81,48.79,8.93,56.7-16.88,7.91-59.39-3.96-65.17-19.78-5.78-15.82,10.71-35.6,25.54-23.74,14.84,11.87,18.52-10.21,12.72-22.91-5.8-12.7-8.96-46.98,26.91-43.03,35.86,3.96,32.58-19.88,21.03-21.1-41.35-4.38-65.24,20.65-72.47,29.75-2.3,2.9-5.81,4.68-9.5,4.54-13.94-.54-10.36-25.06-22.11-43.52-13.43-21.1-41.95,3.96-27.05,30.33,10.06,17.8,3.35,40.41-5.69,58.09-13.42,26.24-2.79,58.49,23.45,71.91,11.78,6.02,27.31,11.34,47.76,15.05,26.1,4.74-11.85,52.75-24.5,55.38-12.65,2.64-19-6.59-4.24-25.05,12.38-15.49-3.62-18.91-31.69-15.72-17.07,1.94-34.27-4.1-45.9-16.75-11.85-12.89-15.94-30.38-.19-58.52,4.27-7.63-33.24-1.32-41.16,19.78-7.91,21.1,9.23,54.06-25.05,84.39-34.28,30.33-63.3,15.82-81.09,13.19-17.8-2.64.66-30.33,33.62-25.05,32.97,5.27,39.26-14.58,25.47-64.44-11.6-41.93,19.63-77.62,64.24-66.02,41.34,10.75,9.16-31.48-24.32-37.01-33.67-5.55-34.25-24.77-54.68-24.77-47.16,0-50.08,68.07-50.05,72.2,0,.13,0,.26-.02.39-2.37,27.46,3.64,21.54,10.7,45.21,7.08,23.74-17.53,41.47-36.65,46.75-19.12,5.27-3.96,18.46,10.71,39.56,14.67,21.1-37.74,25.05-50.93,20.44-13.19-4.62-13.19-16.48,5.27-17.99,18.46-1.5,9.89-16.96-5.93-26.19-11.87-6.92-3.36-22.96,16.68-32.33,20.79-9.73,24.56-23.74,18.52-54.85-5.1-26.27-14.29-68.77-38.85-60.27Z"/></symbol><symbol id="s-word" viewBox="44.2 711.6 1261.5 163.4"><path d="M44.23,714.98h98.68c29.98,0,50.8,13.65,50.8,39.16,0,15-7.16,24.84-22.15,30.21,21.26,4.92,32.22,18.12,32.22,38.49,0,29.09-22.38,48.78-64,48.78H44.23v-156.64ZM127.25,777.64c16.33,0,26.18-7.61,26.18-19.69s-9.18-18.35-26.18-18.35h-38.27v38.04h38.27ZM134.41,844.77c18.35,0,29.09-8.06,29.09-23.05s-10.29-22.83-29.09-22.83h-45.43v45.88h45.43ZM393.08,871.62h-44.76l-10.52-26.41h-71.38l-10.52,26.41h-44.76l68.03-156.64h45.87l68.03,156.64ZM328.86,822.84l-26.63-67.36-26.86,67.36h53.48ZM569.62,763.54l-34.01,12.98c-10.07-19.24-25.51-32.89-50.12-32.89-29.09,0-44.08,18.8-44.08,47.89,0,32,18.12,50.13,50.35,50.13,27.53,0,42.07-13.2,46.1-28.64h-53.93v-24.62h90.85v83.24h-35.81v-39.16c-9.4,29.09-29.76,42.52-59.3,42.52-46.77,0-78.77-33.34-78.77-82.12s30.88-81.23,87.94-81.23c47.66,0,73.62,23.27,80.78,51.91ZM768.09,871.62h-44.76l-10.52-26.41h-71.38l-10.52,26.41h-44.76l68.03-156.64h45.87l68.03,156.64ZM703.86,822.84l-26.63-67.36-26.86,67.36h53.48ZM924.49,871.62h-139.41v-156.64h134.94v26.85h-90.18v37.37h81.23v22.38h-81.23v42.07h94.66v27.97ZM1110.65,759.07c0,22.15-13.2,38.71-31.55,45.43l37.37,67.13h-46.99l-33.12-63.77h-38.27v63.77h-44.76v-156.64h106.52c29.98,0,50.79,15.89,50.79,44.08ZM1038.15,785.47c19.92,0,29.99-9.17,29.99-22.38s-9.62-21.26-29.99-21.26h-40.05v43.64h40.05ZM1305.77,871.62h-44.76l-10.52-26.41h-71.38l-10.52,26.41h-44.76l68.03-156.64h45.87l68.03,156.64ZM1241.55,822.84l-26.63-67.36-26.86,67.36h53.48Z"/></symbol><symbol id="s-o1" viewBox="0 0 99.8 129.8"><path d="M49.2,129.6C42.4,128.7 39.7,125.8 39.8,119.3C39.8,114.4 41.4,105.1 42.8,102.5C44.2,99.6 46.3,99.5 48.2,102.3C49.9,104.5 49.8,106.7 48.2,110.9C46.4,115.7 46.2,116.4 46.2,117.4C46.1,120.0 48.0,121.2 53.3,121.7C62.8,122.7 66.4,117.9 59.9,112.8C53.7,107.8 52.5,103.3 55.7,96.0C57.5,91.8 57.6,88.9 56.1,86.0C54.9,83.5 53.4,82.5 50.0,81.7C41.1,79.8 33.1,79.3 30.7,80.5C29.3,81.1 28.7,82.1 28.9,83.2C29.0,83.6 30.0,85.7 31.0,87.8C34.8,95.5 35.3,99.0 33.0,101.1C31.6,102.3 30.5,102.6 27.6,102.6C22.2,102.5 16.0,99.8 14.5,96.7C13.1,93.9 14.1,89.9 16.7,88.3C18.1,87.5 19.2,87.6 20.9,88.8C21.8,89.3 22.7,89.8 23.1,89.8C25.1,89.7 25.9,86.1 24.6,82.3C23.0,77.3 23.4,72.9 25.7,70.7C27.1,69.3 27.5,69.1 31.8,69.1C36.2,69.1 37.4,68.8 38.7,67.7C40.4,66.1 39.9,63.5 37.7,62.8C36.3,62.4 32.5,62.6 30.0,63.2C25.9,64.3 21.6,67.1 18.7,70.6C17.2,72.5 16.5,73.0 15.3,73.0C13.7,73.0 12.8,71.6 11.8,67.7C9.8,59.3 8.2,57.1 2.7,54.8C0.7,53.9 0.0,53.2 0.0,52.0C-0.0,50.1 3.1,48.2 6.4,48.0L8.3,47.9L9.6,49.3C10.9,50.6 11.3,51.3 13.9,56.9C15.2,59.7 16.2,59.6 18.9,56.4C20.8,53.9 22.1,53.0 23.4,53.0C23.8,53.0 25.7,53.6 27.7,54.3C32.9,56.0 36.2,56.7 40.1,56.9C44.0,57.1 45.3,56.9 48.9,55.5C50.4,54.9 53.4,53.8 55.5,53.0L59.3,51.6L56.5,51.3C50.1,50.6 45.5,48.5 44.0,45.5C43.1,43.7 42.7,39.4 43.3,36.7C43.7,34.7 44.9,32.6 46.3,31.5C49.7,28.8 54.4,29.0 63.4,32.1C81.7,38.6 83.1,41.9 71.7,51.9C65.8,57.0 65.6,58.0 70.2,61.4C75.1,65.0 79.6,66.4 82.8,65.4C87.5,63.8 92.6,50.2 91.5,42.3C90.6,35.7 87.3,31.6 80.9,29.1C74.0,26.5 70.5,21.6 70.5,14.8C70.5,11.8 70.8,10.1 71.9,7.8C73.5,4.5 76.3,2.1 80.1,0.8C82.9,-0.1 89.0,-0.2 92.1,0.7C95.4,1.6 97.7,3.1 98.9,4.8C100.3,6.9 99.6,10.9 97.7,11.9C97.0,12.3 96.6,12.3 94.8,12.1C87.5,11.3 83.9,12.4 83.6,15.3C83.3,17.5 84.9,19.7 88.6,22.6C95.4,27.9 98.1,34.4 98.1,45.2C98.1,54.2 96.6,59.5 92.0,66.3C88.7,71.3 85.1,73.9 81.0,74.2C77.3,74.4 74.7,73.6 67.9,69.9C62.0,66.7 60.4,66.2 59.0,66.9C57.7,67.5 57.4,68.5 57.4,71.5C57.4,73.9 57.4,74.3 58.1,75.5C59.0,77.4 61.0,79.2 64.2,81.2C67.2,83.1 68.8,84.4 69.6,85.9C71.8,89.6 70.4,95.3 65.5,103.0C63.3,106.5 63.0,107.1 63.0,108.1C63.0,109.6 64.1,110.3 68.7,111.6C75.0,113.4 77.3,115.5 77.4,119.1C77.4,123.0 73.1,127.0 67.2,128.3C63.7,129.2 52.2,130.0 49.2,129.6Z"/></symbol><symbol id="s-o2" viewBox="0 0 127.5 126.2"><path d="M62.2,126.0C59.3,125.6 57.5,124.5 57.1,122.7C56.8,121.3 58.3,120.0 60.7,119.5C64.1,118.9 64.8,118.4 64.8,116.8C64.8,115.1 63.4,113.2 60.4,110.8C57.8,108.8 57.5,107.5 58.8,104.8C59.6,103.1 61.8,101.0 64.6,99.4C72.1,95.0 73.0,90.9 69.9,75.7C67.2,62.7 63.2,57.3 58.2,59.8C55.0,61.4 55.6,64.4 61.0,74.3C64.6,81.1 65.1,82.3 64.9,84.5C64.7,87.7 62.7,90.1 58.6,92.1C55.7,93.5 53.5,94.1 49.3,94.6C42.7,95.4 42.5,95.6 42.0,102.6C41.7,106.9 40.9,111.2 40.3,113.2C38.3,118.8 34.2,119.3 29.5,114.4C25.3,109.9 24.2,104.2 26.6,99.7C27.7,97.5 29.1,96.5 34.8,93.6C45.0,88.5 47.7,85.8 48.5,80.4C49.0,77.1 48.0,73.9 44.8,68.6C40.7,61.8 40.5,59.7 42.5,51.4C44.0,45.1 44.3,42.6 44.2,40.0C44.0,36.8 42.8,35.0 40.6,34.6C38.7,34.2 37.2,35.4 35.0,39.0C31.2,45.2 28.2,47.0 21.7,46.7C13.5,46.3 7.0,42.7 2.6,36.2C-0.4,31.7 -0.9,27.0 1.4,24.2C2.9,22.5 6.7,21.5 10.2,22.0C13.8,22.5 14.4,23.3 14.7,28.2C15.0,32.2 15.5,34.2 17.0,36.5C19.7,40.8 22.3,42.1 24.1,40.2C24.6,39.7 25.4,38.1 26.1,36.3C29.1,29.1 31.3,25.2 34.0,22.5C37.1,19.4 39.8,18.8 43.4,20.6C46.7,22.2 48.9,24.7 51.3,29.4C54.0,34.5 55.4,36.1 58.9,37.6L60.3,38.2L59.9,37.7C58.6,35.6 57.1,30.2 56.2,24.1C55.5,19.2 55.4,10.3 56.1,7.7C56.9,4.3 58.6,1.8 60.7,0.7C61.8,0.1 62.0,0.1 66.9,0.1C73.9,0.1 77.0,0.9 79.3,2.9C80.8,4.3 81.3,5.5 81.4,7.9C81.7,12.0 80.5,14.8 74.4,24.3C68.6,33.5 67.5,36.7 68.3,41.8C69.5,49.7 73.6,51.2 79.3,45.9C83.0,42.5 87.9,39.5 92.0,38.2C93.6,37.7 94.4,37.6 97.5,37.6C102.8,37.6 104.9,38.5 110.4,42.9C113.8,45.6 114.9,46.1 116.9,46.0C122.5,45.7 125.3,46.9 126.9,50.4C128.9,54.7 125.4,56.8 116.4,56.8C110.9,56.7 107.7,55.5 103.1,51.6C100.2,49.1 99.0,48.5 97.0,48.3C87.4,47.4 80.8,58.5 80.7,75.5L80.6,79.9L81.4,81.8C84.2,88.4 84.7,90.3 84.3,93.1C83.5,97.9 79.4,102.3 73.4,104.6C70.9,105.6 70.5,105.9 70.0,106.7C69.3,108.0 70.1,109.7 73.8,115.3C76.7,119.6 77.1,120.5 76.4,122.1C75.3,124.8 68.2,126.7 62.2,126.0Z"/></symbol><symbol id="s-o3" viewBox="0 0 122.2 129.8"><path d="M17.0,129.4C12.9,128.7 8.0,127.3 7.3,126.7C5.8,125.3 7.2,121.9 10.2,120.0C13.2,118.1 16.2,117.6 20.8,118.1C26.2,118.8 28.8,117.8 30.4,114.6C32.0,111.6 31.9,105.8 30.1,97.9C28.4,89.9 28.4,90.4 28.6,86.5C28.7,82.4 29.1,80.8 30.5,77.9C34.3,69.9 41.6,66.7 50.9,68.9C55.8,70.0 57.8,69.6 57.8,67.5C57.7,63.0 49.9,56.6 42.2,54.9C38.8,54.1 35.7,52.7 33.1,50.6C27.2,46.1 22.8,46.0 16.3,49.9C2.9,58.1 -2.7,58.0 1.2,49.6C3.2,45.5 6.3,42.0 10.8,39.0C20.7,32.5 29.7,32.2 37.5,38.3C42.9,42.4 43.4,42.8 44.7,43.2C46.3,43.6 47.1,43.5 49.5,42.4C55.8,39.3 61.1,34.0 60.6,31.2C60.3,29.4 58.6,28.2 51.8,25.6C41.9,21.7 39.5,19.3 41.2,14.8C43.9,7.7 54.1,0.5 61.9,0.1C69.3,-0.3 72.9,3.9 72.8,13.1C72.8,18.4 71.7,22.7 69.0,28.2C68.0,30.0 67.7,30.9 68.0,30.7C73.2,27.0 75.8,25.6 78.3,25.2C82.1,24.5 83.9,26.2 87.4,33.9C90.1,39.9 91.0,40.3 93.8,36.8C98.6,30.8 99.1,30.6 106.1,33.1C108.3,33.8 111.9,34.9 114.1,35.3C120.1,36.7 122.2,37.9 122.2,39.8C122.3,41.0 121.4,42.0 119.8,42.8C118.8,43.3 118.1,43.4 114.6,43.5C109.9,43.7 107.7,44.2 104.3,45.9C100.3,47.8 97.1,50.3 94.2,54.0C92.1,56.5 90.5,57.1 88.7,55.9C87.5,55.1 86.9,53.6 85.9,49.5C84.4,43.4 83.3,40.7 81.7,38.9C78.5,35.2 73.2,38.1 72.2,44.2C71.8,46.3 72.2,48.6 73.5,51.6C74.8,54.7 75.1,55.9 75.1,59.2C75.1,63.6 74.0,67.8 71.6,73.2C70.1,76.7 69.7,78.7 69.7,82.5C69.7,86.4 70.2,88.6 71.6,91.7C74.9,98.7 80.6,102.3 92.7,105.4C97.6,106.6 98.3,107.0 98.8,108.8C99.6,112.0 96.1,119.3 91.3,124.3C88.6,127.0 86.3,127.9 84.5,126.8C82.3,125.5 82.8,122.1 86.0,117.5C87.4,115.4 87.7,114.3 87.1,113.2C86.1,111.5 83.1,111.1 74.7,111.6C71.6,111.8 70.8,111.8 69.2,111.4C63.2,110.1 57.8,105.1 56.4,99.6C55.4,95.6 56.1,90.8 58.6,85.0C59.7,82.4 59.7,82.3 57.7,82.3C54.9,82.2 50.5,84.3 48.0,86.8C45.2,89.6 44.5,92.1 44.5,100.1C44.5,107.8 44.0,111.2 42.1,115.1C40.9,117.8 39.4,119.9 36.9,122.4C30.9,128.4 24.3,130.7 17.0,129.4Z"/></symbol></defs></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="s-picto" viewBox="269.6 205.0 810.8 440.4"><path d="M457.42,452.1c-20.6,7.13,5.64,36.68,17.82,61.08,12.18,24.39-20.1,38.9-48.45,40.88-28.35,1.98-18.46,5.93-25.05,42.2-7.1,39.07-29.7,21.74-33.68,18.34-.55-.47-1.1-.92-1.66-1.38-19.49-15.99-22.26-44.2,1.06-55.86,23.74-11.87,59.34-21.1,58.02-50.11-1.32-29.01-32.34-36.92-21.44-72.53,10.89-35.6,10.89-54.06-6.25-55.38-6.9-.53-11.88,6.42-17.34,15-7.77,12.2-19.16,20.77-35.37,20.77-18.11,0-43.08-3.22-63.7-26.82-18.79-21.5-15.6-44.93,13.05-45.59,34.68-.8,15.1,17.06,27.35,38.64,6.81,12,20.94,26.93,29.21,9.21,9.23-19.78,27.03-66.59,58.02-51.43,30.99,15.16,21.48,39.42,48.72,49.17,15.24,5.45-2.97,10.25-9.55-50.96-1.55-14.44-4.91-58.21,27.08-58.21s58.01,1.98,55.22,28.35c-2.79,26.37-44.33,60-43.01,85.71,1.32,25.71,13.16,35.22,31.19,23.74,0,0,31.49-31.29,66.66-28.95,35.16,2.34,43.66,31.65,63,24.18,0,0,27.03-10.33,35.52-26.21,11.68-21.85-74.24-19.22-54.52-51.81,19.72-32.59,75.91-51.88,88.03-19.81,12.12,32.06-14.15,67.66-14.16,67.66,0,0,32.39-26.37,45.82-14.51,13.43,11.87,15.8,32.97,23.85,34.28,8.04,1.32,17.01-25.05,32.31-19.78,15.3,5.27,57.25,19.78,85.73,9.23,28.47-10.55,43.39-14.5,43.4-14.51,0,0-51.91-.32-59.35-23.46-6.93-21.56-2.2-63.57,59.35-45.11,61.56,18.46,81.34,28.91,64.19,50.72-17.14,21.81-52.75,32.35-31.65,46.86,0,0,42.17,33.08,61.94,10.24,17-19.63,47.96-94.13-18.43-114.42-46.02-14.06-47.47-68.25-15.82-87.53,31.65-19.28,89.67-4.79,85.71,17.63-3.96,22.43-15.82,11.79-36.92,12.49-21.1.7-38.24,13.89,0,38.94,38.24,25.05,39.38,94.49,17.14,130.55-17.3,28.06-36.92,46.15-69.89,35.6-32.97-10.55-65.93-42.2-65.93-5.27s60.66,27.69,47.47,71.21c-13.19,43.52-51.43,51.43-2.64,61.98s32.97,51.43-19.78,56.7c-52.75,5.27-94.53,7.91-88.8-39.56,5.73-47.47,14.58-66.32,30-50.11,22.44,23.58-34.89,58.8,12.33,65.21,48.18,6.54,53.53-15.17,31.07-29.61-22.48-14.46-26.79-34.28-14.92-55.38,11.87-21.1,2.31-43.17-16.65-46.64-18.96-3.47-96.67-19.29-79.57,9.72,17.1,29.01,25.81,48.79,8.93,56.7-16.88,7.91-59.39-3.96-65.17-19.78-5.78-15.82,10.71-35.6,25.54-23.74,14.84,11.87,18.52-10.21,12.72-22.91-5.8-12.7-8.96-46.98,26.91-43.03,35.86,3.96,32.58-19.88,21.03-21.1-41.35-4.38-65.24,20.65-72.47,29.75-2.3,2.9-5.81,4.68-9.5,4.54-13.94-.54-10.36-25.06-22.11-43.52-13.43-21.1-41.95,3.96-27.05,30.33,10.06,17.8,3.35,40.41-5.69,58.09-13.42,26.24-2.79,58.49,23.45,71.91,11.78,6.02,27.31,11.34,47.76,15.05,26.1,4.74-11.85,52.75-24.5,55.38-12.65,2.64-19-6.59-4.24-25.05,12.38-15.49-3.62-18.91-31.69-15.72-17.07,1.94-34.27-4.1-45.9-16.75-11.85-12.89-15.94-30.38-.19-58.52,4.27-7.63-33.24-1.32-41.16,19.78-7.91,21.1,9.23,54.06-25.05,84.39-34.28,30.33-63.3,15.82-81.09,13.19-17.8-2.64.66-30.33,33.62-25.05,32.97,5.27,39.26-14.58,25.47-64.44-11.6-41.93,19.63-77.62,64.24-66.02,41.34,10.75,9.16-31.48-24.32-37.01-33.67-5.55-34.25-24.77-54.68-24.77-47.16,0-50.08,68.07-50.05,72.2,0,.13,0,.26-.02.39-2.37,27.46,3.64,21.54,10.7,45.21,7.08,23.74-17.53,41.47-36.65,46.75-19.12,5.27-3.96,18.46,10.71,39.56,14.67,21.1-37.74,25.05-50.93,20.44-13.19-4.62-13.19-16.48,5.27-17.99,18.46-1.5,9.89-16.96-5.93-26.19-11.87-6.92-3.36-22.96,16.68-32.33,20.79-9.73,24.56-23.74,18.52-54.85-5.1-26.27-14.29-68.77-38.85-60.27Z"/></symbol><symbol id="s-word" viewBox="44.2 711.6 1261.5 163.4"><path d="M44.23,714.98h98.68c29.98,0,50.8,13.65,50.8,39.16,0,15-7.16,24.84-22.15,30.21,21.26,4.92,32.22,18.12,32.22,38.49,0,29.09-22.38,48.78-64,48.78H44.23v-156.64ZM127.25,777.64c16.33,0,26.18-7.61,26.18-19.69s-9.18-18.35-26.18-18.35h-38.27v38.04h38.27ZM134.41,844.77c18.35,0,29.09-8.06,29.09-23.05s-10.29-22.83-29.09-22.83h-45.43v45.88h45.43ZM393.08,871.62h-44.76l-10.52-26.41h-71.38l-10.52,26.41h-44.76l68.03-156.64h45.87l68.03,156.64ZM328.86,822.84l-26.63-67.36-26.86,67.36h53.48ZM569.62,763.54l-34.01,12.98c-10.07-19.24-25.51-32.89-50.12-32.89-29.09,0-44.08,18.8-44.08,47.89,0,32,18.12,50.13,50.35,50.13,27.53,0,42.07-13.2,46.1-28.64h-53.93v-24.62h90.85v83.24h-35.81v-39.16c-9.4,29.09-29.76,42.52-59.3,42.52-46.77,0-78.77-33.34-78.77-82.12s30.88-81.23,87.94-81.23c47.66,0,73.62,23.27,80.78,51.91ZM768.09,871.62h-44.76l-10.52-26.41h-71.38l-10.52,26.41h-44.76l68.03-156.64h45.87l68.03,156.64ZM703.86,822.84l-26.63-67.36-26.86,67.36h53.48ZM924.49,871.62h-139.41v-156.64h134.94v26.85h-90.18v37.37h81.23v22.38h-81.23v42.07h94.66v27.97ZM1110.65,759.07c0,22.15-13.2,38.71-31.55,45.43l37.37,67.13h-46.99l-33.12-63.77h-38.27v63.77h-44.76v-156.64h106.52c29.98,0,50.79,15.89,50.79,44.08ZM1038.15,785.47c19.92,0,29.99-9.17,29.99-22.38s-9.62-21.26-29.99-21.26h-40.05v43.64h40.05ZM1305.77,871.62h-44.76l-10.52-26.41h-71.38l-10.52,26.41h-44.76l68.03-156.64h45.87l68.03,156.64ZM1241.55,822.84l-26.63-67.36-26.86,67.36h53.48Z"/></symbol><symbol id="s-o1" viewBox="0 0 325.6 400.0"><path d="M92.8,398.6C70.9,391.2 50.5,366.3 59.2,357.6C61.6,355.2 62.6,355.1 76.4,355C97.1,354.9 108,351.5 111.2,344C112.5,340.9 112,339.3 108.2,334.1C98.5,320.8 95.2,303.9 99.8,290.7C104.6,276.7 116.6,267.4 140.5,259C144,257.8 143.3,257.3 135.4,255.4C91.3,244.7 66.3,218.8 70,187.4C72.1,168.9 81.4,143.2 92.8,124.2C100.6,111.3 103.3,105.1 105,97.2C106.6,88.9 106.8,73.1 105.2,67.1C101.3,51.7 82.7,41 54.4,37.9C51.4,37.5 48.1,37.1 47,37C45.9,36.8 37.4,36.6 28,36.4C8.8,36.1 8.4,36.1 4.7,32.8C-1.1,27.7 -1.7,17.3 3.4,8.6C8.1,0.5 20.5,-1.7 44.2,1.3C77.6,5.6 84.2,6.7 96.4,9.9C126.8,17.8 142.1,32.1 146.7,56.6C147.6,61.6 147.7,81.5 146.9,87.4C144.4,105.2 140.2,120 129.2,150.4C118.8,179.2 117.3,185.1 118.8,191.6C123.4,211.6 158.4,217.3 165.2,199.2C167.6,192.8 166.4,187.2 160.3,176.5C153.3,164.3 153,160.4 158,153.8C164.3,145.4 176,141 192.2,141C225.8,141 247.6,159.7 241.3,183C240.2,186.9 237.5,192.5 233.3,199.7C217.5,226.6 219.4,234.5 240,227.6C273.8,216.3 295.5,179.2 280.9,157.9C270.9,143.4 239.8,126.6 207.7,118.4C182.3,111.9 167,91.3 168.8,66.1C170.9,38.1 188.7,17 216.2,9.8C242.4,3 287.6,10.5 309.6,25.2C327.4,37.1 330.9,54.6 317.9,66.6C309.9,74.1 306.9,74.1 274.2,67.3C263.9,65.1 262.6,64.8 256.9,63.8C240.4,60.9 233.9,62 236.8,67.5C240.2,74 248.8,79.7 267.8,88.3C300.5,103.2 312.1,116.5 317.8,145.5C327.8,197.2 306.4,243.5 260.2,270.2C242.4,280.5 233.9,296.1 236.4,314.3C237.9,324.9 245.6,337.9 253.4,342.8C261.8,348.1 270.5,345.7 280.4,335.4C288.2,327.1 290.3,319 287.4,308C284.4,296.6 291.5,286.6 302.6,286.6C335.1,286.6 321.3,374.1 286.3,389.5C262.6,400 226.7,379.2 212,346.4C207.6,336.6 205.9,329.8 203.8,314.2C202.1,301.5 197.9,293.9 190.7,290.5C179.1,284.9 157.2,290.7 145.7,302.3C137.2,310.8 137.2,319.4 145.7,333.9C154.1,348.2 156.4,356.2 154.4,363.8C150.9,377.4 133.7,392.4 115.8,397.7C113.8,398.3 111.3,399.1 110.2,399.4C106.2,400.6 97.3,400.1 92.8,398.6Z"/></symbol><symbol id="s-o2" viewBox="0 0 304.4 400.0"><path d="M78.6,399.1C61,395 50.9,388.7 44.3,377.7C33.5,359.9 36,342.9 50.4,334.7C56.3,331.4 63.9,330.9 74.6,333.2C86.9,335.8 99.3,334.1 105.3,328.8C113.1,322 118.4,303.2 121.6,271.8C121.8,269.6 122.1,267.4 122.2,266.8C123.7,258.3 123.7,228 122.1,221.8C119.7,212 109.1,207.1 99.7,211.4C93.9,214 91.1,218.4 90.4,226C87,262.6 74.1,281.3 52,281.9C34.9,282.4 28.1,274.8 26,253.2C23.9,230.5 17.3,209.3 5.7,188.3C1,179.6 -0,176.8 -0,171.6C0,163.5 4,158.5 13.3,154.9C15.3,154.2 18,153.2 19.2,152.7C22.8,151.3 31.8,151.4 34.8,152.8C43.4,156.9 47.2,164 50.6,182.8C54.3,202.7 61.5,214.5 66.6,209C69.4,206.1 70,198.5 68.8,183.8C67.8,171.1 68.4,152.7 70.2,144.9C73.3,131.5 81.7,125.2 96.2,125.2C105.7,125.2 112.4,117.9 109.2,110.9C108.1,108.4 106.3,107.5 97.7,105C83.5,100.9 77.3,97.8 71.4,91.8C55.1,75.3 57.3,40.7 75.3,30.1C83.5,25.2 88.6,24.5 111.8,25.2C121.8,25.5 128.2,22.8 133.9,15.9C134.7,14.9 137.2,11.9 139.4,9.2C144.7,2.8 148.1,-0 150.5,-0C152.7,0 153.3,1.6 154,9.2C155.2,23.8 156.7,30.3 159,30.7C160.2,31 161.4,29.7 164.8,24.2C173.4,10.4 179.2,7.3 183.9,14.2C188.4,20.8 190.2,43.3 187.6,59.6C184.6,77.7 179.4,94.8 173.6,105.5C171,110.2 171.6,110.3 177.9,106.7C233.5,74 272.4,84.4 292.2,137.3C296.9,150 301,168.6 302.8,185.6C303.1,187.9 303.5,191.2 303.7,192.8C303.9,194.5 304.2,202.6 304.3,210.9C304.5,227.7 303.9,231.5 300,241.7C291.7,262.9 270.3,274.6 253.5,267C242.6,262.1 242.2,253.3 251.4,223.2C258.4,200.3 260.5,188.2 259.6,175.9C257.8,152.7 240.5,131.5 223.2,131.5C217.2,131.5 215.2,132.3 210.9,136.6C204.4,143 205,145.3 216.1,156.7C227.5,168.6 231.1,174.5 233.5,185.7C234.3,189.7 234.5,207 233.7,213C231.7,228.7 228.6,242.9 220.5,274C220,275.7 218.7,280.6 217.6,285C216.4,289.4 215.3,294 215,295.2C214.7,296.4 213.9,300.3 213.1,303.8C209.8,318.4 209.3,325.6 211.2,329.4C214.3,335.6 218.7,334.8 243.6,323.8C267.2,313.4 274.7,313.6 280.2,325C288.1,341.4 280.2,375.4 265.8,386.9C252.3,397.7 226.1,396 204.4,382.8C186.1,371.6 185,367.2 186,306.8C187,245.9 186.1,230.7 180.5,222.4C173.4,211.6 163.3,233.1 159.2,267.6C156,294.3 156,316.1 159.2,345.4C162.3,373.1 144.4,393.6 113.2,398.4C111.6,398.6 109.1,399.1 107.7,399.4C103.6,400.3 82.9,400.2 78.6,399.1Z"/></symbol><symbol id="s-o3" viewBox="0 0 400.0 390.0"><path d="M277.6,389.6C277.1,389.3 275.3,388.8 273.6,388.4C252.8,382.8 237.5,361.7 240.6,342.8C242.2,332.6 246.1,318 251.8,299.6C256.4,284.9 256.4,280.1 251.6,273.3C248.4,268.7 241.2,263.9 234.3,261.8C230.8,260.7 230.7,260.9 230.3,266.4C225.6,346.1 160.3,373.7 88.2,326.5C64.6,311 47.6,311.5 40.7,327.9C31.5,349.5 9.9,357.3 1.4,342.1C-1.2,337.4 -0.8,332.8 2.8,324.4C9.6,308.5 10.7,302.5 8.4,293.2C6.1,283.8 8.5,275.1 14.5,271C26.4,262.8 50.3,267 85.8,283.3C105.3,292.3 116.1,293.7 128.3,288.8C142.8,283 159,263.8 167.3,242.5C180.6,208.7 173.5,159.5 153.6,147.9C137.8,138.6 117.6,143.8 110.2,158.9C102,175.8 104.4,201.6 114.2,201.6C116.1,201.6 117.1,200.4 118.3,196.9C123.9,180.5 142,175.5 156.9,186.3C172.5,197.7 155.4,231.7 130.4,239.2C99.3,248.5 72.5,220.7 63.4,169.8C63.1,167.8 62.6,165.2 62.4,164C55.9,127.8 65.2,102.8 87.2,96.7C94.6,94.6 108.1,93.9 116.4,95.1C126.5,96.6 133,97.7 137.4,98.8C138.3,99 140.6,99.6 142.6,100C144.6,100.5 149.1,101.5 152.6,102.4C172.6,107.3 175.7,107.7 183.7,106.8C201.3,104.9 201.9,95.9 185.5,81.9C171.5,70 164,54.7 164,38.1C164,17.9 177,5.6 202.4,1.6C205.1,1.2 208.3,0.6 209.3,0.4C216.5,-1.1 236.2,0.1 246.6,2.6C273.6,9.2 284.4,30.6 274.9,58.6C274.1,61 271.2,67.5 268.5,73C255.5,99.3 251.4,113.4 256.2,115.5C258.5,116.6 260.4,115.9 267.9,111.3C302.3,90.4 333.3,87.6 356.7,103.1C374,114.6 389.6,137.9 397.3,163.6C402.9,182.1 399.4,202.2 390,206.9C379.1,212.3 365.6,200.1 351.9,172.6C334.8,138.2 324.2,131.7 302.7,142.4C286.6,150.5 268.4,164.9 259.9,176.2C248.3,191.5 250,203.2 264.8,211.6C299.8,231.2 311.9,255.3 303.6,288.8C300.9,299.8 295.8,311.3 289.1,321.9C284.6,329.2 283.8,331.6 285,335.8C287.1,343.5 293.6,347.1 299.5,343.8C302.2,342.3 306.3,338 312,330.6C322.9,316.4 329.1,312 337.5,312.5C346.6,313.1 355.1,319.6 359.4,329.4C365.7,343.6 361.9,359.8 350.2,369.1C343.2,374.8 319.8,384.4 305.6,387.6C303.5,388.1 300.4,388.8 298.6,389.2C295.1,390.1 279.5,390.3 277.6,389.6Z"/></symbol></defs></svg>
 <header class="top">
   <a class="brand" href="#home" aria-label="BagaeraPP, home">
     <span class="wm"><span class="logoapp" aria-hidden="true"></span><b>L'app dei Bagai</b></span>
@@ -1301,9 +1365,11 @@ const I = {
   megafono: '<path d="M3 10v4h4l7 5V5L7 10z"/><path d="M17 9a4 4 0 0 1 0 6"/>',
   link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
   wallet: '<path d="M4 7h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4z"/><path d="M4 7V6a2 2 0 0 1 2-2h9v3"/><path d="M15 13.5h2"/>',
+  joy: '<path d="M6 8h12a4 4 0 0 1 4 4v1a4 4 0 0 1-4 4h-1.5l-2-2.5h-5L7.5 17H6a4 4 0 0 1-4-4v-1a4 4 0 0 1 4-4z"/><path d="M7.5 10.5v4M5.5 12.5h4"/><path d="M15.5 11.5h.01M18 13.5h.01"/>',
 };
 const ic = (n, cls = "") => `<svg ${cls ? `class="${cls}" ` : ""}viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">${I[n] || ""}</svg>`;
-const OM = { 1: "0 0 99.8 129.8", 2: "0 0 127.5 126.2", 3: "0 0 122.2 129.8" };
+/* gli omini nuovi del grafico (Drive «nuovi_omini_bagaera», 17/11/2026), ricalcati in vettoriale */
+const OM = { 1: "0 0 325.6 400.0", 2: "0 0 304.4 400.0", 3: "0 0 400.0 390.0" };
 const om = (n, cls = "om") => `<svg class="${cls}" viewBox="${OM[n]}" aria-hidden="true"><use href="#s-o${n}"/></svg>`;
 /* simboli pieni per i contatori della home, nello stesso stile degli omini (le icone a linee, riempite, diventavano macchie) */
 const GLIFI = {
@@ -1370,7 +1436,7 @@ const S = {
   soci: {}, contatti: {}, richieste: {}, inviti: {}, accessi: {}, profili: {}, esiti: {}, cal: {}, scadenze: {}, verbali: {}, verbalicd: {}, opencall: {}, post: {}, tessere: {}, anticipi: {}, budget: {}, config: {}, prefsAll: {},
   products: {}, setup: {}, serate: {}, ordini: {}, movements: [], tallies: {},
   sponsor: {}, contributi: {}, segnalazioni: {}, prefs: {}, prefsExists: false,
-  progetti: {}, medaglie: {}, posta: {}, pagamenti: {}, carte: {}, cartemov: {}, carteric: {}, cartechi: {}, ultimoaccesso: {}, compiti: {},
+  progetti: {}, medaglie: {}, posta: {}, pagamenti: {}, carte: {}, cartemov: {}, carteric: {}, cartechi: {}, ultimoaccesso: {}, compiti: {}, sponsorizzate: {},
   loaded: {}, route: { name: "home", arg: "" }, ui: {}, sheet: null, offline: false, pending: 0,
 };
 const cfg = (k) => S.config[k] || {};
@@ -1422,11 +1488,14 @@ function nm(uid, fallback = "Socio") {
 }
 const primoNome = (uid) => nm(uid).split(/\s+/)[0];
 const COLORI_AV = [["verde", "#2a952d", "#ffffff"], ["nero", "#0b0c0b", "#2a952d"], ["viola", "#7b3fa0", "#ffffff"], ["zucca", "#e07a1f", "#ffffff"], ["azzurro", "#1f7ac4", "#ffffff"], ["oro", "#e2b007", "#0b0c0b"], ["rosso", "#c0392b", "#ffffff"], ["rosa", "#d6457a", "#ffffff"], ["petrolio", "#13707a", "#ffffff"]];
+/* il colore dell'omino si sceglie a parte (dai colori dell'associazione); senza scelta va con lo sfondo */
+const COLORI_OM = [["bianco", "#ffffff"], ["nero", "#0b0c0b"], ["verde", "#2a952d"], ["giallo", "#f7ea23"], ["azzurro", "#37bfef"], ["rosa", "#f5b2c4"], ["arancione", "#ff9a3c"], ["viola", "#9c5fc4"], ["rosso", "#ef5a4c"]];
 function profiloAv(uid) {
   const p = S.profili[uid] || {}; const h = hash(uid || "?");
   const col = COLORI_AV.find((c) => c[0] === p.c) || COLORI_AV[h % COLORI_AV.length];
   const o = [1, 2, 3].includes(p.o) ? p.o : 1 + (h % 3);
-  return { o, bg: col[1], fg: col[2], c: col[0] };
+  const f = COLORI_OM.find((c) => c[0] === p.f);
+  return { o, bg: col[1], fg: f ? f[1] : col[2], c: col[0], f: f ? f[0] : "" };
 }
 function avOmino(o, bg, fg, cls = "") { return `<span class="av ${cls}" style="background:${bg}" aria-hidden="true"><svg viewBox="${OM[o]}" style="fill:${fg}"><use href="#s-o${o}"/></svg></span>`; }
 function av(uid, cls = "") { const p = profiloAv(uid); return avOmino(p.o, p.bg, p.fg, cls); }
@@ -1649,7 +1718,8 @@ function strumenti() {
   if (can.sponsor()) t.push({ h: "sponsor", l: "Sponsor", s: "Contatti e ricevute", i: "euro", n: isCouncil() ? Object.values(S.segnalazioni).filter((x) => x.stato === "da_emettere").length : 0 });
   if (can.finanze()) t.push({ h: "finanze", l: "Finanze", s: "Registro contabile", i: "chart" });
   if (isCouncil()) t.push({ h: "pagamenti", l: "Pagamenti", s: "Bonifici da fare e firme", i: "bank", n: pagamentiMiei().length });
-  if (isCouncil() || Object.keys(GRUPPI).some((g) => GRUPPI[g].budget && inGroup(g))) t.push({ h: "budget", l: "Budget", s: "Quanto può spendere ogni gruppo", i: "wallet" });
+  if (isCouncil() || inGroup("marketing") || Object.keys(GRUPPI).some((g) => GRUPPI[g].budget && inGroup(g))) t.push({ h: "budget", l: "Budget", s: "Quanto può spendere ogni gruppo", i: "wallet" });
+  if (can.sponsorizzate()) { const c = contiMarketing(); t.push({ h: "sponsorizzate", l: "Sponsorizzate", s: c.tot ? `${euroT(c.rimasto)} rimasti su ${euroT(c.tot)}` : "Budget del marketing", i: "megafono" }); }
   if (can.carte()) t.push({ h: "carte", l: "Carte", s: "Bancomat, prepagate e budget", i: "card" });
   if (isCouncil()) t.push({ h: "posta", l: "Dalla posta", s: "Eventi trovati nelle mail", i: "mail", n: proposteNuove().length });
   if (isCouncil()) t.push({ h: "rimborsi", l: "Rimborsi", s: "Anticipi dei soci", i: "hand", n: anticipiDaGestire().length });
@@ -1661,6 +1731,7 @@ function strumenti() {
   if (isCouncil()) t.push({ h: "soci", l: "Soci e tessere", s: "Ruoli, gruppi, tessere", i: "card", n: Object.keys(S.richieste).filter((u) => !S.soci[u]).length });
   if (can.editoriale()) t.push({ h: "editoriale", l: "Editoriale", s: "Quando escono i post", i: "film", n: postMiei().length });
   if (can.allestimenti()) t.push({ h: "allestimenti", l: "Allestimenti", s: "Strutture e decori", i: "brush" });
+  if (WEB) t.push({ h: "giochi", l: "Giochi", s: typeof sottotitoloGiochi === "function" ? sottotitoloGiochi() : "Wordy, Bagaera Impact e altri", i: "joy" });
   return t;
 }
 function renderChrome() {
@@ -1924,6 +1995,9 @@ const scriptOn = () => !!scriptFoglio();
 const fogliOk = () => scriptOn() || !!tokenValido(SCOPI.sheets);
 /* si può usare questo servizio Google? con lo script sempre, altrimenti serve il permesso personale ancora valido */
 const collegato = (scope) => scriptOn() || !!tokenValido(scope);
+/* con che account gira lo script: lo dice lui (serve per il calendario, che deve essere di quell'account) */
+let accScript = null;
+function accountScript() { if (!accScript) accScript = scriptOp({ op: "chi" }).then((d) => String((d && d.account) || "").toLowerCase()).catch((e) => { accScript = null; throw e; }); return accScript; }
 async function viaScript(url, tool, i) { return scriptCall(url, { tool, i }, tool !== "get_values" && tool !== "get_spreadsheet"); }
 async function scriptOp(payload, scrive) { return scriptCall(scriptFoglio(), payload, scrive); }
 async function scriptCall(url, payload, scrive) {
@@ -2045,11 +2119,11 @@ const COLLEZIONI = [
   ["inviti", "inviti"], ["accessi", "accessi"], ["profili", "profili"], ["contatti", "contatti"],
   ["products", "products"], ["setup", "setup"], ["serate", "serate"], ["ordini", "ordini"],
   ["sponsor", "sponsor"], ["contributi", "contributi"], ["segnalazioni", "segnalazioni"],
-  ["progetti", "progetti"], ["medaglie", "medaglie"], ["posta", "posta"], ["pagamenti", "pagamenti"], ["carte", "carte"], ["cartemov", "cartemov"], ["carteric", "carteric"], ["cartechi", "cartechi"], ["ultimoaccesso", "ultimoaccesso"], ["compiti", "compiti"],
+  ["progetti", "progetti"], ["medaglie", "medaglie"], ["posta", "posta"], ["pagamenti", "pagamenti"], ["carte", "carte"], ["cartemov", "cartemov"], ["carteric", "carteric"], ["cartechi", "cartechi"], ["ultimoaccesso", "ultimoaccesso"], ["sponsorizzate", "sponsorizzate"], ["compiti", "compiti"],
 ];
 /* sul sito ognuno scarica solo quello che può vedere (le regole del database dicono lo stesso) */
 const PERMESSI = {
-  ultimoaccesso: () => isCouncil(), compiti: () => isCouncil(),
+  ultimoaccesso: () => isCouncil(), compiti: () => isCouncil(), sponsorizzate: () => isCouncil() || inGroup("marketing"),
   tessere: () => isCouncil(), contatti: () => isCouncil(), posta: () => isCouncil(), pagamenti: () => isCouncil(), richieste: () => isCouncil(),
   verbalicd: () => isCouncil(), scadenze: () => isCouncil(), anticipi: () => isCouncil(), esiti: () => isCouncil(), verbali: () => isCouncil(),
   sponsor: () => isCouncil() || inGroup("sponsor"), contributi: () => isCouncil() || inGroup("sponsor"), segnalazioni: () => isCouncil() || inGroup("sponsor"),
@@ -3237,7 +3311,7 @@ route("gr", (k) => {
     extra = `<a class="goal" href="#sponsor" style="text-decoration:none"><span class="eyebrow" style="color:var(--nero)">Raccolti nel giro ${esc(giroAttuale())}</span><span class="big">${esc(euroT(t.raccolti))}</span>${t.obiettivo ? `<div class="gbar"><b style="width:${Math.min(100, ((t.raccolti + t.promessi) / t.obiettivo) * 100)}%"></b><i style="width:${Math.min(100, (t.raccolti / t.obiettivo) * 100)}%"></i></div><span class="small"><b>Obiettivo ${esc(euroT(t.obiettivo))}</b> · promessi ${esc(euroT(t.promessi))}</span>` : ""}<span class="btn dark sm" style="align-self:flex-start">Apri Sponsor${ic("chev")}</span></a>`;
   }
   if (g.budget) extra = bloccoBudget(k);
-  if (k === "marketing") extra = (can.editoriale() ? bloccoEditoriale() : "") + `<div class="notice">Gli incontri «aperti a tutti» (per esempio le riprese) li vede ogni socio, che può dire se partecipa. Segna sempre luogo, orario e materiale.</div>`;
+  if (k === "marketing") extra = (can.sponsorizzate() ? bloccoSponsorizzate() : "") + (can.editoriale() ? bloccoEditoriale() : "") + `<div class="notice">Gli incontri «aperti a tutti» (per esempio le riprese) li vede ogni socio, che può dire se partecipa. Segna sempre luogo, orario e materiale.</div>`;
   const puoCreare = can.creaIncontro(k);
   return `<div class="wrap">
     ${backLink("gruppi", "Gruppi")}
@@ -3258,11 +3332,13 @@ route("gr", (k) => {
 route("budget", () => {
   const anno = String(new Date().getFullYear());
   const gs = Object.keys(GRUPPI).filter((k) => GRUPPI[k].budget && (isCouncil() || inGroup(k)));
-  if (!gs.length) return `<div class="wrap">${backLink("strumenti", "Strumenti")}${empty("Budget dei gruppi", "Li vedono il consiglio e i gruppi che hanno un budget.")}</div>`;
+  const mkt = can.sponsorizzate();
+  if (!gs.length && !mkt) return `<div class="wrap">${backLink("strumenti", "Strumenti")}${empty("Budget dei gruppi", "Li vedono il consiglio e i gruppi che hanno un budget.")}</div>`;
   return `<div class="wrap">${backLink("strumenti", "Strumenti")}
     <div class="pagehead"><div class="stack"><span class="eyebrow">Quanto può spendere ogni gruppo nel ${anno}</span><h1>Budget</h1></div></div>
     ${isCouncil() ? `<div class="notice small">Il consiglio fissa il budget dell'anno con «Imposta» (o «Cambia»). Le spese si scalano da sole: quelle fatte con le carte, quelle segnate qui e i rimborsi approvati. I soldi caricati sulle prepagate si dividono tra i budget da <a href="#carte">Carte → Ricarica</a>.</div>` : ""}
     ${gs.map((k) => `<div class="stack s"><h2 class="budh"><i class="sq" style="background:${colBudget(k)}"></i>${esc(GRUPPI[k].nome)}</h2>${bloccoBudget(k)}</div>`).join("")}
+    ${mkt ? `<div class="stack s"><h2 class="budh"><i class="sq" style="background:#d6457a"></i>Marketing</h2>${riepilogoMarketing(contiMarketing(), true)}</div>` : ""}
   </div>`;
 });
 function speseGruppo(k, anno = String(new Date().getFullYear())) {
@@ -3464,19 +3540,31 @@ ACT["ritira-anticipo"] = (el) => confirmSheet({ title: "Ritirare la richiesta?",
   if (anticipiMiei().some((a) => a.id === el.dataset.id && a.stato !== "inviato")) return toast("Il tesoriere l'ha già gestita: parlane con lui.");
   const d = clone(S.anticipi[ME()]); delete d.id; delete d.voci[el.dataset.id]; await wSet("anticipi/" + ME(), d); wDel(`anticipi/${ME()}/foto/${el.dataset.id}`, { quiet: true }).catch(() => {}); toast("Richiesta ritirata."); } });
 
-/* il tuo omino: forma e colore */
+/* il tuo omino: forma, colore di sfondo e colore dell'omino */
+const avScelta = (f) => { const v = (n) => (f.querySelector(`[name="${n}"]:checked`) || {}).value || ""; return { o: Number(v("o")) || 1, c: v("c"), f: v("f") }; };
+const avColori = ({ c, f }) => { const col = COLORI_AV.find((x) => x[0] === c) || COLORI_AV[0], om = COLORI_OM.find((x) => x[0] === f); return { bg: col[1], fg: om ? om[1] : col[2] }; };
 ACT["av-scegli"] = () => {
   const p = profiloAv(ME());
   openSheet({ title: "Il tuo omino", eyebrow: "Mi son", body: `<form data-form="avatar" id="fAv" class="stack">
     <div class="row" style="justify-content:center"><span id="avPrev">${av(ME(), "xl")}</span></div>
-    <div class="field"><span>Omino</span><div class="opts" style="grid-template-columns:repeat(3,minmax(0,1fr))">${[1, 2, 3].map((o) => radio("o", o, `<svg viewBox="${OM[o]}" style="width:26px;height:32px;fill:currentColor"><use href="#s-o${o}"/></svg>`, p.o === o)).join("")}</div></div>
+    <p class="small muted" id="avNota" style="text-align:center;margin:0" hidden>Così l'omino non si vede: scegli colori diversi.</p>
+    <div class="field"><span>Omino</span><div class="opts" style="grid-template-columns:repeat(3,minmax(0,1fr))">${[1, 2, 3].map((o) => radio("o", o, `<svg viewBox="${OM[o]}" style="width:28px;height:34px;fill:currentColor"><use href="#s-o${o}"/></svg>`, p.o === o)).join("")}</div></div>
+    <div class="field"><span>Colore dell'omino</span><div class="swatches">
+      <label class="sw"><input type="radio" name="f" value="" ${p.f ? "" : "checked"}><span class="auto" title="Va con lo sfondo">A</span><b class="sr">Va con lo sfondo</b></label>
+      ${COLORI_OM.map(([k, x]) => `<label class="sw"><input type="radio" name="f" value="${k}" ${p.f === k ? "checked" : ""}><span style="background:${x}" title="${k}"></span><b class="sr">${k}</b></label>`).join("")}</div></div>
     <div class="field"><span>Colore di sfondo</span><div class="swatches">${COLORI_AV.map(([k, bg]) => `<label class="sw"><input type="radio" name="c" value="${k}" ${p.c === k ? "checked" : ""}><span style="background:${bg}" title="${k}"></span><b class="sr">${k}</b></label>`).join("")}</div></div></form>`,
     foot: `<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fAv">Salva</button>`,
-    mount: (root) => { const f = root.querySelector("#fAv"); f.addEventListener("change", () => { const o = Number(f.querySelector('[name="o"]:checked').value), c = f.querySelector('[name="c"]:checked').value; const col = COLORI_AV.find((x) => x[0] === c); root.querySelector("#avPrev").innerHTML = avOmino(o, col[1], col[2], "xl"); }); } });
+    mount: (root) => {
+      const f = root.querySelector("#fAv");
+      const agg = () => { const sc = avScelta(f), k = avColori(sc); root.querySelector("#avPrev").innerHTML = avOmino(sc.o, k.bg, k.fg, "xl"); root.querySelector("#avNota").hidden = k.bg.toLowerCase() !== k.fg.toLowerCase(); };
+      f.addEventListener("change", agg); agg();
+    } });
 };
 FORMS.avatar = async (f) => {
-  const o = Number(f.querySelector('[name="o"]:checked').value), c = f.querySelector('[name="c"]:checked').value;
-  await wSet("profili/" + ME(), { o, c, at: Date.now() }); closeSheet(); toast("Omino aggiornato.");
+  const sc = avScelta(f), k = avColori(sc);
+  if (k.bg.toLowerCase() === k.fg.toLowerCase()) return toast("L'omino dello stesso colore dello sfondo non si vede: cambia uno dei due.");
+  const { id, ...prima } = S.profili[ME()] || {};
+  await wSet("profili/" + ME(), { ...prima, o: sc.o, c: sc.c, f: sc.f || null, at: Date.now() }); closeSheet(); toast("Omino aggiornato.");
 };
 
 /* ================= RIMBORSI (tesoriere) ================= */
@@ -3590,11 +3678,11 @@ let PROPOSTA_SCRIPT = true;
 function pannelloScript() {
   const u = scriptFoglio();
   if (!u && !PROPOSTA_SCRIPT) return `<p class="small muted">I numeri arrivano dal foglio Google «Registrazioni Contabili» con il tuo account: la prima volta tocca «Collega Google» e dai il permesso; serve anche l'accesso al foglio.</p>`;
-  if (u) return `<section class="drvbar"><span class="ic">${ic("check")}</span><span class="grow"><b>Google collegato tramite lo script del consiglio</b><br><span class="small muted">Registro, posta, Drive dei verbali e Google Calendar li usa lo script con l'account del consiglio: nessuno deve più collegare Google e niente scade.</span></span><button class="btn sm" data-act="fin-script">Cambia</button></section>`;
+  if (u) return `<section class="drvbar"><span class="ic">${ic("check")}</span><span class="grow"><b>Google collegato tramite lo script del consiglio</b><br><span class="small muted">Registro, Drive dei verbali e Google Calendar li usa lo script con il suo account; la posta ognuno la collega una volta sola. Nessuno deve più ricollegare Google e niente scade.</span></span><button class="btn sm" data-act="fin-script">Cambia</button></section>`;
   return `<section class="drvbar"><span class="ic">${ic("key")}</span><span class="grow"><b>Stanco di ricollegare Google?</b><br><span class="small muted">Oggi foglio, posta, Drive e Calendar usano il permesso Google di ciascuno, che scade. Collega lo script del consiglio e non servirà più, in tutta l'app.</span></span>${isCouncil() ? `<button class="btn sm pri" data-act="fin-script">Collega lo script</button>` : ""}</section>`;
 }
 ACT["fin-script"] = () => openSheet({ title: "Google senza permessi", eyebrow: "Script del consiglio", body: `<form data-form="fin-script" id="fFs" class="stack">
-  <p class="small">Nello script «BagaeraPP notifiche» (account del consiglio): <b>Esegui il deployment → Nuovo deployment</b>, tipo <b>App web</b>, esegui come <b>Me</b>, accesso <b>Chiunque</b>. Copia l'<b>URL dell'app web</b> e incollalo qui.</p>
+  <p class="small">Nello script «BagaeraPP notifiche» (con l'account che l'ha creato): <b>Esegui il deployment → Nuovo deployment</b>, tipo <b>App web</b>, esegui come <b>Me</b>, accesso <b>Chiunque</b>. Copia l'<b>URL dell'app web</b> e incollalo qui.</p>
   <label class="field"><span>URL dell'app web</span><input class="in" name="u" inputmode="url" value="${esc(cfg("finanze").script || "")}" placeholder="https://script.google.com/macros/s/…/exec"></label>
   <p class="small muted">Vale per tutta l'app: registro, posta del consiglio, Drive dei verbali e Google Calendar. Lo script controlla chi chiede: queste cose le usa solo il consiglio (le risposte di un'open call anche il gruppo che la gestisce), come prima.</p><p class="err" hidden></p></form>`,
   foot: `${cfg("finanze").script ? `<button class="btn ghost" data-act="fin-script-togli">Togli</button>` : ""}<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fFs">Prova e salva</button>` });
@@ -5289,7 +5377,7 @@ function barraCassa(s, mode, t, mine) {
 }
 route("cassa", () => {
   const ap = serateAperte();
-  const esci = kioskAttivo() ? `<button class="btn sm" data-act="kiosk-off">${ic("x")}Esci dallo schermo cassa</button>` : "";
+  const esci = kioskAttivo() ? `<button class="btn sm" data-act="kiosk-off" title="Esci dallo schermo cassa">${ic("x")}Esci<span class="lungo"> dallo schermo cassa</span></button>` : "";
   if (!can.cassa()) return kioskAttivo() ? `<div class="wrap">${empty("Nessuna cassa aperta", "Quando il consiglio apre la cassa compare qui da sola.")}<div class="btns">${esci}</div></div>` : soloConsiglio();
   if (!ap.length) {
     return `<div class="wrap">${kioskAttivo() ? "" : isCouncil() ? backLink("magazzino", "Magazzino") : backLink("home", "Home")}
@@ -5305,17 +5393,20 @@ route("cassa", () => {
   const pend = pendingMap();
   const tiles = prodotti(sellsInCassa).sort((a, b) => (a.cat === "drink" ? 0 : 1) - (b.cat === "drink" ? 0 : 1) || (a.order ?? 999) - (b.order ?? 999));
   const html = `<div class="wrap cassa">
+    <div class="ctop">
     <div class="pagehead"><div class="stack"><span class="eyebrow"><span class="dot" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--verde);margin-right:6px"></span>${s.prova ? "Cassa di prova" : s.kind === "riunione" ? "Consumi riunione" : "Cassa aperta"} · da ${esc(fTs(s.openedAt).split(" · ")[1])}</span><h1>${esc(s.name)}</h1></div>
       <div class="btns"><button class="btn sm" data-act="cassa-nome" title="Nome di questo tablet">${ic("reg")}${esc(nomeCassa() || "Dai un nome")}</button>${kioskAttivo() ? esci : `<button class="btn sm" data-act="kiosk-on" title="Il tablet resta sulla cassa, senza menu">${ic("lock")}Schermo cassa</button>`}${can.magazzino() && !kioskAttivo() ? `<button class="btn sm" data-act="listino">${ic("tag")}Listino</button>` : ""}${isCouncil() && !kioskAttivo() ? `<button class="btn sm" data-act="cassa-cassieri" data-id="${s.id}">${ic("people")}Cassieri (${(s.cassieri || []).length})</button>${s.prova ? `<button class="btn sm" data-act="prova-azzera" data-id="${s.id}">${ic("undo")}Azzera</button>` : ""}<button class="btn sm dark" data-act="${s.prova ? "prova-chiudi" : "cassa-chiudi"}" data-id="${s.id}">${s.prova ? "Chiudi la prova" : "Chiudi"}</button>` : ""}</div></div>
-    ${s.prova ? `<div class="provabar">${ic("sparkle")}<span><b>Cassa di prova.</b> Vendi pure: niente esce dal magazzino e alla chiusura non resta niente.</span></div>` : ""}
     <div class="modes due" role="group" aria-label="Modalità">${Object.entries(MODI_CASSA).map(([k, m]) => `<button data-act="cassa-mode" data-m="${k}" aria-pressed="${mode === k}">${m.l}<small>${m.s}</small></button>`).join("")}</div>
     <div class="ctot"><div><b>${esc(euro(t.cash))}</b><span>contanti</span></div><div><b>${esc(euro(t.card))}</b><span>carta</span></div><div><b>${int(t.pcs)}</b><span>pezzi venduti</span></div><div><b>${int(t.ipcs)}</b><span>uso interno</span></div></div>
+    </div>
+    ${s.prova ? `<div class="provabar">${ic("sparkle")}<span><b>Cassa di prova.</b> Vendi pure: niente esce dal magazzino e alla chiusura non resta niente.</span></div>` : ""}
     <div class="cassa-lay">
-    <div class="tiles">${tiles.map((p) => { const mc = mode === "v" ? conto[p.id] || 0 : ((mine.counts[p.id] || {}).i || 0); const tc = t.tot[p.id] || { k: 0, c: 0, i: 0 }; const left = p.track === "lots" ? lotsTotal(p) - (pend[p.id] || 0) - (mode === "v" ? conto[p.id] || 0 : 0) : null;
+    <div class="ccol"><div class="tiles">${tiles.map((p) => { const mc = mode === "v" ? conto[p.id] || 0 : ((mine.counts[p.id] || {}).i || 0); const tc = t.tot[p.id] || { k: 0, c: 0, i: 0 }; const left = p.track === "lots" ? lotsTotal(p) - (pend[p.id] || 0) - (mode === "v" ? conto[p.id] || 0 : 0) : null;
       return `<button class="tile ${left !== null && left <= 0 ? "out" : ""}" data-act="tap" data-id="${p.id}" aria-label="${esc(p.name)}: aggiungi uno"><span class="tn">${esc(p.name)}</span><span class="tp"><b>${esc(euroT(mode === "v" ? prezzoDi(p, fasciaOra()) : p.price))}</b>${tc.k + tc.c + tc.i ? `${tc.k + tc.c} ${tc.k + tc.c === 1 ? "venduto" : "venduti"}${tc.i ? ` · ${tc.i} int.` : ""}` : left !== null ? `${int(left)} in magazzino` : "&nbsp;"}</span>${mc ? `<span class="cnt">${mc}</span><span class="minus" data-act="untap" data-id="${p.id}" role="button" aria-label="Togli uno">−</span>` : ""}</button>`; }).join("")}</div>
+    ${(() => { const bt = prodotti((p) => p.track === "bottles" && ((p.closed || 0) + (p.open || 0) > 0)); return bt.length ? `<details class="panel bottiglie"><summary class="ph" style="cursor:pointer"><h3>Bottiglie e fusti</h3><span class="pill">${bt.reduce((x, p) => x + (p.open || 0), 0)} aperti</span></summary><div class="list">${bt.map((p) => `<div class="li"><span class="grow"><span class="t">${esc(p.name)}</span><br><span class="s">${int(p.closed)} ${isKeg(p) ? "chiusi" : "chiuse"} · ${int(p.open)} ${isKeg(p) ? "attaccati" : "aperte"}</span></span><button class="btn sm" data-act="bott-apri" data-id="${p.id}" ${p.closed > 0 ? "" : "disabled"}>${isKeg(p) ? "Attacca" : "Apri"}</button><button class="btn sm ghost" data-act="bott-finita" data-id="${p.id}" ${p.open > 0 ? "" : "disabled"}>${isKeg(p) ? "Finito" : "Finita"}</button></div>`).join("")}</div></details>` : ""; })()}
+    </div>
     ${barraCassa(s, mode, t, mine)}
     </div>
-    ${(() => { const bt = prodotti((p) => p.track === "bottles" && ((p.closed || 0) + (p.open || 0) > 0)); return bt.length ? `<details class="panel"><summary class="ph" style="cursor:pointer"><h3>Bottiglie e fusti</h3><span class="pill">${bt.reduce((x, p) => x + (p.open || 0), 0)} aperti</span></summary><div class="list">${bt.map((p) => `<div class="li"><span class="grow"><span class="t">${esc(p.name)}</span><br><span class="s">${int(p.closed)} ${isKeg(p) ? "chiusi" : "chiuse"} · ${int(p.open)} ${isKeg(p) ? "attaccati" : "aperte"}</span></span><button class="btn sm" data-act="bott-apri" data-id="${p.id}" ${p.closed > 0 ? "" : "disabled"}>${isKeg(p) ? "Attacca" : "Apri"}</button><button class="btn sm ghost" data-act="bott-finita" data-id="${p.id}" ${p.open > 0 ? "" : "disabled"}>${isKeg(p) ? "Finito" : "Finita"}</button></div>`).join("")}</div></details>` : ""; })()}
   </div>`;
   return { html, mount: () => schermoAcceso(true) };
 });
@@ -6238,6 +6329,7 @@ can.editoriale = () => isCouncil() || inGroup("marketing");
 const canale = (p) => CANALI[p.canale] || CANALI.altro;
 const postTutti = () => Object.values(S.post || {}).sort((a, b) => (a.data + (a.ora || "99")).localeCompare(b.data + (b.ora || "99")));
 function postMiei() { return postTutti().filter((p) => p.chi === ME() && p.stato !== "pubblicato" && p.data >= oggi() && giorniTra(oggi(), p.data) <= 2); }
+const sponsDiPost = (id) => Object.values(S.sponsorizzate || {}).filter((x) => x.post === id);
 const chipPost = (p) => { const c = canale(p); return `<span class="pchip" style="background:${c[1]};color:${c[2]}" title="${esc(c[0])}: ${esc(p.titolo)}">${esc(p.titolo)}</span>`; };
 route("editoriale", (mese) => {
   if (!can.editoriale()) return `<div class="wrap">${backLink("gr-marketing", "Marketing")}${empty("Calendario del gruppo Marketing", "Lo usano i membri del gruppo Marketing e il consiglio.")}</div>`;
@@ -6254,7 +6346,7 @@ route("editoriale", (mese) => {
   }
   const giorni = [...new Set(delMese.map((p) => p.data))];
   const riga = (p) => { const c = canale(p), s = STATI_POST[p.stato] || STATI_POST.idea;
-    return `<button class="li" data-act="post-apri" data-id="${p.id}"><span class="psq" style="background:${c[1]}"></span><span class="grow"><span class="t">${esc(p.titolo)}</span><br><span class="s">${esc(c[0])}${p.ora ? " · " + esc(p.ora) : ""}${p.chi ? " · " + esc(primoNome(p.chi)) : ""}${p.evento && S.cal[p.evento] ? " · " + esc(S.cal[p.evento].titolo) : ""}</span></span><span class="pill ${s[1]}">${s[0]}</span></button>`; };
+    return `<button class="li" data-act="post-apri" data-id="${p.id}"><span class="psq" style="background:${c[1]}"></span><span class="grow"><span class="t">${esc(p.titolo)}</span>${sponsDiPost(p.id).length ? ` <span class="pill sm">€ sponsorizzato</span>` : ""}<br><span class="s">${esc(c[0])}${p.ora ? " · " + esc(p.ora) : ""}${p.chi ? " · " + esc(primoNome(p.chi)) : ""}${p.evento && S.cal[p.evento] ? " · " + esc(S.cal[p.evento].titolo) : ""}</span></span><span class="pill ${s[1]}">${s[0]}</span></button>`; };
   const daFare = tutti.filter((p) => p.data >= oggi() && p.stato !== "pubblicato").slice(0, 3);
   return `<div class="wrap">${backLink("gr-marketing", "Marketing")}
     <div class="pagehead"><div class="stack"><span class="eyebrow">Gruppo Marketing</span><h1>Calendario editoriale</h1></div><button class="btn pri" data-act="post-nuovo">${ic("plus")}Nuovo post</button></div>
@@ -6302,15 +6394,149 @@ function bloccoEditoriale() {
       : `<div class="pb"><p class="small muted">Nessun post in programma.</p><button class="btn sm pri" data-act="post-nuovo">${ic("plus")}Aggiungi il primo</button></div>`}</section>`;
 }
 
+/* ================= SPONSORIZZATE: il budget del marketing =================
+   Il consiglio fissa quanto c'è per l'anno (budget/marketing, come gli altri budget: solo il consiglio).
+   Il gruppo Marketing lo divide tra le sponsorizzate: post, storie, reel o altro, ognuna con inizio, fine e budget.
+   Consumato: quello vero dal pannello di Meta se qualcuno lo scrive, altrimenti una stima in base ai giorni passati. */
+const TIPI_SPONS = { post: ["Post", "#d6457a"], storia: ["Storie", "#e07a1f"], reel: ["Reel", "#7b3fa0"], altro: ["Altro", "#4a5a66"] };
+const CANALI_SPONS = { instagram: "Instagram", facebook: "Facebook", insta_fb: "Instagram + Facebook", tiktok: "TikTok", altro: "Altro" };
+can.sponsorizzate = () => isCouncil() || inGroup("marketing");
+const sponsTutte = () => Object.values(S.sponsorizzate || {}).sort((a, b) => (b.dal || "").localeCompare(a.dal || ""));
+/* stato e soldi di una sponsorizzata, oggi */
+function statoSpons(x, giorno = oggi()) {
+  const budget = Number(x.budget) || 0, giorni = Math.max(1, giorniTra(x.dal, x.al) + 1);
+  const passati = giorno < x.dal ? 0 : giorno > x.al ? giorni : giorniTra(x.dal, giorno) + 1;
+  const stato = giorno < x.dal ? "programmata" : giorno > x.al ? "finita" : "in corso";
+  const reale = x.speso != null && x.speso !== "" && isFinite(Number(x.speso));
+  const consumato = reale ? Number(x.speso) : Math.round((budget * passati / giorni) * 100) / 100;
+  return { budget, giorni, passati, stato, reale, consumato, rimanente: Math.round((budget - consumato) * 100) / 100, pctGiorni: Math.round((passati / giorni) * 100) };
+}
+/* il budget dell'anno: totale (consiglio), messo nelle sponsorizzate, consumato, rimasto */
+function contiMarketing(anno = String(new Date().getFullYear())) {
+  const tot = Number(((S.budget.marketing || {}).importi || {})[anno]) || 0;
+  const dellAnno = sponsTutte().filter((x) => (x.dal || "").startsWith(anno) || (x.al || "").startsWith(anno));
+  let allocato = 0, consumato = 0; const perTipo = {};
+  for (const x of dellAnno) {
+    const st = statoSpons(x); allocato += st.budget; consumato += st.consumato;
+    const t = perTipo[x.tipo || "altro"] || (perTipo[x.tipo || "altro"] = { budget: 0, consumato: 0, n: 0 });
+    t.budget += st.budget; t.consumato += st.consumato; t.n++;
+  }
+  return { anno, tot, allocato, consumato, daAllocare: tot - allocato, rimasto: tot - consumato, perTipo, lista: dellAnno };
+}
+const pctDi = (a, b) => (b > 0 ? Math.max(0, Math.min(100, (a / b) * 100)) : 0);
+function rigaSpons(x) {
+  const st = statoSpons(x), t = TIPI_SPONS[x.tipo] || TIPI_SPONS.altro, post = x.post && S.post[x.post];
+  return `<button class="li spons" data-act="spons-apri" data-id="${x.id}"><span class="psq" style="background:${t[1]}"></span>
+    <span class="grow"><span class="t">${esc(x.titolo)}</span><br><span class="s">${esc(t[0])}${x.canale ? " · " + esc(CANALI_SPONS[x.canale] || x.canale) : ""} · ${esc(fData(x.dal))} → ${esc(fData(x.al))}${post ? " · post: " + esc(post.titolo) : ""}</span>
+      <span class="sbar2" role="img" aria-label="Consumato ${Math.round(pctDi(st.consumato, st.budget))}%"><i style="width:${pctDi(st.consumato, st.budget)}%"></i></span>
+      <span class="s">${st.stato === "in corso" ? `giorno ${st.passati} di ${st.giorni}` : st.stato} · consumati ${esc(euro(st.consumato))}${st.reale ? "" : " (stima)"} · restano <b>${esc(euro(st.rimanente))}</b></span></span>
+    <span class="v">${esc(euroT(st.budget))}<small>budget</small></span></button>`;
+}
+function riepilogoMarketing(c, link) {
+  return `<section class="panel budget"><div class="ph"><h3>Budget sponsorizzate ${c.anno}</h3>${isCouncil() ? `<button class="btn sm" data-act="budget-imposta" data-g="marketing">${ic("edit")}${c.tot ? "Cambia" : "Imposta"}</button>` : ""}</div>
+    <div class="pb"><div class="row between"><span><span class="big" style="font-size:2rem">${esc(euroT(c.rimasto))}</span><br><span class="small muted">rimasti su ${esc(euroT(c.tot))}</span></span><span class="v" style="font:700 1.1rem var(--f-display);text-align:right">${esc(euroT(c.consumato))}<br><span class="small muted">consumati</span></span></div>
+      ${c.tot ? `<div class="bar" role="img" aria-label="Consumato ${Math.round(pctDi(c.consumato, c.tot))}%"><i class="${c.consumato > c.tot ? "over" : ""}" style="width:${pctDi(c.consumato, c.tot)}%"></i></div>
+        <p class="small">${c.daAllocare >= 0 ? `Messi nelle sponsorizzate <b>${esc(euro(c.allocato))}</b> · ancora da decidere <b>${esc(euro(c.daAllocare))}</b>` : `<span class="bad">Le sponsorizzate superano il budget di ${esc(euro(-c.daAllocare))}</span>`}</p>`
+      : `<p class="small muted">${isCouncil() ? "Fissa quanto può spendere il marketing quest'anno con «Imposta»." : "Il consiglio non ha ancora fissato il budget del marketing per quest'anno."}</p>`}
+      ${Object.keys(c.perTipo).length ? `<div class="chips">${Object.entries(c.perTipo).map(([k, v]) => `<span class="pill"><i class="sq" style="background:${(TIPI_SPONS[k] || TIPI_SPONS.altro)[1]}"></i>${esc((TIPI_SPONS[k] || TIPI_SPONS.altro)[0])} ${esc(euroT(v.budget))}</span>`).join("")}</div>` : ""}
+      ${link ? `<div class="btns"><a class="btn sm pri" href="#sponsorizzate">${ic("film")}Sponsorizzate</a></div>` : ""}</div></section>`;
+}
+route("sponsorizzate", () => {
+  if (!can.sponsorizzate()) return `<div class="wrap">${backLink("gr-marketing", "Marketing")}${empty("Sponsorizzate del marketing", "Le vedono il gruppo Marketing e il consiglio.")}</div>`;
+  const c = contiMarketing(), oggiS = oggi();
+  const inCorso = c.lista.filter((x) => x.dal <= oggiS && x.al >= oggiS), prossime = c.lista.filter((x) => x.dal > oggiS).reverse(), finite = c.lista.filter((x) => x.al < oggiS);
+  const altre = sponsTutte().filter((x) => !c.lista.includes(x)).slice(0, 10);
+  const sez = (t, l) => (l.length ? `<section class="panel"><div class="ph"><h3>${t}</h3><span class="pill">${l.length}</span></div><div class="list">${l.map(rigaSpons).join("")}</div></section>` : "");
+  return `<div class="wrap">${backLink("gr-marketing", "Marketing")}
+    <div class="pagehead"><div class="stack"><span class="eyebrow">Gruppo Marketing · budget dal consiglio</span><h1>Sponsorizzate</h1></div><button class="btn pri" data-act="spons-nuova">${ic("plus")}Nuova</button></div>
+    ${riepilogoMarketing(c, false)}
+    ${sez("In corso", inCorso)}${sez("In programma", prossime)}${sez("Finite", finite)}
+    ${!c.lista.length ? `<div class="pb"><p class="small muted">Ancora nessuna sponsorizzata quest'anno. Con «Nuova» decidete quanto mettere su un post, una storia o altro, e per quanti giorni.</p></div>` : ""}
+    ${altre.length ? sez("Anni passati", altre) : ""}
+    <p class="small muted">«Consumato» è quello che scrivete dal pannello delle inserzioni di Meta; finché non c'è, l'app lo stima in base ai giorni passati.</p>
+  </div>`;
+});
+function formSpons(x, pre = {}) {
+  const v = x || { tipo: "post", canale: "insta_fb", dal: pre.dal || oggi(), al: pre.al || isoOf(new Date(Date.now() + 6 * 864e5)), budget: "" };
+  const c = contiMarketing(), libero = c.daAllocare + (x ? Number(x.budget) || 0 : 0);
+  const posts = postTutti().filter((p) => p.data >= isoOf(new Date(Date.now() - 60 * 864e5)) || p.id === v.post).slice(-60).reverse();
+  openSheet({ title: x ? "Sponsorizzata" : "Nuova sponsorizzata", eyebrow: c.tot ? `Da decidere: ${euro(libero)} su ${euro(c.tot)}` : "Budget del marketing", body: `<form data-form="spons" data-id="${x ? x.id : ""}" id="fSpo" class="stack">
+    <label class="field"><span>Cosa sponsorizzate</span><input class="in" name="titolo" required maxlength="90" value="${esc(v.titolo || "")}" placeholder="es. Lancio biglietti Fem Fest" ${x ? "" : "autofocus"}></label>
+    <div class="field"><span>Su cosa</span><div class="opts">${Object.entries(TIPI_SPONS).map(([k, t]) => radio("tipo", k, `<i class="sq" style="background:${t[1]}"></i>${esc(t[0])}`, v.tipo === k)).join("")}</div></div>
+    <label class="field"><span>Dove</span><select class="in" name="canale">${Object.entries(CANALI_SPONS).map(([k, l]) => opt(k, l, v.canale === k)).join("")}</select></label>
+    <div class="fields"><label class="field"><span>Inizio</span><input class="in" type="date" name="dal" required value="${esc(v.dal)}"></label><label class="field"><span>Fine</span><input class="in" type="date" name="al" required value="${esc(v.al)}"></label></div>
+    <div class="fields"><label class="field"><span>Budget</span><span class="money"><b>€</b><input name="budget" inputmode="decimal" required value="${esc(String(v.budget ?? ""))}" placeholder="es. 30"></span></label>
+      <label class="field"><span>Consumato finora <small>(dal pannello di Meta)</small></span><span class="money"><b>€</b><input name="speso" inputmode="decimal" value="${v.speso == null ? "" : esc(String(v.speso))}" placeholder="vuoto = stima"></span></label></div>
+    <p class="small muted" id="spoInfo"></p>
+    ${posts.length ? `<label class="field"><span>Post del calendario editoriale</span><select class="in" name="post">${opt("", "Nessuno")}${posts.map((p) => opt(p.id, `${fData(p.data)} · ${p.titolo}`, v.post === p.id)).join("")}</select></label>` : ""}
+    <label class="field"><span>Note</span><textarea class="in" name="note" rows="2" maxlength="500" placeholder="Pubblico, età, zona, obiettivo…">${esc(v.note || "")}</textarea></label>
+    <p class="err" hidden></p></form>`,
+    foot: `${x ? `<button class="btn danger" data-act="spons-del" data-id="${x.id}" aria-label="Elimina">${ic("trash")}</button>` : ""}<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fSpo">${x ? "Salva" : "Aggiungi"}</button>`,
+    mount: (root) => {
+      const f = root.querySelector("#fSpo"), info = root.querySelector("#spoInfo");
+      const agg = () => { const b = leggiImporto(f.elements.budget.value), dal = f.elements.dal.value, al = f.elements.al.value;
+        if (!(b > 0) || !dal || !al || al < dal) { info.textContent = ""; return; }
+        const g = giorniTra(dal, al) + 1;
+        info.innerHTML = `${g} ${g === 1 ? "giorno" : "giorni"} · circa ${esc(euro(b / g))} al giorno${c.tot && b > libero + 0.001 ? ` · <b class="bad">supera di ${esc(euro(b - libero))} quello che resta da decidere</b>` : ""}`; };
+      ["input", "change"].forEach((ev) => f.addEventListener(ev, agg)); agg();
+    } });
+}
+ACT["spons-nuova"] = () => { if (can.sponsorizzate()) formSpons(null); };
+ACT["spons-apri"] = (el) => { const x = S.sponsorizzate[el.dataset.id]; if (x) formSpons(x); };
+FORMS.spons = async (f) => {
+  const id = f.dataset.id || genId("sp"), prima = S.sponsorizzate[f.dataset.id];
+  const budget = leggiImporto(fv(f, "budget")), spesoTxt = fv(f, "speso"), speso = spesoTxt ? leggiImporto(spesoTxt) : null;
+  const d = { titolo: fv(f, "titolo"), tipo: (f.querySelector('[name="tipo"]:checked') || {}).value || "post", canale: fv(f, "canale") || null, dal: fv(f, "dal"), al: fv(f, "al"),
+    budget, speso: speso != null && isFinite(speso) ? speso : null, post: fv(f, "post") || null, note: fv(f, "note"), agg: Date.now(), aggDa: ME() };
+  if (!d.titolo) return fErr(f, "Scrivi cosa sponsorizzate.");
+  if (!d.dal || !d.al) return fErr(f, "Metti inizio e fine."); if (d.al < d.dal) return fErr(f, "La fine viene prima dell'inizio.");
+  if (!(budget > 0)) return fErr(f, "Scrivi il budget, es. 30.");
+  if (spesoTxt && !(speso >= 0)) return fErr(f, "Il consumato deve essere un importo, es. 12,40.");
+  await wSet("sponsorizzate/" + id, { ...(prima ? strip(prima) : { creato: Date.now(), creatoDa: ME() }), ...d });
+  closeSheet(); toast(prima ? "Sponsorizzata salvata." : "Sponsorizzata aggiunta.");
+};
+ACT["spons-del"] = (el) => confirmSheet({ title: "Eliminare la sponsorizzata?", text: "I soldi tornano «da decidere» nel budget del marketing.", ok: "Elimina", danger: true, onOk: async () => { await wDel("sponsorizzate/" + el.dataset.id); closeSheet(); } });
+/* nella pagina del gruppo Marketing e in Budget */
+function bloccoSponsorizzate() {
+  const c = contiMarketing(), corso = c.lista.filter((x) => statoSpons(x).stato === "in corso");
+  return `${riepilogoMarketing(c, true)}${corso.length ? `<section class="panel"><div class="ph"><h3>Sponsorizzate in corso</h3></div><div class="list">${corso.map(rigaSpons).join("")}</div></section>` : ""}`;
+}
+
+/* ================= GIOCHI: la parte vera sta in un file a parte (giochi.txt) =================
+   L'app resta leggera: il file dei giochi si scarica solo quando qualcuno apre la sezione, poi resta in memoria
+   (e il telefono lo tiene anche senza rete). Qui c'è solo il caricatore e la pagina d'attesa. */
+const GIOCHI_V = "af6d09833d";
+const GIOCHI = { stato: null, err: "" }; /* null · carico · ok · errore */
+function caricaGiochi() {
+  if (GIOCHI.stato) return; /* già scaricato, in arrivo o andato male (si riprova solo col pulsante) */
+  GIOCHI.stato = "carico"; GIOCHI.err = "";
+  const testo = window.__giochiCarica ? window.__giochiCarica() : fetch("giochi.txt?v=" + GIOCHI_V).then((r) => { if (!r.ok) throw new Error("HTTP " + r.status); return r.text(); });
+  Promise.resolve(testo).then((t) => new Promise((ok, ko) => {
+    const s = document.createElement("script"), u = URL.createObjectURL(new Blob([t], { type: "text/javascript" }));
+    s.src = u; s.onload = () => { URL.revokeObjectURL(u); ok(); }; s.onerror = () => ko(new Error("file dei giochi non valido"));
+    document.head.appendChild(s);
+  })).then(() => { GIOCHI.stato = "ok"; if (S.route.name === "giochi") render(true); },
+    (e) => { console.warn("giochi", e); GIOCHI.stato = "errore"; GIOCHI.err = (e && e.message) || ""; if (S.route.name === "giochi") render(true); });
+}
+ACT["giochi-riprova"] = () => { GIOCHI.stato = null; caricaGiochi(); render(true); };
+/* il file dei giochi, quando arriva, sostituisce questa pagina con la sua */
+route("giochi", () => {
+  if (!WEB) return `<div class="wrap">${empty("I giochi sono sul sito", "Wordy, Bagaera Impact e gli altri giochi si aprono da bagaera.it/app.")}</div>`;
+  caricaGiochi();
+  return `<div class="wrap"><div class="pagehead"><div class="stack"><span class="eyebrow">Per staccare un attimo</span><h1>Giochi</h1></div></div>
+    ${GIOCHI.stato === "errore" ? `<div class="notice bad">Non riesco a scaricare i giochi${S.offline || !navigator.onLine ? ": sei senza rete" : ""}. <button class="btn sm" data-act="giochi-riprova">Riprova</button></div>` : `<div class="loading">${omini()}<p class="eyebrow">Arrivano i giochi…</p></div>`}</div>`;
+});
+
 /* ================= STRUMENTI E BARRA IN BASSO: ognuno li sistema come gli servono ================= */
 const SEZIONI = { calendario: { h: "calendario", l: "Calendario", i: "cal" }, strumenti: { h: "strumenti", l: "Strumenti", i: "tools" }, gruppi: { h: "gruppi", l: "Gruppi", i: "people" }, mison: { h: "mison", l: "Mi son", i: "user" } };
 const MAX_BARRA = 4; // più la Home, sempre prima
 /* categorie degli strumenti: aiutano a trovare subito quello che serve */
 const CATEGORIE = [
   ["serate", "Serate e magazzino", ["cassa", "magazzino", "ordini", "allestimenti"]],
-  ["soldi", "Soldi", ["finanze", "budget", "carte", "rimborsi", "pagamenti", "sponsor"]],
+  ["soldi", "Soldi", ["finanze", "budget", "sponsorizzate", "carte", "rimborsi", "pagamenti", "sponsor"]],
   ["soci", "Soci e comunicazione", ["soci", "compiti", "opencall", "editoriale"]],
   ["documenti", "Documenti e scadenze", ["verbali", "scadenze", "posta"]],
+  ["svago", "Svago", ["giochi"]],
 ];
 const ORDINE_BASE = CATEGORIE.flatMap(([, , hs]) => hs);
 function perCategoria(lista) {
@@ -6359,7 +6585,7 @@ route("strumenti", () => {
     <div class="pagehead"><div class="stack"><span class="eyebrow">Quello che usi tu</span><h1>Strumenti</h1></div><button class="btn" data-act="str-edit">${ic("edit")}Personalizza</button></div>
     ${vis.length ? grigliaStrumenti(vis, false) : empty("Nessuno strumento in vista", "Li hai nascosti tutti: tocca Personalizza per rimetterli.")}
     ${nas.length ? `<section class="panel"><div class="ph"><h3>Nascosti</h3><span class="pill">${nas.length}</span></div><div class="list">${nas.map((t) => `<a class="li" href="#${t.h}">${ic(t.i)}<span class="grow"><span class="t">${esc(t.l)}</span><br><span class="s">${esc(t.s)}</span></span>${t.n ? `<span class="badge">${t.n}</span>` : ic("chev", "chev")}</a>`).join("")}</div></section>` : ""}
-    ${sezioni.length ? `<section class="panel"><div class="ph"><h3>Le altre sezioni</h3></div><div class="list">${sezioni.map((x) => `<a class="li" href="#${x.h}">${ic(x.i)}<span class="grow t">${esc(x.l)}</span>${ic("chev", "chev")}</a>`).join("")}</div></section>` : ""}
+    ${sezioni.length ? `<section class="panel"><div class="ph"><h3>Le altre sezioni</h3></div><div class="list">${sezioni.map((x) => `<a class="li" href="#${x.h}"><span class="ic">${ic(x.i)}</span><span class="grow t">${esc(x.l)}</span>${ic("chev", "chev")}</a>`).join("")}</div></section>` : ""}
   </div>`;
 });
 function vistaPersonalizza(tutti) {
@@ -6404,6 +6630,7 @@ const TIPI_NOTIFICA = [
   ["soldi", "I tuoi rimborsi", "quando il tuo rimborso è approvato, pagato o rifiutato"],
   ["lavoro", "Cose da fare", "compiti affidati a te, post da pubblicare e nuove open call"],
   ["verbali", "Verbali delle assemblee", "quando ne esce uno nuovo"],
+  ["giochi", "Giochi", "la parola nuova di Wordy, ogni sera alle 20"],
 ];
 let mioPush = null, pushUnsub = null;
 const iPhone = () => /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
@@ -6744,7 +6971,9 @@ const gcalPuo = () => (scriptOn() ? !cfg("gcal").calendarId || gcalDelConsiglio(
 /* crea il calendario «Bagaera» e dà il permesso di scriverci al consiglio */
 async function gcalCrea() {
   const cal = await gcalApi(GC + "calendars", { method: "POST", body: JSON.stringify({ summary: "Bagaera", description: "Gli appuntamenti di BagaeraPP (bagaera.it/app). Si aggiorna da solo: non modificarlo a mano.", timeZone: "Europe/Rome" }) });
-  await wSet("config/gcal", { calendarId: cal.id, proprietario: scriptOn() ? ADMIN_EMAILS[0] : S.me.email, creato: Date.now(), scrittori: [] });
+  /* con lo script il calendario è dell'account con cui gira lo script: lo chiedo a lui invece di darlo per scontato */
+  const dello = scriptOn() ? await accountScript().catch(() => "") : "";
+  await wSet("config/gcal", { calendarId: cal.id, proprietario: scriptOn() ? dello || "lo script del consiglio" : S.me.email, creato: Date.now(), scrittori: [], ...(scriptOn() ? { consiglioOk: true } : {}) });
   return cal.id;
 }
 async function gcalPermessi() {
@@ -6800,7 +7029,7 @@ function gcalErrore(e) {
 }
 ACT["gcal-apri"] = () => openSheet({ title: "Google Calendar", eyebrow: "Notifiche degli appuntamenti", live: true, body: () => {
   const g = cfg("gcal"), tok = gcalPuo();
-  if (scriptOn() && g.calendarId && !gcalDelConsiglio()) { gcalProvaScript(); return `<p>Ora Google Calendar lo aggiorna lo script con l'account del consiglio (${esc(ADMIN_EMAILS[0])}). Il calendario «Bagaera» però l'ha creato <b>${esc(g.proprietario || "un altro account")}</b>: serve che lo dia all'account del consiglio, una volta sola.</p>
+  if (scriptOn() && g.calendarId && !gcalDelConsiglio()) { gcalProvaScript(); return `<p>Ora Google Calendar lo aggiorna lo script del consiglio. Il calendario «Bagaera» però l'ha creato <b>${esc(g.proprietario || "un altro account")}</b>: serve che lo dia all'account del consiglio, una volta sola.</p>
     ${String(g.proprietario || "").toLowerCase() === String(S.me.email || "").toLowerCase() ? `<button class="btn pri block" data-act="gcal-cedi">${ic("key")}Dai il calendario all'account del consiglio</button><p class="tiny muted">Google ti chiede il permesso un'ultima volta, poi non serve più.</p>` : `<div class="notice small">Chiedi a ${esc(g.proprietario || "chi l'ha creato")} di aprire qui (Calendario → Google Calendar) e toccare «Dai il calendario all'account del consiglio».</div>`}
     ${S.ui.gcalStato ? `<p class="small" role="status">${esc(S.ui.gcalStato)}</p>` : ""}`; }
   const stato = S.ui.gcalStato || "";
@@ -6826,7 +7055,7 @@ ACT["gcal-cedi"] = async (el) => {
   if (!tokenValido(SCOPI.calendar)) { try { localStorage.setItem("bagaera-gcal-dopo", "1"); } catch (e) {} return vaiAGoogle([SCOPI.calendar], "#calendario"); }
   el.disabled = true; S.ui.gcalStato = "Do il calendario all'account del consiglio…"; drawSheet();
   try {
-    await gapi(`${GC}calendars/${enc(cfg("gcal").calendarId)}/acl?sendNotifications=false`, { diretto: true, method: "POST", body: JSON.stringify({ role: "owner", scope: { type: "user", value: ADMIN_EMAILS[0] } }) }, SCOPI.calendar);
+    await gapi(`${GC}calendars/${enc(cfg("gcal").calendarId)}/acl?sendNotifications=false`, { diretto: true, method: "POST", body: JSON.stringify({ role: "owner", scope: { type: "user", value: await accountScript() } }) }, SCOPI.calendar);
     await wUpd("config/gcal", { consiglioOk: true }); S.config.gcal = { ...cfg("gcal"), consiglioOk: true };
     S.ui.gcalStato = "Fatto: da ora il calendario lo aggiorna lo script."; drawSheet(); await esegui();
   } catch (e) { S.ui.gcalStato = "Non ci sono riuscito: " + gcalErrore(e); el.disabled = false; drawSheet(); }
@@ -6834,7 +7063,7 @@ ACT["gcal-cedi"] = async (el) => {
 ACT["gcal-collega"] = () => { try { localStorage.setItem("bagaera-gcal-dopo", "1"); } catch (e) {} vaiAGoogle([SCOPI.calendar], "#calendario"); };
 ACT["gcal-crea"] = async (el) => {
   el.disabled = true; S.ui.gcalStato = "Creo il calendario…"; drawSheet();
-  try { if (!cfg("gcal").calendarId) { const id = await gcalCrea(); S.config.gcal = { ...cfg("gcal"), calendarId: id, proprietario: S.me.email }; } await esegui(); }
+  try { if (!cfg("gcal").calendarId) { const id = await gcalCrea(); S.config.gcal = { ...cfg("gcal"), calendarId: id, ...(scriptOn() ? { consiglioOk: true } : { proprietario: S.me.email }) }; } await esegui(); }
   catch (e) { S.ui.gcalStato = "Non ci sono riuscito: " + gcalErrore(e); drawSheet(); }
 };
 ACT["gcal-allinea"] = async (el) => { el.disabled = true; await esegui(); };
