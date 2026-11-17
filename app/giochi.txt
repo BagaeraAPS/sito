@@ -14,17 +14,20 @@ const ora = () => (typeof window.__giochiOra === "function" ? window.__giochiOra
 const oggiG = () => isoOf(new Date(ora()));
 function giornoWordy(t = ora()) { const d = new Date(t); if (d.getHours() < 20) d.setDate(d.getDate() - 1); return isoOf(d); }
 function prossimaParola(t = ora()) { const d = new Date(t); d.setHours(20, 0, 0, 0); if (d.getTime() <= t) d.setDate(d.getDate() + 1); return d.getTime(); }
-/* settimana ISO («2026-W47»): le classifiche settimanali ripartono il lunedì */
+/* la settimana delle classifiche va da giovedì a mercoledì: alla riunione del mercoledì sera si vede quella completa,
+   e da giovedì si riparte. La chiave è la settimana ISO del giorno spostato di 3 giorni (giovedì → lunedì), es. «2026-W46» */
+const SPOSTA = 3;
 function settimana(iso) {
-  const d = dOf(iso); d.setHours(12);
+  const d = dOf(addDays(iso, -SPOSTA)); d.setHours(12);
   d.setDate(d.getDate() - ((d.getDay() + 6) % 7) + 3);
   const y = d.getFullYear(), g4 = new Date(y, 0, 4, 12);
   return y + "-W" + pad(1 + Math.round(((d - g4) / 864e5 - 3 + ((g4.getDay() + 6) % 7)) / 7));
 }
 const settOra = () => settimana(oggiG());
-const lunedi = (iso) => addDays(iso, -((dOf(iso).getDay() + 6) % 7));
+/* il giovedì da cui parte la settimana di quel giorno */
+const inizioSett = (iso) => addDays(iso, -((dOf(iso).getDay() + 3) % 7));
 function periodo(iso) {
-  const a = dOf(lunedi(iso)), b = dOf(addDays(lunedi(iso), 6));
+  const a = dOf(inizioSett(iso)), b = dOf(addDays(inizioSett(iso), 6));
   return a.getMonth() === b.getMonth() ? `dal ${a.getDate()} al ${b.getDate()} ${MESI[b.getMonth()]}` : `dal ${a.getDate()} ${MESI[a.getMonth()].slice(0, 3)} al ${b.getDate()} ${MESI[b.getMonth()].slice(0, 3)}`;
 }
 const durata = (ms) => { const s = Math.round((ms || 0) / 1000); return s >= 3600 ? `${Math.floor(s / 3600)}:${pad(Math.floor(s / 60) % 60)}:${pad(s % 60)}` : `${Math.floor(s / 60)}:${pad(s % 60)}`; };
@@ -142,7 +145,7 @@ function pannelloClassifica(g) {
   const voci = GL[g].voci, cur = ((S.ui.gxTab || {})[g]) || voci[0][0];
   return `<section class="panel gx-pcl"><div class="ph"><h3>Classifica</h3><div class="seg" role="group" aria-label="Quale classifica">${voci.map(([k, l]) => `<button data-act="gx-tab" data-g="${g}" data-v="${k}" aria-pressed="${cur === k}">${l}</button>`).join("")}</div></div>
     ${D.err ? `<div class="pb"><div class="notice warn small">Le classifiche non sono ancora attive: nel database manca la regola per «giocatori». Si può giocare lo stesso, ma i punteggi non restano.</div></div>` : D.pronto ? tabella(righe(g, cur), VUOTO[cur]) : `<p class="small muted gx-vuoto">Carico la classifica…</p>`}
-    ${cur === "sett" ? `<p class="tiny muted gx-nota">Si riparte da zero ogni lunedì.</p>` : ""}</section>`;
+    ${cur === "sett" ? `<p class="tiny muted gx-nota">La settimana va da giovedì a mercoledì: alla riunione del mercoledì sera c'è la classifica completa, giovedì si riparte da zero.</p>` : ""}</section>`;
 }
 ACT["gx-tab"] = (el) => { S.ui.gxTab = { ...(S.ui.gxTab || {}), [el.dataset.g]: el.dataset.v }; render(true); };
 
@@ -170,7 +173,7 @@ function hub() {
   return `<div class="wrap gx">
     <div class="pagehead"><div class="stack"><span class="eyebrow">Per staccare un attimo</span><h1>Giochi</h1></div></div>
     <div class="gx-hub">${ORDINE.map((g) => `<a class="gx-card gk-${g}" href="#giochi-${g}"><span class="gx-ico">${ICO[g]()}</span><span class="gx-ct"><b>${esc(GL[g].n)}</b><small>${esc(D.pronto ? stato(g) : "…")}</small></span>${g === "wordy" && nuova ? `<span class="pill solid gx-nuova">Nuova</span>` : ""}<span class="gx-lead">${inTesta(g)}</span></a>`).join("")}</div>
-    <p class="small muted">Ogni gioco ha la sua classifica, della settimana e di sempre. La parola di Wordy cambia ogni sera alle 20.</p>
+    <p class="small muted">Ogni gioco ha la sua classifica, della settimana e di sempre. La settimana va da giovedì a mercoledì, così alla riunione del mercoledì sera c'è quella completa. La parola di Wordy cambia ogni sera alle 20.</p>
   </div>`;
 }
 function testa(g, sotto, bottone, extra = "") {
@@ -488,7 +491,7 @@ function treninoApri(box) {
   const fr = (d) => `<button class="tr-b ${d}" data-d="${d}" aria-label="${{ su: "Su", giu: "Giù", sx: "Sinistra", dx: "Destra" }[d]}" tabindex="-1">${ic({ su: "up", giu: "down", sx: "back", dx: "chev" }[d])}</button>`;
   box.innerHTML = `<div class="tr"><div class="tr-board"><canvas class="tr-c" aria-label="Il trenino"></canvas><div class="tr-msg"></div></div><div class="tr-pad">${fr("su")}${fr("sx")}${fr("giu")}${fr("dx")}</div></div>`;
   const wrap = box.querySelector(".tr"), cv = box.querySelector("canvas"), x = cv.getContext("2d"), pad = box.querySelector(".tr-pad"), msgEl = box.querySelector(".tr-msg");
-  const OMP = [1, 2, 3].map((n) => { const el = document.querySelector("#s-o" + n + " path"); return el && window.Path2D ? { p: new Path2D(el.getAttribute("d")), vb: OM[n].split(" ").map(Number) } : null; });
+  const OMP = OMINI.map((n) => { const el = document.querySelector("#s-o" + n + " path"); return el && window.Path2D ? { p: new Path2D(el.getAttribute("d")), vb: OM[n].split(" ").map(Number) } : null; });
   function omino(n, cx, cy, size, col) {
     const o = OMP[n - 1]; x.fillStyle = col;
     if (!o) { x.fillRect(cx - size / 4, cy - size / 2, size / 2, size); return; }
@@ -499,7 +502,7 @@ function treninoApri(box) {
   const STILI = [["#f7ea23", "#1d1a08"], ["#37bfef", "#06222e"], ["#ffffff", "#2a952d"], ["#f5b2c4", "#3a0d1c"], ["#0b0c0b", "#f7ea23"], ["#5fc962", "#0b2412"]].map(([bg, fg]) => ({ bg, fg }));
   let st, raf = 0, last = 0, cell = 20;
   function libera() { for (let k = 0; k < 600; k++) { const p = { x: Math.floor(Math.random() * C), y: Math.floor(Math.random() * R) }; if (!st.pos.some((q) => q.x === p.x && q.y === p.y) && !(st.cibo && st.cibo.x === p.x && st.cibo.y === p.y) && !(st.birra && st.birra.x === p.x && st.birra.y === p.y)) return p; } return { x: 0, y: 0 }; }
-  function cibo() { const p = libera(); st.cibo = { ...p, s: { ...STILI[Math.floor(Math.random() * STILI.length)], o: 1 + Math.floor(Math.random() * 3) } }; }
+  function cibo() { const p = libera(); st.cibo = { ...p, s: { ...STILI[Math.floor(Math.random() * STILI.length)], o: OMINI[Math.floor(Math.random() * OMINI.length)] } }; }
   function nuova() {
     st = { pos: [{ x: 5, y: 9 }, { x: 4, y: 9 }, { x: 3, y: 9 }], chi: [{ bg: "#2a952d", fg: "#ffffff", o: 1 }, { bg: "#f7ea23", fg: "#1d1a08", o: 2 }, { bg: "#37bfef", fg: "#06222e", o: 3 }], dir: [1, 0], coda: [], cibo: null, birra: null, punti: 0, presi: 0, passo: 175, acc: 0, via: false, finito: false, t: 0 };
     cibo(); msgEl.textContent = "Tocca una freccia per partire"; msgEl.hidden = false;
@@ -574,7 +577,7 @@ function treninoApri(box) {
 /* =================================================================== MEMORY */
 function memoryApri(box) {
   const scelte = mescola(FOTO.map((_, i) => i)).slice(0, 8), carte = mescola([...scelte, ...scelte]);
-  box.innerHTML = `<div class="mm"><div class="mm-g">${carte.map((p, i) => `<button class="mm-c" data-p="${p}" aria-label="Carta ${i + 1}, coperta"><span class="in"><span class="b">${om(1 + (i % 3), "")}</span><span class="f"><img src="${fotoUrl(p)}" alt="" draggable="false"></span></span></button>`).join("")}</div></div>`;
+  box.innerHTML = `<div class="mm"><div class="mm-g">${carte.map((p, i) => `<button class="mm-c" data-p="${p}" aria-label="Carta ${i + 1}, coperta"><span class="in"><span class="b">${om(OMINI[i % OMINI.length], "")}</span><span class="f"><img src="${fotoUrl(p)}" alt="" draggable="false"></span></span></button>`).join("")}</div></div>`;
   let su = [], mosse = 0, coppie = 0, t0 = 0, blocco = false, finito = false;
   const tick = setInterval(() => hudM(), 500);
   const hudM = () => hud(`<span>${mosse} ${mosse === 1 ? "mossa" : "mosse"}</span><span>${durata(t0 ? Date.now() - t0 : 0)}</span>`);
@@ -661,8 +664,9 @@ function paginaCruci() {
     ${gestione}</div>`;
 }
 /* «2026-W48» → il suo lunedì */
-function lunediDi(k) { const m = /^(\d{4})-W(\d{2})$/.exec(k); if (!m) return null; const g4 = new Date(+m[1], 0, 4, 12), l = new Date(g4); l.setDate(g4.getDate() - ((g4.getDay() + 6) % 7) + (Number(m[2]) - 1) * 7); return isoOf(l); }
-const perSett = (k) => { const l = lunediDi(k); return l ? periodo(l) : k; };
+/* «2026-W46» → il giovedì da cui parte quella settimana */
+function giovediDi(k) { const m = /^(\d{4})-W(\d{2})$/.exec(k); if (!m) return null; const g4 = new Date(+m[1], 0, 4, 12), l = new Date(g4); l.setDate(g4.getDate() - ((g4.getDay() + 6) % 7) + (Number(m[2]) - 1) * 7 + SPOSTA); return isoOf(l); }
+const perSett = (k) => { const l = giovediDi(k); return l ? periodo(l) : k; };
 const chiaveCw = (k) => "bagaera-cruci-" + k + "-" + mio();
 const salvato = (k) => { try { const m = JSON.parse(ls.get(chiaveCw(k)) || "null"); return !!(m && m.L && /[A-Z]/.test(m.L)); } catch (e) { return false; } };
 function cruciApri(box) {
@@ -805,7 +809,7 @@ FORMS["cw-salva"] = async (f) => {
   catch (e) { return; }
   S.ui.cwNuovo = null; closeSheet();
   if (sett === settOra()) { notifica("tutti", "Cruciverba: è uscito quello nuovo", `«${titolo}»: chi lo finisce prima?`, "#giochi-cruciverba", "giochi"); toast("Pubblicato: lo trovano tutti in Giochi."); }
-  else toast("Fatto: esce lunedì.");
+  else toast("Fatto: esce giovedì, dopo la riunione.");
 };
 ACT["cw-del"] = (el) => { const k = el.dataset.k, d = D.cru[k]; if (!d) return; confirmSheet({ title: "Eliminare il cruciverba?", text: `«${esc(d.titolo || "Senza titolo")}» sparisce per tutti. I tempi di chi l'ha già finito restano nelle classifiche di sempre.`, ok: "Elimina", danger: true, onOk: () => wDel("cruciverba/" + k).then(() => toast("Eliminato.")) }); };
 
