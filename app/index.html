@@ -6508,7 +6508,7 @@ function bloccoSponsorizzate() {
 /* ================= GIOCHI: la parte vera sta in un file a parte (giochi.txt) =================
    L'app resta leggera: il file dei giochi si scarica solo quando qualcuno apre la sezione, poi resta in memoria
    (e il telefono lo tiene anche senza rete). Qui c'è solo il caricatore e la pagina d'attesa. */
-const GIOCHI_V = "f704bdb1c7";
+const GIOCHI_V = "431ec3d2df";
 const GIOCHI = { stato: null, err: "" }; /* null · carico · ok · errore */
 function caricaGiochi() {
   if (GIOCHI.stato) return; /* già scaricato, in arrivo o andato male (si riprova solo col pulsante) */
