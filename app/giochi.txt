@@ -384,7 +384,7 @@ const IMP_MONDI = [
   { n: "Il lago", s: "Le nuvole hanno pescato nel lago: si va sott'acqua. Sopra c'è la superficie, sotto il fondale.", ros: [["pesce", 3], ["medusa", 2], ["biscia", 2]], g2: "anatra", terr: { lago: 1, bot: [4, 12, 20] }, mid: "luccio", boss: "lariosauro" },
   { n: "Il magazzino", s: "Qualcuno ha lasciato i fusti senza tappo, e le lattine scadute si sono svegliate.", ros: [["fusto", 3], ["lattina", 3], ["carrello", 2]], g2: "topo", terr: { top: [0, 14, 8, 1], bot: [4, 15, 8, 1] }, mid: "muletto", boss: "fustone" },
   { n: "La Fem Fest", s: "Il palco è pronto, ma la cassa ha deciso di suonare da sola. Tutto va a tempo di musica.", ros: [["nota", 3], ["bicchiere", 2], ["lattina", 1]], g2: "palloncino", mid: "faro", boss: "cassa" },
-  { n: "Il cantiere", s: "Grandi Opere: il totem si è montato da solo, e non è contento. Le impalcature non perdonano.", ros: [["martello", 3], ["torretta", 2], ["mattone", 2]], g2: "gancio", terr: { top: [0, 12, 16, 1], bot: [6, 14, 16, 1], lattice: 1 }, mid: "betoniera", boss: "totem" },
+  { n: "Il cantiere", s: "Grandi Opere: il totem si è montato da solo, e non è contento. Le impalcature non perdonano.", ros: [["martello", 3], ["torretta", [1, 2, 2]], ["mattone", 2]], g2: "gancio", terr: { top: [0, 12, 16, 1], bot: [6, 14, 16, 1], lattice: 1 }, mid: "betoniera", boss: "totem" },
   { n: "La burocrazia", s: "Manca un permesso per la festa. Si va in Comune, numerino in mano.", ros: [["multa", 3], ["timbro", 2], ["modulo", 3]], g2: "raccomandata", terr: { top: [3, 3, 50], bot: [0, 10, 10, 1] }, mid: "pila", boss: "sportello" },
   { n: "Il cielo della festa", s: "L'ultima nuvola è sopra la piazza: o lei o la festa.", ros: [["zanzara", 1], ["nuvola", 1], ["calabrone", 1], ["nota", 1], ["multa", 1], ["martello", 1], ["falena", 1]], g2: "fulmine", mid: "globulare", boss: "diluvio" },
 ];
@@ -673,7 +673,15 @@ function impactApri(box) {
     bicchiere: { hp: 1, pts: 15, init(e) { e.x = 30 + rnd() * (W - 40); e.y = H; e.vx = -0.3 - rnd() * 0.5; e.vy = -2.1 - rnd() * 0.6; }, mov(e) { e.vy += 0.05; e.x += e.vx; e.y += e.vy; if (e.y > H + 4 && e.t > 20) e.via = 1; } },
     palloncino: { hp: 1, pts: 20, init(e) { e.y = H; }, mov(e) { e.x -= 0.3 * vf(); e.y -= 0.35 * vf(); if (e.y < -8) e.via = 1; }, morte(e) { for (let i = 0; i < 8; i++) { const a = (i * Math.PI) / 4; tiro(e.x + 2, e.y + 3, Math.cos(a) * 0.8, Math.sin(a) * 0.8, "coriandolo"); } } },
     martello: { hp: 2, pts: 20, init(e) { e.y0 = e.y; }, mov(e) { e.x -= 0.8 * vf(); e.y = clampY(e.y0 + Math.sin(e.t / 14) * 10, 6); e.fr = (e.t >> 2) % 2; } },
-    torretta: { hp: 3, pts: 30, init(e) { e.su = rnd() < 0.5 && !!(st.terr && st.terr.top[0] >= 0); }, mov(e) { e.x -= st.vel; const tt = terrAt(e.x + 3); if (e.su && tt.t < 2) e.su = false; e.y = e.su ? tt.t : H - tt.b - 4; if (e.t % 75 === 40 && e.x < W - 6 && e.x > 4) { const [vx, vy] = mira(e, 1.3); tiro(e.x + 1, e.y + 2, vx, vy, "chiodo"); } }, terra: 1 },
+    /* la torretta del cantiere sta su un paletto (si colpisce senza strisciare sulle impalcature); lampeggia prima di
+       sparare; nel giro 1 spara più di rado e più piano */
+    torretta: { hp: 2, pts: 30, w: 6, h: 8, init(e) { e.su = rnd() < 0.5 && !!(st.terr && st.terr.top[0] >= 0); },
+      mov(e) { e.x -= st.vel; const tt = terrAt(e.x + 3); if (e.su && tt.t < 2) e.su = false; e.y = e.su ? tt.t : H - tt.b - 8;
+        const iv = [120, 95, 75][st.giro - 1], k = (e.t + 40) % iv, dentro = e.x < W - 6 && e.x > 4; e.carica = dentro && k >= iv - 24;
+        if (dentro && k === iv - 1) { const [vx, vy] = mira(e, [0.9, 1.15, 1.3][st.giro - 1]); tiro(e.x + 1, e.su ? e.y + 6 : e.y + 1, vx, vy, "chiodo"); } },
+      draw(e) { const s = ISP.torretta[0], testa = e.su ? e.y + 4 : e.y; R(e.x + 2, e.su ? e.y : e.y + 4, 2, 4, INK);
+        if (e.arm) blitArm(s, e.x, testa, e.su); else blit(s, e.x, testa, INK, e.su);
+        if (e.carica && (e.t >> 1) % 2) { const ty = e.su ? testa + 5 : testa - 2; R(e.x + 1, ty, 4, 1, INK); R(e.x + 2, ty - 1, 2, 3, INK); } }, terra: 1 },
     mattone: { hp: 1, pts: 10, cade: 1 }, timbro: { hp: 3, pts: 20, cade: 1 },
     gancio: { hp: 999, pts: 0, inv: 1, w: 5, h: 5, init(e) { e.ax = 40 + rnd() * 60; e.len = 0; }, mov(e) { e.ax -= st.vel; e.len = Math.min(34, e.len + 0.5); const a = Math.sin(e.t / 30) * 0.7; e.x = e.ax + Math.sin(a) * e.len; e.y = Math.cos(a) * e.len; if (e.ax < -12) e.via = 1; }, draw(e) { L(e.ax, 0, e.x + 2, e.y, INK); blit(ISP.gancio[0], e.x, e.y, INK); } },
     multa: { hp: 1, pts: 15, mov(e) { e.x -= 1.25 * vf(); } },
@@ -841,13 +849,13 @@ function impactApri(box) {
   /* ---------- regia del mondo ---------- */
   function programma(f, fn) { st.coda.push({ f: st.t + f, fn }); }
   function onda(k) {
-    const m = IMP_MONDI[st.mondo], ros = [...m.ros]; if (st.giro >= 2) ros.push([m.g2, 2]);
+    const m = IMP_MONDI[st.mondo], ros = m.ros.map(([t, w]) => [t, Array.isArray(w) ? w[st.giro - 1] : w]); if (st.giro >= 2) ros.push([m.g2, 2]);
     const tot = ros.reduce((s, r) => s + r[1], 0), scegli = () => { let x = rnd() * tot; for (const r of ros) { x -= r[1]; if (x <= 0) return r[0]; } return ros[0][0]; };
     const n = 5 + k * 2 + Math.floor(st.mondo / 2) + (st.giro - 1) * 2;
     let f = 20;
     for (let g = 0; g < n; g++) {
       const tipo = scegli(), d = TIPI[tipo] || {}, y = 6 + rnd() * (H - 22);
-      if (tipo === "fulmine" || d.cade || d.terra || tipo === "bicchiere" || tipo === "palloncino" || tipo === "gancio" || tipo === "fusto" || tipo === "carrello" || tipo === "topo" || tipo === "anatra") { const q = tipo === "fulmine" || tipo === "gancio" ? 1 : 2; for (let i = 0; i < q; i++) programma(f + i * 22, () => nasci(tipo, W + 2, y)); }
+      if (tipo === "fulmine" || d.cade || d.terra || tipo === "bicchiere" || tipo === "palloncino" || tipo === "gancio" || tipo === "fusto" || tipo === "carrello" || tipo === "topo" || tipo === "anatra") { const q = tipo === "fulmine" || tipo === "gancio" || (tipo === "torretta" && st.giro === 1) ? 1 : 2; for (let i = 0; i < q; i++) programma(f + i * 22, () => nasci(tipo, W + 2, y)); }
       else { const forma = tipo === "pesce" ? "banco" : ["fila", "fila", "v", "colonna", "sparsi"][Math.floor(rnd() * 5)], q = forma === "colonna" ? 3 : forma === "sparsi" ? 3 : 4 + (st.giro > 1 ? 1 : 0);
         for (let i = 0; i < q; i++) {
           if (forma === "fila") programma(f + i * 14, () => nasci(tipo, W + 2, y));
