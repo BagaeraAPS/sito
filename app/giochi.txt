@@ -441,10 +441,22 @@ const IMP_NEGOZIO = [
   { k: "birra", n: "Una birra subito", d: "Una vita adesso", costo: [10], ripeti: true },
 ];
 let impAudio = null;
+/* iPhone, iPad (e i browser in genere) fanno partire l'audio solo dentro un tocco o un tasto:
+   al primo tocco nel gioco creo il contesto, lo riattivo e suono un campione muto per sbloccarlo */
+function impSblocca() {
+  if (ls.get("bagaera-impact-suoni") === "0") return;
+  try {
+    impAudio = impAudio || new (window.AudioContext || window.webkitAudioContext)();
+    if (impAudio.state !== "running") { const r = impAudio.resume(); if (r && r.catch) r.catch(() => {}); }
+    const b = impAudio.createBuffer(1, 1, 22050), src = impAudio.createBufferSource(); src.buffer = b; src.connect(impAudio.destination); src.start(0);
+  } catch (e) {}
+}
 function impSuono(f, d = 0.08, tipo = "square", vol = 0.035, f2) {
   if (ls.get("bagaera-impact-suoni") === "0") return;
   try {
     impAudio = impAudio || new (window.AudioContext || window.webkitAudioContext)();
+    if (impAudio.state !== "running") { const r = impAudio.resume(); if (r && r.catch) r.catch(() => {}); return; }
+    vol *= 2.2;
     const o = impAudio.createOscillator(), g = impAudio.createGain(), t0 = impAudio.currentTime;
     o.type = tipo; o.frequency.setValueAtTime(f, t0); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t0 + d);
     g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(0.0001, t0 + d);
@@ -458,6 +470,7 @@ const chiaveCp = () => "bagaera-impact-cp-" + mio();
 
 function impactApri(box) {
   const W = IW, H = IH, rnd = Math.random;
+  for (const t of ["pointerup", "touchend", "click", "keydown"]) box.addEventListener(t, impSblocca, true);
   box.innerHTML = `<div class="im"><div class="im-scr"><canvas class="im-c" width="${W}" height="${H}" role="img" aria-label="Bagaera Impact"></canvas><div class="im-msg" hidden></div></div>
     <div class="im-pad"><span class="im-aiuto">Trascina qui per muoverti<br>si spara da solo</span><p class="im-storia" hidden></p><button class="im-spb" type="button" tabindex="-1"><b>Speciale</b><small>—</small></button></div><div class="im-pan" hidden></div></div>`;
   const area = box.querySelector(".im"), storiaEl = box.querySelector(".im-storia"), aiutoEl = box.querySelector(".im-aiuto"), cv = box.querySelector("canvas"), cx = cv.getContext("2d"), msgEl = box.querySelector(".im-msg"), pan = box.querySelector(".im-pan"), spb = box.querySelector(".im-spb");
@@ -1069,7 +1082,7 @@ function impactApri(box) {
   const su = () => { drag = null; }; area.addEventListener("pointerup", su); area.addEventListener("pointercancel", su);
   spb.addEventListener("pointerdown", (e) => { e.preventDefault(); e.stopPropagation(); usaSpeciale(); });
   const MAP = { ArrowUp: "su", w: "su", W: "su", ArrowDown: "giu", s: "giu", S: "giu", ArrowLeft: "sx", a: "sx", A: "sx", ArrowRight: "dx", d: "dx", D: "dx" };
-  const kd = (e) => { if (schermo !== "gioco") return; const k = MAP[e.key]; if (k) { tasti[k] = 1; e.preventDefault(); } if (e.key === "x" || e.key === "X" || e.key === " ") { e.preventDefault(); usaSpeciale(); } if (e.key === "p" || e.key === "P") { st.pausa = !st.pausa; messaggio(st.pausa ? "Pausa" : ""); } };
+  const kd = (e) => { impSblocca(); if (schermo !== "gioco") return; if (e.key === "m" || e.key === "M") { const on = ls.get("bagaera-impact-suoni") === "0"; ls.set("bagaera-impact-suoni", on ? "1" : "0"); messaggio(on ? "Suoni accesi" : "Suoni spenti", 900); if (on) { impSblocca(); SUONI.preso(); } return; } const k = MAP[e.key]; if (k) { tasti[k] = 1; e.preventDefault(); } if (e.key === "x" || e.key === "X" || e.key === " ") { e.preventDefault(); usaSpeciale(); } if (e.key === "p" || e.key === "P") { st.pausa = !st.pausa; messaggio(st.pausa ? "Pausa" : ""); } };
   const ku = (e) => { const k = MAP[e.key]; if (k) tasti[k] = 0; };
   const vis = () => { if (document.hidden && st && schermo === "gioco" && !st.finito) { st.pausa = true; messaggio("Pausa · tocca per riprendere"); } };
   document.addEventListener("keydown", kd); document.addEventListener("keyup", ku); document.addEventListener("visibilitychange", vis);
@@ -1077,7 +1090,7 @@ function impactApri(box) {
   return {
     stop() { cancelAnimationFrame(raf); clearTimeout(msgT); clearTimeout(stT); document.removeEventListener("keydown", kd); document.removeEventListener("keyup", ku); document.removeEventListener("visibilitychange", vis); if (st && !st.finito && st.punti > 0) salvaFine(); },
     /* per le prove automatiche */
-    fine(n) { st.punti = n; finePartita(false); }, stato: () => st, schermo: () => schermo,
+    fine(n) { st.punti = n; finePartita(false); }, stato: () => st, schermo: () => schermo, audio: () => (impAudio ? impAudio.state : "nessuno"),
     avvia(g = 1, m = 0) { nuovoStato(g, m, null); nascondi(); }, dio() { st.p.inv = 1e9; }, pace() { st.pace = 1; },
     corri(n) { for (let i = 0; i < n && !st.finito; i++) { if (schermo !== "gioco") break; passo(); } disegna(); },
     salta(passoRegia2) { st.step = passoRegia2; st.t0 = st.t; st.coda = []; st.nemici = []; if (PASSI[st.step] === "boss") nuovoBoss(IMP_MONDI[st.mondo].boss, false); if (PASSI[st.step] === "mezzo") { st.doppio = 0; nuovoBoss(IMP_MONDI[st.mondo].mid, true); } },
