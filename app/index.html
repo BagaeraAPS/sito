@@ -337,6 +337,29 @@ textarea.in { min-height: 84px; resize: vertical; line-height: 1.4; }
 .calleg span { display: inline-flex; align-items: center; gap: 6px; }
 .calleg i, .sq { width: 12px; height: 12px; display: inline-block; flex: none; }
 h2.mese { text-transform: capitalize; }
+/* mesi: testata con frecce, nome toccabile e «Oggi»; griglia che si sposta col dito */
+.testamese { display: flex; align-items: center; gap: 6px; }
+.testamese .mesetit { flex: 1; min-width: 0; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 0; background: none; color: inherit; cursor: pointer; padding: 6px 8px; border-radius: 12px; font: 400 1.35rem/1.1 var(--f-display); text-transform: capitalize; }
+@media (hover: hover) { .testamese .mesetit:hover { background: var(--bg-2); } }
+.testamese .mesetit:focus-visible { background: var(--bg-2); }
+.testamese .mesetit .giu { display: inline-flex; transform: rotate(90deg); opacity: .6; }
+.testamese .mesetit .giu svg { width: 18px; height: 18px; }
+.swipemese { touch-action: pan-y; user-select: none; -webkit-user-select: none; transition: transform .25s cubic-bezier(.2, .8, .2, 1), opacity .25s; }
+.swipemese.tira { transition: none; }
+.swipemese.entra-dx { animation: meseDx .32s cubic-bezier(.2, .8, .2, 1); }
+.swipemese.entra-sx { animation: meseSx .32s cubic-bezier(.2, .8, .2, 1); }
+@keyframes meseDx { from { transform: translateX(40px); opacity: .2; } to { transform: none; opacity: 1; } }
+@keyframes meseSx { from { transform: translateX(-40px); opacity: .2; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .swipemese.entra-dx, .swipemese.entra-sx { animation: none; } }
+.sceglimese { display: flex; flex-direction: column; gap: 14px; }
+.sceglimese .anno { display: flex; align-items: center; justify-content: space-between; }
+.sceglimese .anno b { font: 400 1.6rem/1 var(--f-display); }
+.sceglimese .mesi12 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.sceglimese .mesi12 button { position: relative; min-height: 56px; border: 2px solid var(--line); border-radius: 14px; background: var(--bg); color: inherit; cursor: pointer; font: 600 .95rem/1.1 var(--f-body, inherit); text-transform: capitalize; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 6px 4px; }
+.sceglimese .mesi12 button small { font-size: .72rem; color: var(--muted); font-weight: 600; }
+.sceglimese .mesi12 button.ora { border-color: var(--verde); }
+.sceglimese .mesi12 button.su { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.sceglimese .mesi12 button.su small { color: inherit; opacity: .75; }
 .t-evento { background: var(--verde) !important; }
 .t-riunione { background: var(--amber) !important; }
 .t-incontro { background: var(--info) !important; color: #fff !important; }
@@ -2915,7 +2938,7 @@ ACT.rsvp = async (el) => {
 };
 ACT.checkin = (el) => {
   const e = S.cal[el.dataset.id]; if (!e) return;
-  if (!e.codice || puoModificareEvento(e)) return segnaPresente(e);
+  if (!conCodice(e) || puoModificareEvento(e)) return segnaPresente(e);   /* di base niente codice: chi c'è tocca «Sono qui» */
   openSheet({ title: "Sono qui", eyebrow: esc(e.titolo),
     body: `<p>Chiedi il codice a chi organizza: lo vede nella pagina dell'appuntamento. Serve a segnare chi c'è davvero.</p>
       <form data-form="checkin" data-id="${e.id}" class="stack s"><label class="field"><span>Codice presenza</span>
@@ -2959,6 +2982,71 @@ function itemsCal() {
   const po = can.editoriale() ? postTutti().map((p) => ({ id: "po" + p.id, titolo: p.titolo, data: p.data, ora: p.ora || null, post: p, tipo: "post" })) : [];
   return [...eventi(), ...promemoria(), ...sc, ...pg, ...po].sort(ordinaEv);
 }
+/* ---------- mesi (calendario ed editoriale): frecce, swipe a destra/sinistra sulla griglia, «Vai a un mese» toccando il nome, «Oggi» ---------- */
+const meseDopo = (m, d) => { const [y, mm] = m.split("-").map(Number); return isoOf(new Date(y, mm - 1 + d, 1)).slice(0, 7); };
+const meseOra = (dove) => (dove === "cal" ? S.ui.calMese : (location.hash.match(/^#editoriale-(\d{4}-\d{2})$/) || [])[1]) || oggi().slice(0, 7);
+function testaMese(m, dove) {
+  const [y, mm] = m.split("-").map(Number), ora = oggi().slice(0, 7);
+  return `<div class="testamese"><button class="btn sm ghost" data-act="mese-vai" data-dove="${dove}" data-m="${meseDopo(m, -1)}" aria-label="Mese precedente">${ic("back")}</button>
+    <button class="mesetit" data-act="mese-scegli" data-dove="${dove}" data-m="${m}" aria-haspopup="dialog" aria-label="${MESI[mm - 1]} ${y}: vai a un altro mese"><span>${MESI[mm - 1]} ${y}</span><i class="giu" aria-hidden="true">${ic("chev")}</i></button>
+    ${m !== ora ? `<button class="btn sm" data-act="mese-vai" data-dove="${dove}" data-m="${ora}">Oggi</button>` : ""}
+    <button class="btn sm ghost" data-act="mese-vai" data-dove="${dove}" data-m="${meseDopo(m, 1)}" aria-label="Mese successivo">${ic("chev")}</button></div>`;
+}
+/* la griglia che si sposta col dito; arrivando da uno swipe o dalle frecce il mese nuovo entra dal lato giusto */
+function zonaMese(dove, m, html) {
+  const a = S.ui.meseAnim; let cls = "";
+  if (a && a.dove === dove && Date.now() - a.t < 800) { cls = a.dir > 0 ? "entra-dx" : a.dir < 0 ? "entra-sx" : ""; S.ui.meseAnim = null; }
+  return `<div class="swipemese ${cls}" data-swipe-mese="${dove}" data-m="${m}">${html}</div>`;
+}
+function vaiMese(dove, m) {
+  const cur = meseOra(dove); if (!/^\d{4}-\d{2}$/.test(m)) return;
+  S.ui.meseAnim = { dove, dir: Math.sign(m.localeCompare(cur)), t: Date.now() };
+  if (dove === "cal") { S.ui.calMese = m; S.ui.calSel = null; render(true); }
+  else if (location.hash === "#editoriale-" + m) render(true); else location.replace("#editoriale-" + m);   /* senza riempire la cronologia */
+}
+ACT["mese-vai"] = (el) => vaiMese(el.dataset.dove, el.dataset.m);
+/* «Vai a un mese»: anno con le frecce, i dodici mesi (con quanti appuntamenti o post ci sono), «Torna a oggi» */
+function contaMese(dove, k) {
+  if (dove === "ed") return postTutti().filter((p) => (p.data || "").startsWith(k)).length;
+  const f = S.ui.calFiltro || "miei", fine = isoOf(new Date(Number(k.slice(0, 4)), Number(k.slice(5)), 0));
+  return itemsCal().filter((e) => filtroEv(e, f) && e.data <= fine && (e.dataFine || e.data) >= k + "-01").length;
+}
+ACT["mese-scegli"] = (el) => {
+  const dove = el.dataset.dove, m = el.dataset.m;
+  openSheet({ title: "Vai a un mese", eyebrow: dove === "ed" ? "Calendario editoriale" : "Calendario", mese: { dove, m, anno: Number(m.slice(0, 4)) },
+    body: () => { const s = S.sheet.mese, ora = oggi().slice(0, 7);
+      return `<div class="sceglimese"><div class="anno"><button class="btn sm ghost" data-act="mese-anno" data-d="-1" aria-label="Anno prima">${ic("back")}</button><b>${s.anno}</b><button class="btn sm ghost" data-act="mese-anno" data-d="1" aria-label="Anno dopo">${ic("chev")}</button></div>
+        <div class="mesi12">${MESI.map((n, i) => { const k = `${s.anno}-${pad(i + 1)}`, c = contaMese(dove, k);
+          return `<button class="${k === s.m ? "su" : ""} ${k === ora ? "ora" : ""}" data-act="mese-pick" data-m="${k}" aria-pressed="${k === s.m}" aria-label="${n} ${s.anno}${c ? `, ${c} ${dove === "ed" ? (c === 1 ? "post" : "post") : c === 1 ? "appuntamento" : "appuntamenti"}` : ""}"><span>${n}</span>${c ? `<small>${c}</small>` : ""}</button>`; }).join("")}</div>
+        <button class="btn block" data-act="mese-pick" data-m="${ora}">${ic("cal")}Torna a oggi</button></div>`; } });
+};
+ACT["mese-anno"] = (el) => { const s = S.sheet && S.sheet.mese; if (!s) return; s.anno += Number(el.dataset.d); drawSheet(); };
+ACT["mese-pick"] = (el) => { const s = S.sheet && S.sheet.mese; if (!s) return; closeSheet(); vaiMese(s.dove, el.dataset.m); };
+/* swipe: la griglia segue il dito; oltre la soglia si passa al mese dopo (verso sinistra) o prima (verso destra); in verticale la pagina scorre */
+let SWM = null, swmClick = 0;
+document.addEventListener("pointerdown", (e) => {
+  const z = e.target.closest && e.target.closest("[data-swipe-mese]"); if (!z || e.button > 0) return;
+  SWM = { z, x: e.clientX, y: e.clientY, dx: 0, id: e.pointerId, via: false, w: z.offsetWidth || 320 };
+});
+document.addEventListener("pointermove", (e) => {
+  if (!SWM || e.pointerId !== SWM.id) return;
+  const dx = e.clientX - SWM.x, dy = e.clientY - SWM.y;
+  if (!SWM.via) { if (Math.abs(dy) > 12 && Math.abs(dy) > Math.abs(dx)) { SWM = null; return; } if (Math.abs(dx) < 10) return; SWM.via = true; SWM.z.classList.add("tira"); }
+  SWM.dx = dx; SWM.z.style.transform = `translateX(${dx * 0.6}px)`; SWM.z.style.opacity = String(1 - Math.min(0.45, Math.abs(dx) / SWM.w));
+});
+function swmLascia(e, annulla) {
+  if (!SWM || e.pointerId !== SWM.id) return;
+  const { z, dx, via, w } = SWM; SWM = null; if (!via) return;
+  swmClick = Date.now(); z.classList.remove("tira"); z.style.transform = ""; z.style.opacity = "";
+  if (annulla || Math.abs(dx) < Math.min(70, w * 0.18)) return;
+  vaiMese(z.dataset.swipeMese, meseDopo(z.dataset.m, dx < 0 ? 1 : -1));
+}
+document.addEventListener("pointerup", (e) => swmLascia(e, false));
+document.addEventListener("pointercancel", (e) => swmLascia(e, true));
+/* il tocco che chiude uno swipe non apre il giorno */
+document.addEventListener("click", (e) => { if (Date.now() - swmClick < 450 && e.target.closest && e.target.closest("[data-swipe-mese]")) { e.preventDefault(); e.stopImmediatePropagation(); } }, true);
+document.addEventListener("dragstart", (e) => { if (e.target.closest && e.target.closest("[data-swipe-mese]")) e.preventDefault(); });
+
 /* il mese: ogni appuntamento è una striscia colorata col titolo, quelli di più giorni continuano da un giorno all'altro */
 function meseHtml(tutti, mese, sel) {
   const [y, m] = mese.split("-").map(Number);
@@ -3015,8 +3103,8 @@ route("calendario", () => {
     const [y, m] = u.calMese.split("-").map(Number);
     const sel = u.calSel || (oggi().startsWith(u.calMese) ? oggi() : u.calMese + "-01");
     const selList = tutti.filter((e) => e.data <= sel && (e.dataFine || e.data) >= sel);
-    corpo = `<div class="row between"><button class="btn sm" data-act="cal-mese" data-d="-1" aria-label="Mese precedente">${ic("back")}</button><h2 class="mese">${MESI[m - 1]} ${y}</h2><button class="btn sm" data-act="cal-mese" data-d="1" aria-label="Mese successivo">${ic("chev")}</button></div>
-      ${meseHtml(tutti, u.calMese, sel)}
+    corpo = `${testaMese(u.calMese, "cal")}
+      ${zonaMese("cal", u.calMese, meseHtml(tutti, u.calMese, sel))}
       <section class="panel"><div class="ph"><h3>${esc(fDataL(sel))}</h3>${puo ? `<button class="btn sm" data-act="nuovo-evento" data-d="${sel}">${ic("plus")}Aggiungi</button>` : ""}</div>
       ${selList.length ? `<div class="list">${selList.map(evRow).join("")}</div>` : `<div class="pb"><p class="muted small">Niente in questo giorno.</p></div>`}</section>`;
   } else {
@@ -3081,7 +3169,7 @@ route("ev", (id) => {
       ${contaRisposte(e, false)}
       <div class="row">${vengono.length ? avs(vengono, 8) : ""}<button class="btn sm ghost" data-act="ev-risposte" data-id="${e.id}">${ic("people")}Vedi chi ha risposto</button></div>
       ${check ? (presente(e) ? `<div class="notice">${ic("check")} <b>Ci sei:</b> presenza segnata alle ${new Date(e.presenze[ME()].c).toTimeString().slice(0, 5)}.</div>` : `<button class="btn pri block" data-act="checkin" data-id="${e.id}">${ic("check")}Sono qui: segna la presenza</button>`) : ""}
-      ${org && e.codice && (check || giorniTra(oggi(), e.data) <= 1) ? `<div class="codebox"><div><span class="eyebrow" style="color:#c4cec4">Codice presenza</span><br><span class="small">Mostralo a chi arriva</span></div><span class="code">${esc(e.codice)}</span></div>` : ""}
+      ${org && conCodice(e) && (check || giorniTra(oggi(), e.data) <= 1) ? `<div class="codebox"><div><span class="eyebrow" style="color:#c4cec4">Codice presenza</span><br><span class="small">Mostralo a chi arriva</span></div><span class="code">${esc(e.codice)}</span></div>` : ""}
       ${org ? `<button class="btn sm" data-act="registro" data-id="${e.id}">${ic("clip")}Registro presenze (${presenti.length})</button>` : ""}</div>`;
   } else {
     const ordP = presenti.slice().sort((a, b) => nm(a).localeCompare(nm(b), "it"));
@@ -3237,6 +3325,10 @@ function leggiDate(txt, anno) {
   }
   return out;
 }
+/* codice presenza: solo se chi crea l'appuntamento lo chiede (spunta, di base spenta). Quelli creati prima
+   avevano sempre il codice automatico: senza la spunta valgono come senza codice. */
+const conCodice = (e) => !!(e && e.chiediCodice && e.codice);
+const nuovoCodice = () => String(1000 + Math.floor(Math.random() * 9000));
 function formEvento(e, pre = {}, opz = {}) {
   const miei = Object.keys(GRUPPI).filter((g) => can.creaIncontro(g));
   const tipi = [];
@@ -3267,6 +3359,7 @@ function formEvento(e, pre = {}, opz = {}) {
       <div class="field" data-show="appuntamento"><span>Chi lo vede</span><div class="opts">${radio("visib", "consiglio", "Solo il consiglio e chi inviti", visib === "consiglio")}${radio("visib", "tutti", "Tutti i soci", visib !== "consiglio")}</div></div>
       ${cand.length ? `<details class="rip" data-show="appuntamento"><summary>${ic("people")}Invita altri soci${(v.invitati || []).length ? ` (${v.invitati.length})` : ""}</summary><div class="opts" style="padding-top:10px">${cand.map((u) => checkbox("inv", u, esc(nm(u)), (v.invitati || []).includes(u))).join("")}</div></details>` : ""}
       ${!e ? `<label class="field" data-hide="personale"><span>Materiale necessario</span><textarea class="in" name="materiale" placeholder="Uno per riga: si spunta quando c'è già o quando qualcuno lo porta"></textarea></label>` : ""}
+      <label class="check" data-hide="personale"><input type="checkbox" name="chiediCodice" ${conCodice(v) ? "checked" : ""}><span><b>Chiedi un codice per segnare la presenza</b><br><small class="muted">Di base no: chi c'è tocca «Sono qui». Con il codice, chi organizza lo mostra a chi arriva e solo chi lo sa segna la presenza.</small></span></label>
       <label class="check" data-show="incontro"><input type="checkbox" name="aperto" ${v.aperto ? "checked" : ""}><span><b>Aperto a tutti i soci</b><br><small class="muted">Per le riprese del marketing o quando serve una mano: lo vedono tutti.</small></span></label>
       ${isCouncil() ? campoMedaglia(e) : ""}
       <div class="field" data-show="evento"><span>Colore della medaglia${isCouncil() ? " (se non la carichi)" : ""}</span><div class="opts">${Object.entries(COLORI_MEDAGLIA).map(([k, c]) => radio("colore", k, `<i style="width:14px;height:14px;background:${c};border:2px solid var(--rule);display:inline-block"></i>${k}`, (v.colore || "verde") === k)).join("")}</div></div>
@@ -3294,7 +3387,8 @@ FORMS.evento = async (f) => {
   if (tipo === "evento" || tipo === "appuntamento") { d.dataFine = fv(f, "dataFine") || null; if (d.dataFine && d.dataFine < d.data) return fErr(f, "L'ultimo giorno viene prima del primo."); if (f.elements.progetto) d.progetto = fv(f, "progetto") || null; }
   if (tipo === "evento") d.colore = (f.querySelector('[name="colore"]:checked') || {}).value || "verde";
   if (tipo === "appuntamento") { d.visib = (f.querySelector('[name="visib"]:checked') || {}).value || "consiglio"; d.invitati = fvAll(f, "inv"); }
-  if (id) { await wUpd("calendario/" + id, d); if (tipo === "evento") await salvaMedaglia(f, [id]); closeSheet(); toast("Salvato."); return; }
+  d.chiediCodice = !!fv(f, "chiediCodice");
+  if (id) { if (d.chiediCodice && !(S.cal[id] || {}).codice) d.codice = nuovoCodice(); await wUpd("calendario/" + id, d); if (tipo === "evento") await salvaMedaglia(f, [id]); closeSheet(); toast("Salvato."); return; }
   // tutte le date
   let date = [d.data];
   const rip = fv(f, "ripeti"), fino = fv(f, "finoAl");
@@ -3314,7 +3408,7 @@ FORMS.evento = async (f) => {
   for (const dt of date) {
     const nid = genId("ev"); ids.push(nid);
     const materiale = {}; righe.forEach((n, i) => { materiale[genId("m") + i] = { n: n.slice(0, 80), ok: false, chi: null, ord: i + 1 }; });
-    await wSet("calendario/" + nid, { ...d, data: dt, dataFine: durata ? addDays(dt, durata) : d.dataFine || null, tipo, materiale, presenze: {}, codice: String(1000 + Math.floor(Math.random() * 9000)), creatoDa: ME(), creato: Date.now(), ...(serie ? { serie } : {}), ...(sh.fonte ? { fonte: sh.fonte } : {}) });
+    await wSet("calendario/" + nid, { ...d, data: dt, dataFine: durata ? addDays(dt, durata) : d.dataFine || null, tipo, materiale, presenze: {}, codice: d.chiediCodice ? nuovoCodice() : null, creatoDa: ME(), creato: Date.now(), ...(serie ? { serie } : {}), ...(sh.fonte ? { fonte: sh.fonte } : {}) });
   }
   if (tipo === "evento") await salvaMedaglia(f, ids);
   notificaNuovoEvento(d, tipo, ids, date);
@@ -3662,24 +3756,30 @@ route("anticipi", () => {
 ACT["nuovo-anticipo"] = (el) => formAnticipo(null, { g: el.dataset.g || "", ev: el.dataset.ev || "", voce: el.dataset.voce });
 ACT["modifica-anticipo"] = (el) => { const a = anticipiMiei().find((x) => x.id === el.dataset.id); if (!a) return; if (a.stato !== "inviato") return toast("Il tesoriere l'ha già approvata: non si può più modificare."); formAnticipo(a); };
 /* richiesta di rimborso (nuova o da modificare finché il tesoriere non la approva): per un evento si sceglie anche la voce del suo budget */
-function formAnticipo(a, ctx = {}) {
+/* «Per» di una spesa come stringa del select: "associazione:", "evento:<id>", "gruppo:<id>" */
+const chiavePer = (p) => (p && p.tipo && p.tipo !== "associazione" ? `${p.tipo}:${p.id}` : "associazione:");
+/* le scelte di «Per»: associazione, eventi in arrivo e passati (dai 120 giorni fa), gruppi fuori dagli eventi */
+function opzioniPer(per) {
   const evs = eventiPerSpese();
   const futuri = evs.filter((e) => !finito(e)), passati = evs.filter(finito).reverse();
-  let per = "associazione:";
-  if (a) per = a.per && a.per.tipo !== "associazione" ? `${a.per.tipo}:${a.per.id}` : "associazione:";
-  else if (ctx.ev) per = "evento:" + ctx.ev;
-  else if (ctx.g) { const e = eventoPerGruppo(ctx.g); per = e ? "evento:" + e.id : "gruppo:" + ctx.g; }
   if (per.startsWith("evento:") && !evs.some((e) => "evento:" + e.id === per) && S.cal[per.slice(7)]) (finito(S.cal[per.slice(7)]) ? passati : futuri).push(S.cal[per.slice(7)]);
   const oe = (e) => opt("evento:" + e.id, `${e.titolo} (${fData(e.data)})`, per === "evento:" + e.id);
   const gruppi = Object.entries(GRUPPI).filter(([k]) => k !== "consiglio");
+  return opt("associazione:", "Associazione in generale", per === "associazione:")
+    + (futuri.length ? `<optgroup label="Eventi in arrivo">${futuri.map(oe).join("")}</optgroup>` : "") + (passati.length ? `<optgroup label="Eventi passati">${passati.map(oe).join("")}</optgroup>` : "")
+    + `<optgroup label="Gruppi, fuori dagli eventi">${gruppi.map(([k, x]) => opt("gruppo:" + k, "Gruppo " + x.nome, per === "gruppo:" + k)).join("")}</optgroup>`;
+}
+function formAnticipo(a, ctx = {}) {
+  let per = "associazione:";
+  if (a) per = chiavePer(a.per);
+  else if (ctx.ev) per = "evento:" + ctx.ev;
+  else if (ctx.g) { const e = eventoPerGruppo(ctx.g); per = e ? "evento:" + e.id : "gruppo:" + ctx.g; }
   openSheet({ title: a ? "Modifica la richiesta" : "Chiedi un rimborso", eyebrow: a ? "Finché il tesoriere non la approva" : "Hai pagato tu per Bagaera",
     body: `<form data-form="anticipo" id="fAnt" class="stack" data-id="${a ? a.id : ""}">
       <label class="field"><span>Quanto hai speso</span><span class="money"><b>€</b><input name="imp" inputmode="decimal" placeholder="0,00" required ${a ? `value="${esc(String(a.importo).replace(".", ","))}"` : "autofocus"}></span></label>
       <label class="field"><span>Cosa hai comprato</span><input class="in" name="desc" maxlength="100" required placeholder="es. Nastro e fascette per le luci" value="${esc((a && a.desc) || "")}"></label>
       <div class="fields"><label class="field"><span>Quando</span><input class="in" type="date" name="data" value="${esc((a && a.data) || oggi())}" max="${oggi()}" required></label>
-        <label class="field"><span>Per</span><select class="in" name="per">${opt("associazione:", "Associazione in generale", per === "associazione:")}
-          ${futuri.length ? `<optgroup label="Eventi in arrivo">${futuri.map(oe).join("")}</optgroup>` : ""}${passati.length ? `<optgroup label="Eventi passati">${passati.map(oe).join("")}</optgroup>` : ""}
-          <optgroup label="Gruppi, fuori dagli eventi">${gruppi.map(([k, x]) => opt("gruppo:" + k, "Gruppo " + x.nome, per === "gruppo:" + k)).join("")}</optgroup></select></label></div>
+        <label class="field"><span>Per</span><select class="in" name="per">${opzioniPer(per)}</select></label></div>
       ${campoVoce()}
       <div class="field"><span>Come preferisci riaverli</span><div class="opts">${radio("mezzo", "Contanti", "Contanti", !a || a.mezzo !== "Bonifico")}${radio("mezzo", "Bonifico", "Bonifico", !!a && a.mezzo === "Bonifico")}</div></div>
       <label class="field"><span>${a && a.foto ? "Cambia la foto dello scontrino (facoltativo)" : "Foto dello scontrino (facoltativa)"}</span><input class="in" type="file" name="foto" accept="image/*" capture="environment"><small>Il tesoriere la vede insieme alla richiesta.</small></label>
@@ -3744,6 +3844,7 @@ function apriAnticipo(uid, id, gestione) {
       <div class="stack s"><b>${esc(a.desc)}</b><span class="small muted">${esc(fDataL(a.data))} · per ${esc(perLabel(a.per))} · rimborso in ${esc((a.mezzo || "").toLowerCase())}</span>${a.nota ? `<span class="small">«${esc(a.nota)}»</span>` : ""}</div>
       <div class="list" style="border:2px solid var(--rule)">
         <div class="li">${ic("check", "chev")}<span class="grow small">Inviata il ${esc(fTs(a.creato))}${a.modificato ? ` · modificata il ${esc(fTs(a.modificato))}` : ""}</span></div>
+        ${a.corretto ? `<div class="li">${ic("edit", "chev")}<span class="grow small">Categoria corretta da ${esc(primoNome(a.corretto.da))} il ${esc(fTs(a.corretto.at))}${a.corretto.prima ? ` (prima: ${esc(perLabel(a.corretto.prima))})` : ""}</span></div>` : ""}
         ${a.approvato ? `<div class="li">${ic("check", "chev")}<span class="grow small">Approvata da ${esc(primoNome(a.approvato.da))} il ${esc(fTs(a.approvato.at))}${a.registro ? ` · registro ${a.registro.anno}, n. ${a.registro.n}` : ""}</span></div>` : ""}
         ${a.stato === "rimborsato" ? `<div class="li">${ic("euro", "chev")}<span class="grow small">Rimborsata ${e.mezzo ? "in " + esc(e.mezzo.toLowerCase()) : ""} il ${esc(fDataIt(e.data || ""))} da ${esc(primoNome(e.da))}</span></div>` : ""}
         ${a.stato === "rifiutato" ? `<div class="li">${ic("x", "chev")}<span class="grow small">Non approvata da ${esc(primoNome(e.da))}${e.nota ? `: «${esc(e.nota)}»` : ""}</span></div>` : ""}
@@ -3751,6 +3852,13 @@ function apriAnticipo(uid, id, gestione) {
       ${a.foto ? `<div class="stack s"><span class="eyebrow">Scontrino</span><div id="fotoAnt" class="small muted">Carico la foto…</div></div>` : ""}
       ${gestione ? azioniTesoriere(uid, id, a) : a.stato === "inviato" ? `<p class="small muted">Finché il tesoriere non la approva puoi ancora cambiarla.</p><div class="btns"><button class="btn sm" data-act="modifica-anticipo" data-id="${id}">${ic("edit")}Modifica</button><button class="btn danger sm" data-act="ritira-anticipo" data-id="${id}">${ic("trash")}Ritira la richiesta</button></div>` : ""}`;
   }, mount: async (root) => {
+    const fa = root.querySelector('form[data-form="ant-approva"]'), a0 = get();
+    if (fa && a0 && fa.elements.per && !fa.dataset.ok) {
+      fa.dataset.ok = 1;
+      const sc = (S.ui.antCorr || {})[uid + "/" + id] || {}, evDi = () => { const v = fa.elements.per.value; return v.startsWith("evento:") ? v.slice(7) : null; };
+      collegaVoce(fa, { evDi, gruppoDi: () => { const ev = evDi(); return [...gruppiDi(uid)].find((g) => voceDiGruppo(ev, g)) || null; },
+        sel: sc.voce !== undefined ? sc.voce || "" : fa.elements.per.value === chiavePer(a0.per) ? (a0.per && a0.per.voce) || "" : undefined, trig: ["per"] });
+    }
     const box = root.querySelector("#fotoAnt"); if (!box || !S.db) return;
     try { const d = await S.db.doc(`anticipi/${uid}/foto/${id}`).get(); box.innerHTML = d.exists ? `<img class="foto" src="${esc(d.data().img)}" alt="Foto dello scontrino">` : "Foto non disponibile."; } catch (e) { box.textContent = "Foto non disponibile."; }
   } });
@@ -3806,32 +3914,41 @@ route("rimborsi", () => {
     <section class="panel">${lista.length ? `<div class="list">${lista.map((a) => tab === "approvato" ? `<div class="lirow">${rigaAnticipo(a, true)}<button class="tick" data-act="ant-tick" data-u="${a.uid}" data-id="${a.id}" aria-label="Segna rimborsato: ${esc(a.desc)}">${ic("check")}<span>Rimborsato</span></button></div>` : rigaAnticipo(a, true)).join("")}</div>` : empty(tab === "inviato" ? "Nessuna richiesta da controllare" : tab === "approvato" ? "Nessun rimborso in sospeso" : "Ancora niente qui", "Quando un socio chiede un rimborso, arriva qui e trovi l'avviso in home.")}</section>
   </div>`;
 });
-async function scriviEsito(uid, id, e) { notificaEsito(uid, id, e); if (S.esiti[uid]) return wUpd("esiti/" + uid, { voci: { [id]: e } }); S.esiti[uid] = { id: uid, voci: {} }; return wSet("esiti/" + uid, { voci: { [id]: e } }); }
+async function scriviEsito(uid, id, e, nota = "") { notificaEsito(uid, id, e, nota); if (S.esiti[uid]) return wUpd("esiti/" + uid, { voci: { [id]: e } }); S.esiti[uid] = { id: uid, voci: {} }; return wSet("esiti/" + uid, { voci: { [id]: e } }); }
 ACT["rim-tab"] = (el) => { S.ui.rimTab = el.dataset.v; render(true); };
 function tagDi(a) { const p = a.per || {}; if (p.tipo === "gruppo") return GRUPPI[p.id] ? GRUPPI[p.id].nome : "Associazione"; if (p.tipo === "evento") return (S.cal[p.id] || {}).titolo || "Associazione"; return "Associazione"; }
 /* rimborso per un evento: da quale voce del budget si scala (il tesoriere può correggerla) */
 const descAnticipo = (a, voce = a.per && a.per.voce) => (a.per && a.per.tipo === "evento" ? descConVoce(a.desc, a.per.id, voce) : a.desc);
-function budgetDiAnticipo(a) {
-  const p = a.per || {};
-  if (p.tipo === "evento") {
-    if (!haBudgetEv(p.id)) return `<p class="small muted">${ic("euro")} ${esc(tagEvento(p.id) || "L'evento")} non ha ancora un budget: la spesa finisce tra le spese dell'evento, senza voce.</p>`;
-    return `<label class="field"><span>Si scala dal budget di ${esc(tagEvento(p.id))}</span><select class="in" name="voce" data-ant-voce>${opzVoci(p.id, p.voce || "")}</select><small>Sul registro va come spesa dell'evento, con la voce tra parentesi.</small></label>`;
-  }
-  if (p.tipo === "gruppo" && GRUPPI[p.id] && GRUPPI[p.id].budget) return `<p class="small muted">${ic("euro")} Si scala dal budget dell'anno di ${esc(GRUPPI[p.id].nome)} (fuori dagli eventi).</p>`;
+/* la categoria («Per» + voce) si può correggere finché il rimborso non è approvato: se un socio l'ha messa nel posto sbagliato,
+   il consiglio la sistema qui (solo la correzione, o correzione e approvazione insieme). La scelta in corso resta in S.ui.antCorr
+   finché non si salva, così l'aggiornamento dal vivo del pannello non la perde. */
+function perDaForm(f) {
+  const [tipo, pid] = fv(f, "per").split(":");
+  return { tipo, id: pid || null, voce: tipo === "evento" && haBudgetEv(pid) && f.elements.voce ? fv(f, "voce") || null : null };
+}
+const perUguale = (p, q) => chiavePer(p) === chiavePer(q) && ((p && p.voce) || null) === ((q && q.voce) || null);
+function notaBudget(perK) {
+  const [tipo, pid] = perK.split(":");
+  if (tipo === "evento") return haBudgetEv(pid) ? `${ic("euro")} Si scala dal budget di ${esc(tagEvento(pid))}: sul registro va come spesa dell'evento, con la voce tra parentesi.` : `${ic("euro")} ${esc(tagEvento(pid) || "L'evento")} non ha ancora un budget: la spesa finisce tra le spese dell'evento, senza voce.`;
+  if (tipo === "gruppo" && GRUPPI[pid] && GRUPPI[pid].budget) return `${ic("euro")} Si scala dal budget dell'anno di ${esc(GRUPPI[pid].nome)} (fuori dagli eventi).`;
   return "";
 }
 function azioniTesoriere(uid, id, a) {
   if (a.stato === "inviato") {
+    const sc = (S.ui.antCorr || {})[uid + "/" + id] || {}, perK = sc.per || chiavePer(a.per);
+    const [t0, i0] = perK.split(":"), p0 = { tipo: t0, id: i0 || null, voce: sc.voce !== undefined ? sc.voce : perK === chiavePer(a.per) ? (a.per && a.per.voce) || null : null };
     return `<form data-form="ant-approva" data-u="${uid}" data-id="${id}" class="soft">
       <h3>Approva</h3>
+      <label class="field"><span>Per</span><select class="in" name="per" data-ant-per>${opzioniPer(perK)}</select><small>Se ${esc(primoNome(uid))} ha scelto la categoria sbagliata, correggila qui prima di approvare.</small></label>
+      ${campoVoce()}
+      <p class="small muted" data-ant-nota>${notaBudget(perK)}</p>
       <label class="check"><input type="checkbox" name="reg" checked><span><b>Scrivi l'uscita sul registro contabile</b><br><small class="muted">Riga in fondo al registro ${esc((a.data || oggi()).slice(0, 4))}, con «Rimborso? Sì» e il nome di chi ha anticipato.</small></span></label>
-      ${budgetDiAnticipo(a)}
       <div class="fields"><label class="field"><span>Voce</span><select class="in" name="codice">${VOCI.U.map(([c, l]) => opt(c, `${l} (${c})`, c === "UA1")).join("")}</select></label>
-        <label class="field"><span>Evento / tag</span><input class="in" name="tag" value="${esc(tagDi(a))}" maxlength="60"></label>
+        <label class="field"><span>Evento / tag</span><input class="in" name="tag" value="${esc(tagDi({ per: p0 }))}" maxlength="60"></label>
         <label class="field"><span>Conto</span><select class="in" name="conto">${opt("cassa", "Cassa (contanti)", a.mezzo !== "Bonifico")}${opt("cc", "Conto corrente", a.mezzo === "Bonifico")}</select></label></div>
-      <label class="field"><span>Descrizione sul registro</span><input class="in" name="rdesc" maxlength="140" value="${esc(descAnticipo(a))}"></label>
+      <label class="field"><span>Descrizione sul registro</span><input class="in" name="rdesc" maxlength="140" value="${esc(descAnticipo({ ...a, per: p0 }, p0.voce))}"></label>
       <p class="err" hidden></p>
-      <div class="btns"><button class="btn pri">${ic("check")}Approva</button><button type="button" class="btn danger" data-act="ant-rifiuta" data-u="${uid}" data-id="${id}">Non approvare</button></div></form>`;
+      <div class="btns"><button class="btn pri">${ic("check")}Approva</button><button type="button" class="btn" data-act="ant-correggi" data-u="${uid}" data-id="${id}">${ic("edit")}Salva solo la correzione</button><button type="button" class="btn danger" data-act="ant-rifiuta" data-u="${uid}" data-id="${id}">Non approvare</button></div></form>`;
   }
   if (a.stato === "approvato") {
     return `<form data-form="ant-rimborsa" data-u="${uid}" data-id="${id}" class="soft"><h3>Segna come rimborsato</h3>
@@ -3842,33 +3959,52 @@ function azioniTesoriere(uid, id, a) {
   }
   return "";
 }
-/* cambiando la voce, cambia anche la descrizione che va sul registro */
+/* cambiando categoria o voce, cambiano anche tag e descrizione che vanno sul registro */
 document.addEventListener("change", (e) => {
-  const sel = e.target; if (!sel.matches || !sel.matches("[data-ant-voce]")) return;
-  const f = sel.form, a = f && anticipiTutti().find((x) => x.uid === f.dataset.u && x.id === f.dataset.id);
-  if (a && f.elements.rdesc) f.elements.rdesc.value = descAnticipo(a, sel.value || null);
+  const el = e.target, f = el && el.form; if (!f || f.dataset.form !== "ant-approva" || !["per", "voce"].includes(el.name)) return;
+  const a = anticipiTutti().find((x) => x.uid === f.dataset.u && x.id === f.dataset.id); if (!a) return;
+  const p = perDaForm(f);
+  S.ui.antCorr = { ...(S.ui.antCorr || {}), [a.uid + "/" + a.id]: { per: chiavePer(p), voce: p.voce } };
+  if (f.elements.rdesc) f.elements.rdesc.value = descAnticipo({ ...a, per: p }, p.voce);
+  if (el.name === "per" && f.elements.tag) f.elements.tag.value = tagDi({ per: p });
+  const nota = f.querySelector("[data-ant-nota]"); if (nota) nota.innerHTML = notaBudget(chiavePer(p));
 });
+async function correggiPer(uid, id, a, p) {
+  await wUpd("anticipi/" + uid, { voci: { [id]: { per: p, corretto: { da: ME(), at: Date.now(), prima: (a.corretto && a.corretto.prima) || a.per || null } } } });   /* «prima» = la scelta del socio */
+  if (S.ui.antCorr) delete S.ui.antCorr[uid + "/" + id];
+}
+ACT["ant-correggi"] = async (el) => {
+  const f = el.form || el.closest("form"), uid = el.dataset.u, id = el.dataset.id, a = anticipiTutti().find((x) => x.uid === uid && x.id === id);
+  if (!f || !a) return;
+  if (a.stato !== "inviato") return toast("È già stata approvata: la categoria non si cambia più.");
+  const p = perDaForm(f);
+  if (perUguale(p, a.per)) return toast("La categoria è già questa.");
+  el.disabled = true;
+  await correggiPer(uid, id, a, p);
+  notifica([uid], "Rimborso: categoria corretta", `${euro(a.importo)} · ${a.desc} · ora è per ${perLabel(p)}`, "#anticipi", "soldi");
+  toast(`Categoria corretta: ora è per ${perLabel(p)}. ${primoNome(uid)} riceve l'avviso.`);
+};
 FORMS["ant-approva"] = async (f) => {
   const uid = f.dataset.u, id = f.dataset.id, a = anticipiTutti().find((x) => x.uid === uid && x.id === id); if (!a) return;
   const btn = f.querySelector("button.pri"); btn.disabled = true; btn.textContent = "Approvo…";
   let registro = null;
   await risolviNomi([uid]);
-  const p = a.per || {}, evId = p.tipo === "evento" ? p.id : null;
-  const voce = evId && f.elements.voce ? fv(f, "voce") || null : p.voce || null;
+  const p = f.elements.per ? perDaForm(f) : { tipo: "associazione", id: null, voce: null, ...(a.per || {}) }, evId = p.tipo === "evento" ? p.id : null;
+  const voce = p.voce || null, cambiata = !perUguale(p, a.per);
   if (fv(f, "reg")) {
-    try { registro = await scriviMovimento((a.data || oggi()).slice(0, 4), { tipo: "U", conto: fv(f, "conto"), importo: a.importo, data: a.data || oggi(), desc: fv(f, "rdesc") || descAnticipo(a, voce), codice: fv(f, "codice"), tag: fv(f, "tag") || "Associazione", anticipo: nm(uid) }); }
+    try { registro = await scriviMovimento((a.data || oggi()).slice(0, 4), { tipo: "U", conto: fv(f, "conto"), importo: a.importo, data: a.data || oggi(), desc: fv(f, "rdesc") || descAnticipo({ ...a, per: p }, voce), codice: fv(f, "codice"), tag: fv(f, "tag") || "Associazione", anticipo: nm(uid) }); }
     catch (e) { btn.disabled = false; btn.innerHTML = ic("check") + "Approva"; return fErr(f, "Non ho scritto sul registro: " + spiegaMcp(e) + " Puoi togliere la spunta e approvare lo stesso."); }
   }
-  await scriviEsito(uid, id, { stato: "approvato", approvato: { da: ME(), at: Date.now() }, registro, esito: { da: ME(), at: Date.now() } });
+  if (cambiata) await correggiPer(uid, id, a, p);
+  await scriviEsito(uid, id, { stato: "approvato", approvato: { da: ME(), at: Date.now() }, registro, esito: { da: ME(), at: Date.now() } }, cambiata ? `per ${perLabel(p)} (categoria corretta)` : "");
   if (evId) {
-    if (voce !== (p.voce || null)) await wUpd("anticipi/" + uid, { voci: { [id]: { per: { voce } } } }, { quiet: true }).catch(() => {});
     const s = { importo: a.importo, desc: a.desc, data: a.data || oggi(), da: uid, at: Date.now(), anticipo: id, voce };
     if (budgetEv(evId)) await wUpd("budget/" + chiaveEv(evId), { spese: { ["ant-" + id]: s } }); else await wSet("budget/" + chiaveEv(evId), { evento: evId, voci: {}, spese: { ["ant-" + id]: s } });
-  } else if (a.per && a.per.tipo === "gruppo" && GRUPPI[a.per.id] && GRUPPI[a.per.id].budget) {
+  } else if (p.tipo === "gruppo" && GRUPPI[p.id] && GRUPPI[p.id].budget) {
     const s = { importo: a.importo, desc: a.desc, data: a.data, da: uid, at: Date.now(), anticipo: id };
-    if (S.budget[a.per.id]) await wUpd("budget/" + a.per.id, { spese: { ["ant-" + id]: s } }); else await wSet("budget/" + a.per.id, { importi: {}, spese: { ["ant-" + id]: s } });
+    if (S.budget[p.id]) await wUpd("budget/" + p.id, { spese: { ["ant-" + id]: s } }); else await wSet("budget/" + p.id, { importi: {}, spese: { ["ant-" + id]: s } });
   }
-  toast(registro ? `Approvato e scritto sul registro (n. ${registro.n}).` : "Approvato.");
+  toast((registro ? `Approvato e scritto sul registro (n. ${registro.n}).` : "Approvato.") + (cambiata ? ` Categoria corretta: per ${perLabel(p)}.` : ""));
 };
 FORMS["ant-rimborsa"] = async (f) => {
   const uid = f.dataset.u, id = f.dataset.id, a = anticipiTutti().find((x) => x.uid === uid && x.id === id); if (!a) return;
@@ -6802,7 +6938,6 @@ route("editoriale", (mese) => {
   if (!can.editoriale()) return `<div class="wrap">${backLink("gr-marketing", "Marketing")}${empty("Calendario del gruppo Marketing", "Lo usano i membri del gruppo Marketing e il consiglio.")}</div>`;
   const m = /^\d{4}-\d{2}$/.test(mese || "") ? mese : oggi().slice(0, 7);
   const [y, mm] = m.split("-").map(Number);
-  const prima = isoOf(new Date(y, mm - 2, 1)).slice(0, 7), dopo = isoOf(new Date(y, mm, 1)).slice(0, 7);
   const tutti = postTutti(), delMese = tutti.filter((p) => p.data.startsWith(m));
   const primo = new Date(y, mm - 1, 1), off = (primo.getDay() + 6) % 7, nGiorni = new Date(y, mm, 0).getDate();
   const celle = [];
@@ -6818,8 +6953,8 @@ route("editoriale", (mese) => {
   return `<div class="wrap">${backLink("gr-marketing", "Marketing")}
     <div class="pagehead"><div class="stack"><span class="eyebrow">Gruppo Marketing</span><h1>Calendario editoriale</h1></div><button class="btn pri" data-act="post-nuovo">${ic("plus")}Nuovo post</button></div>
     ${daFare.length ? `<p class="small muted">Prossimi: ${daFare.map((p) => `<b>${esc(fData(p.data))}</b> ${esc(p.titolo)}`).join(" · ")}</p>` : ""}
-    <div class="row between"><a class="btn sm ghost" href="#editoriale-${prima}" aria-label="Mese prima">${ic("back")}</a><h2 class="disp" style="margin:0;text-transform:capitalize">${MESI[mm - 1]} ${y}</h2><a class="btn sm ghost" href="#editoriale-${dopo}" aria-label="Mese dopo" style="transform:scaleX(-1)">${ic("back")}</a></div>
-    <div class="ecal" role="grid">${["lun", "mar", "mer", "gio", "ven", "sab", "dom"].map((g) => `<span class="eg">${g}</span>`).join("")}${celle.join("")}</div>
+    ${testaMese(m, "ed")}
+    ${zonaMese("ed", m, `<div class="ecal" role="grid">${["lun", "mar", "mer", "gio", "ven", "sab", "dom"].map((g) => `<span class="eg">${g}</span>`).join("")}${celle.join("")}</div>`)}
     <div class="chips legcanali">${legendaCanali()}<button class="btn sm ghost" data-act="colori-canali">${ic("edit")}Colori</button></div>
     <section class="panel"><div class="ph"><h3>Post di ${MESI[mm - 1]}</h3><span class="pill">${delMese.length}</span></div>
       ${giorni.length ? giorni.map((g) => `<div class="wk">${esc(fDataL(g))}</div><div class="list">${delMese.filter((p) => p.data === g).map(riga).join("")}</div>`).join("") : `<div class="pb"><p class="small muted">Nessun post in calendario questo mese: tocca un giorno per aggiungerlo.</p></div>`}</section>
@@ -7001,7 +7136,7 @@ function bloccoSponsorizzate() {
 /* ================= GIOCHI: la parte vera sta in un file a parte (giochi.txt) =================
    L'app resta leggera: il file dei giochi si scarica solo quando qualcuno apre la sezione, poi resta in memoria
    (e il telefono lo tiene anche senza rete). Qui c'è solo il caricatore e la pagina d'attesa. */
-const GIOCHI_V = "b17cd195bb";
+const GIOCHI_V = "d5efa1434f";
 const GIOCHI = { stato: null, err: "" }; /* null · carico · ok · errore */
 function caricaGiochi() {
   if (GIOCHI.stato) return; /* già scaricato, in arrivo o andato male (si riprova solo col pulsante) */
@@ -7291,12 +7426,12 @@ function notificaAnnullato(e, quante) {
 }
 
 /* ---------- chi riceve cosa ---------- */
-function notificaEsito(uid, id, e) {
+function notificaEsito(uid, id, e, nota = "") {
   if (!e || !e.esito || Date.now() - (e.esito.at || 0) > 60000) return; // gli «annulla» non rimandano niente
   const a = ((S.anticipi[uid] || {}).voci || {})[id] || {};
   const cosa = a.importo ? `${euro(a.importo)}${a.desc ? " · " + a.desc : ""}` : "";
   const t = { approvato: "Rimborso approvato", rimborsato: "Rimborso pagato", rifiutato: "Rimborso non approvato" }[e.stato];
-  if (t) notifica([uid], t, e.stato === "rifiutato" && e.esito.nota ? `${cosa} · ${e.esito.nota}` : cosa, "#anticipi", "soldi");
+  if (t) notifica([uid], t, e.stato === "rifiutato" && e.esito.nota ? `${cosa} · ${e.esito.nota}` : nota ? `${cosa} · ${nota}` : cosa, "#anticipi", "soldi");
 }
 
 /* ================= COMPITI: il consiglio assegna cose da fare ai soci ================= */
