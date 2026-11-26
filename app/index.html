@@ -992,7 +992,7 @@ input[type="checkbox"], input[type="radio"], progress { accent-color: var(--verd
 .ecell.oggi { border-color: var(--verde); box-shadow: inset 0 0 0 1px var(--verde); }
 .pchip { display: block; font-size: .66rem; font-weight: 700; line-height: 1.25; padding: 2px 5px; border-radius: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .psq { width: 12px; height: 34px; border-radius: 4px; flex: none; }
-@media (max-width: 520px) { .ecell { min-height: 54px; padding: 3px; } .pchip { font-size: 0; height: 6px; padding: 0; } }
+@media (max-width: 520px) { .ecell { min-height: 54px; padding: 3px; } }
 
 /* strumenti compatti in home: una griglia da app */
 .tools.mini { grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 10px; }
@@ -1282,6 +1282,27 @@ body.kiosk .cassa .ctot div { padding: 6px 10px; }
 .mazzo-punti i { width: 7px; height: 7px; border-radius: 4px; background: var(--line); transition: width .2s, background .2s; }
 .mazzo-punti i.on { width: 18px; background: var(--verde); }
 @media (prefers-reduced-motion: reduce) { .mazzo-pila > .hero { transition: opacity .15s; } }
+/* budget per evento */
+.budev .budv { align-items: center; text-align: left; }
+.budev .budv .bar { margin: 2px 0; }
+.budev .v.neg, .budev .v.neg small { color: var(--bad); }
+.bevr { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) auto; gap: 8px; align-items: end; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+.bevr .field { margin: 0; }
+@media (max-width: 520px) { .bevr { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; } .bevr > .field:first-of-type { grid-column: 1 / -1; } }
+/* calendario editoriale: sigla del canale (si riconosce anche senza colori) */
+.pchip .psig { font-weight: 800; margin-right: 4px; letter-spacing: .02em; }
+.psq { width: 26px; height: 34px; display: inline-flex; align-items: center; justify-content: center; font: 800 .62rem/1 var(--f-body, inherit); letter-spacing: .02em; }
+.sq.psig-sq { width: auto; min-width: 18px; height: 16px; padding: 0 3px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; font: 800 .58rem/1 var(--f-body, inherit); font-style: normal; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .12); }
+.pchip { box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .12); }
+.legcanali { align-items: center; }
+.colcan { align-items: center; gap: 10px; }
+.colcan .anteprima { font-size: .8rem; padding: 4px 8px; max-width: 60%; }
+.colcan input[type=color] { width: 44px; height: 34px; padding: 0; border: 2px solid var(--line); border-radius: 8px; background: none; cursor: pointer; }
+@media (max-width: 520px) {
+  .ecell .pchip { font-size: .56rem; height: auto; padding: 1px 3px; display: inline-block; align-self: flex-start; }
+  .ecell .pchip .ptit { display: none; }
+  .ecell .pchip .psig { margin: 0; }
+}
 
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="s-picto" viewBox="269.6 205.0 810.8 440.4"><path d="M457.42,452.1c-20.6,7.13,5.64,36.68,17.82,61.08,12.18,24.39-20.1,38.9-48.45,40.88-28.35,1.98-18.46,5.93-25.05,42.2-7.1,39.07-29.7,21.74-33.68,18.34-.55-.47-1.1-.92-1.66-1.38-19.49-15.99-22.26-44.2,1.06-55.86,23.74-11.87,59.34-21.1,58.02-50.11-1.32-29.01-32.34-36.92-21.44-72.53,10.89-35.6,10.89-54.06-6.25-55.38-6.9-.53-11.88,6.42-17.34,15-7.77,12.2-19.16,20.77-35.37,20.77-18.11,0-43.08-3.22-63.7-26.82-18.79-21.5-15.6-44.93,13.05-45.59,34.68-.8,15.1,17.06,27.35,38.64,6.81,12,20.94,26.93,29.21,9.21,9.23-19.78,27.03-66.59,58.02-51.43,30.99,15.16,21.48,39.42,48.72,49.17,15.24,5.45-2.97,10.25-9.55-50.96-1.55-14.44-4.91-58.21,27.08-58.21s58.01,1.98,55.22,28.35c-2.79,26.37-44.33,60-43.01,85.71,1.32,25.71,13.16,35.22,31.19,23.74,0,0,31.49-31.29,66.66-28.95,35.16,2.34,43.66,31.65,63,24.18,0,0,27.03-10.33,35.52-26.21,11.68-21.85-74.24-19.22-54.52-51.81,19.72-32.59,75.91-51.88,88.03-19.81,12.12,32.06-14.15,67.66-14.16,67.66,0,0,32.39-26.37,45.82-14.51,13.43,11.87,15.8,32.97,23.85,34.28,8.04,1.32,17.01-25.05,32.31-19.78,15.3,5.27,57.25,19.78,85.73,9.23,28.47-10.55,43.39-14.5,43.4-14.51,0,0-51.91-.32-59.35-23.46-6.93-21.56-2.2-63.57,59.35-45.11,61.56,18.46,81.34,28.91,64.19,50.72-17.14,21.81-52.75,32.35-31.65,46.86,0,0,42.17,33.08,61.94,10.24,17-19.63,47.96-94.13-18.43-114.42-46.02-14.06-47.47-68.25-15.82-87.53,31.65-19.28,89.67-4.79,85.71,17.63-3.96,22.43-15.82,11.79-36.92,12.49-21.1.7-38.24,13.89,0,38.94,38.24,25.05,39.38,94.49,17.14,130.55-17.3,28.06-36.92,46.15-69.89,35.6-32.97-10.55-65.93-42.2-65.93-5.27s60.66,27.69,47.47,71.21c-13.19,43.52-51.43,51.43-2.64,61.98s32.97,51.43-19.78,56.7c-52.75,5.27-94.53,7.91-88.8-39.56,5.73-47.47,14.58-66.32,30-50.11,22.44,23.58-34.89,58.8,12.33,65.21,48.18,6.54,53.53-15.17,31.07-29.61-22.48-14.46-26.79-34.28-14.92-55.38,11.87-21.1,2.31-43.17-16.65-46.64-18.96-3.47-96.67-19.29-79.57,9.72,17.1,29.01,25.81,48.79,8.93,56.7-16.88,7.91-59.39-3.96-65.17-19.78-5.78-15.82,10.71-35.6,25.54-23.74,14.84,11.87,18.52-10.21,12.72-22.91-5.8-12.7-8.96-46.98,26.91-43.03,35.86,3.96,32.58-19.88,21.03-21.1-41.35-4.38-65.24,20.65-72.47,29.75-2.3,2.9-5.81,4.68-9.5,4.54-13.94-.54-10.36-25.06-22.11-43.52-13.43-21.1-41.95,3.96-27.05,30.33,10.06,17.8,3.35,40.41-5.69,58.09-13.42,26.24-2.79,58.49,23.45,71.91,11.78,6.02,27.31,11.34,47.76,15.05,26.1,4.74-11.85,52.75-24.5,55.38-12.65,2.64-19-6.59-4.24-25.05,12.38-15.49-3.62-18.91-31.69-15.72-17.07,1.94-34.27-4.1-45.9-16.75-11.85-12.89-15.94-30.38-.19-58.52,4.27-7.63-33.24-1.32-41.16,19.78-7.91,21.1,9.23,54.06-25.05,84.39-34.28,30.33-63.3,15.82-81.09,13.19-17.8-2.64.66-30.33,33.62-25.05,32.97,5.27,39.26-14.58,25.47-64.44-11.6-41.93,19.63-77.62,64.24-66.02,41.34,10.75,9.16-31.48-24.32-37.01-33.67-5.55-34.25-24.77-54.68-24.77-47.16,0-50.08,68.07-50.05,72.2,0,.13,0,.26-.02.39-2.37,27.46,3.64,21.54,10.7,45.21,7.08,23.74-17.53,41.47-36.65,46.75-19.12,5.27-3.96,18.46,10.71,39.56,14.67,21.1-37.74,25.05-50.93,20.44-13.19-4.62-13.19-16.48,5.27-17.99,18.46-1.5,9.89-16.96-5.93-26.19-11.87-6.92-3.36-22.96,16.68-32.33,20.79-9.73,24.56-23.74,18.52-54.85-5.1-26.27-14.29-68.77-38.85-60.27Z"/></symbol><symbol id="s-word" viewBox="44.2 711.6 1261.5 163.4"><path d="M44.23,714.98h98.68c29.98,0,50.8,13.65,50.8,39.16,0,15-7.16,24.84-22.15,30.21,21.26,4.92,32.22,18.12,32.22,38.49,0,29.09-22.38,48.78-64,48.78H44.23v-156.64ZM127.25,777.64c16.33,0,26.18-7.61,26.18-19.69s-9.18-18.35-26.18-18.35h-38.27v38.04h38.27ZM134.41,844.77c18.35,0,29.09-8.06,29.09-23.05s-10.29-22.83-29.09-22.83h-45.43v45.88h45.43ZM393.08,871.62h-44.76l-10.52-26.41h-71.38l-10.52,26.41h-44.76l68.03-156.64h45.87l68.03,156.64ZM328.86,822.84l-26.63-67.36-26.86,67.36h53.48ZM569.62,763.54l-34.01,12.98c-10.07-19.24-25.51-32.89-50.12-32.89-29.09,0-44.08,18.8-44.08,47.89,0,32,18.12,50.13,50.35,50.13,27.53,0,42.07-13.2,46.1-28.64h-53.93v-24.62h90.85v83.24h-35.81v-39.16c-9.4,29.09-29.76,42.52-59.3,42.52-46.77,0-78.77-33.34-78.77-82.12s30.88-81.23,87.94-81.23c47.66,0,73.62,23.27,80.78,51.91ZM768.09,871.62h-44.76l-10.52-26.41h-71.38l-10.52,26.41h-44.76l68.03-156.64h45.87l68.03,156.64ZM703.86,822.84l-26.63-67.36-26.86,67.36h53.48ZM924.49,871.62h-139.41v-156.64h134.94v26.85h-90.18v37.37h81.23v22.38h-81.23v42.07h94.66v27.97ZM1110.65,759.07c0,22.15-13.2,38.71-31.55,45.43l37.37,67.13h-46.99l-33.12-63.77h-38.27v63.77h-44.76v-156.64h106.52c29.98,0,50.79,15.89,50.79,44.08ZM1038.15,785.47c19.92,0,29.99-9.17,29.99-22.38s-9.62-21.26-29.99-21.26h-40.05v43.64h40.05ZM1305.77,871.62h-44.76l-10.52-26.41h-71.38l-10.52,26.41h-44.76l68.03-156.64h45.87l68.03,156.64ZM1241.55,822.84l-26.63-67.36-26.86,67.36h53.48Z"/></symbol><symbol id="s-o1" viewBox="0 0 99.8 129.8"><path d="M49.2,129.6C42.4,128.7 39.7,125.8 39.8,119.3C39.8,114.4 41.4,105.1 42.8,102.5C44.2,99.6 46.3,99.5 48.2,102.3C49.9,104.5 49.8,106.7 48.2,110.9C46.4,115.7 46.2,116.4 46.2,117.4C46.1,120.0 48.0,121.2 53.3,121.7C62.8,122.7 66.4,117.9 59.9,112.8C53.7,107.8 52.5,103.3 55.7,96.0C57.5,91.8 57.6,88.9 56.1,86.0C54.9,83.5 53.4,82.5 50.0,81.7C41.1,79.8 33.1,79.3 30.7,80.5C29.3,81.1 28.7,82.1 28.9,83.2C29.0,83.6 30.0,85.7 31.0,87.8C34.8,95.5 35.3,99.0 33.0,101.1C31.6,102.3 30.5,102.6 27.6,102.6C22.2,102.5 16.0,99.8 14.5,96.7C13.1,93.9 14.1,89.9 16.7,88.3C18.1,87.5 19.2,87.6 20.9,88.8C21.8,89.3 22.7,89.8 23.1,89.8C25.1,89.7 25.9,86.1 24.6,82.3C23.0,77.3 23.4,72.9 25.7,70.7C27.1,69.3 27.5,69.1 31.8,69.1C36.2,69.1 37.4,68.8 38.7,67.7C40.4,66.1 39.9,63.5 37.7,62.8C36.3,62.4 32.5,62.6 30.0,63.2C25.9,64.3 21.6,67.1 18.7,70.6C17.2,72.5 16.5,73.0 15.3,73.0C13.7,73.0 12.8,71.6 11.8,67.7C9.8,59.3 8.2,57.1 2.7,54.8C0.7,53.9 0.0,53.2 0.0,52.0C-0.0,50.1 3.1,48.2 6.4,48.0L8.3,47.9L9.6,49.3C10.9,50.6 11.3,51.3 13.9,56.9C15.2,59.7 16.2,59.6 18.9,56.4C20.8,53.9 22.1,53.0 23.4,53.0C23.8,53.0 25.7,53.6 27.7,54.3C32.9,56.0 36.2,56.7 40.1,56.9C44.0,57.1 45.3,56.9 48.9,55.5C50.4,54.9 53.4,53.8 55.5,53.0L59.3,51.6L56.5,51.3C50.1,50.6 45.5,48.5 44.0,45.5C43.1,43.7 42.7,39.4 43.3,36.7C43.7,34.7 44.9,32.6 46.3,31.5C49.7,28.8 54.4,29.0 63.4,32.1C81.7,38.6 83.1,41.9 71.7,51.9C65.8,57.0 65.6,58.0 70.2,61.4C75.1,65.0 79.6,66.4 82.8,65.4C87.5,63.8 92.6,50.2 91.5,42.3C90.6,35.7 87.3,31.6 80.9,29.1C74.0,26.5 70.5,21.6 70.5,14.8C70.5,11.8 70.8,10.1 71.9,7.8C73.5,4.5 76.3,2.1 80.1,0.8C82.9,-0.1 89.0,-0.2 92.1,0.7C95.4,1.6 97.7,3.1 98.9,4.8C100.3,6.9 99.6,10.9 97.7,11.9C97.0,12.3 96.6,12.3 94.8,12.1C87.5,11.3 83.9,12.4 83.6,15.3C83.3,17.5 84.9,19.7 88.6,22.6C95.4,27.9 98.1,34.4 98.1,45.2C98.1,54.2 96.6,59.5 92.0,66.3C88.7,71.3 85.1,73.9 81.0,74.2C77.3,74.4 74.7,73.6 67.9,69.9C62.0,66.7 60.4,66.2 59.0,66.9C57.7,67.5 57.4,68.5 57.4,71.5C57.4,73.9 57.4,74.3 58.1,75.5C59.0,77.4 61.0,79.2 64.2,81.2C67.2,83.1 68.8,84.4 69.6,85.9C71.8,89.6 70.4,95.3 65.5,103.0C63.3,106.5 63.0,107.1 63.0,108.1C63.0,109.6 64.1,110.3 68.7,111.6C75.0,113.4 77.3,115.5 77.4,119.1C77.4,123.0 73.1,127.0 67.2,128.3C63.7,129.2 52.2,130.0 49.2,129.6Z"/></symbol><symbol id="s-o2" viewBox="0 0 127.5 126.2"><path d="M62.2,126.0C59.3,125.6 57.5,124.5 57.1,122.7C56.8,121.3 58.3,120.0 60.7,119.5C64.1,118.9 64.8,118.4 64.8,116.8C64.8,115.1 63.4,113.2 60.4,110.8C57.8,108.8 57.5,107.5 58.8,104.8C59.6,103.1 61.8,101.0 64.6,99.4C72.1,95.0 73.0,90.9 69.9,75.7C67.2,62.7 63.2,57.3 58.2,59.8C55.0,61.4 55.6,64.4 61.0,74.3C64.6,81.1 65.1,82.3 64.9,84.5C64.7,87.7 62.7,90.1 58.6,92.1C55.7,93.5 53.5,94.1 49.3,94.6C42.7,95.4 42.5,95.6 42.0,102.6C41.7,106.9 40.9,111.2 40.3,113.2C38.3,118.8 34.2,119.3 29.5,114.4C25.3,109.9 24.2,104.2 26.6,99.7C27.7,97.5 29.1,96.5 34.8,93.6C45.0,88.5 47.7,85.8 48.5,80.4C49.0,77.1 48.0,73.9 44.8,68.6C40.7,61.8 40.5,59.7 42.5,51.4C44.0,45.1 44.3,42.6 44.2,40.0C44.0,36.8 42.8,35.0 40.6,34.6C38.7,34.2 37.2,35.4 35.0,39.0C31.2,45.2 28.2,47.0 21.7,46.7C13.5,46.3 7.0,42.7 2.6,36.2C-0.4,31.7 -0.9,27.0 1.4,24.2C2.9,22.5 6.7,21.5 10.2,22.0C13.8,22.5 14.4,23.3 14.7,28.2C15.0,32.2 15.5,34.2 17.0,36.5C19.7,40.8 22.3,42.1 24.1,40.2C24.6,39.7 25.4,38.1 26.1,36.3C29.1,29.1 31.3,25.2 34.0,22.5C37.1,19.4 39.8,18.8 43.4,20.6C46.7,22.2 48.9,24.7 51.3,29.4C54.0,34.5 55.4,36.1 58.9,37.6L60.3,38.2L59.9,37.7C58.6,35.6 57.1,30.2 56.2,24.1C55.5,19.2 55.4,10.3 56.1,7.7C56.9,4.3 58.6,1.8 60.7,0.7C61.8,0.1 62.0,0.1 66.9,0.1C73.9,0.1 77.0,0.9 79.3,2.9C80.8,4.3 81.3,5.5 81.4,7.9C81.7,12.0 80.5,14.8 74.4,24.3C68.6,33.5 67.5,36.7 68.3,41.8C69.5,49.7 73.6,51.2 79.3,45.9C83.0,42.5 87.9,39.5 92.0,38.2C93.6,37.7 94.4,37.6 97.5,37.6C102.8,37.6 104.9,38.5 110.4,42.9C113.8,45.6 114.9,46.1 116.9,46.0C122.5,45.7 125.3,46.9 126.9,50.4C128.9,54.7 125.4,56.8 116.4,56.8C110.9,56.7 107.7,55.5 103.1,51.6C100.2,49.1 99.0,48.5 97.0,48.3C87.4,47.4 80.8,58.5 80.7,75.5L80.6,79.9L81.4,81.8C84.2,88.4 84.7,90.3 84.3,93.1C83.5,97.9 79.4,102.3 73.4,104.6C70.9,105.6 70.5,105.9 70.0,106.7C69.3,108.0 70.1,109.7 73.8,115.3C76.7,119.6 77.1,120.5 76.4,122.1C75.3,124.8 68.2,126.7 62.2,126.0Z"/></symbol><symbol id="s-o3" viewBox="0 0 122.2 129.8"><path d="M17.0,129.4C12.9,128.7 8.0,127.3 7.3,126.7C5.8,125.3 7.2,121.9 10.2,120.0C13.2,118.1 16.2,117.6 20.8,118.1C26.2,118.8 28.8,117.8 30.4,114.6C32.0,111.6 31.9,105.8 30.1,97.9C28.4,89.9 28.4,90.4 28.6,86.5C28.7,82.4 29.1,80.8 30.5,77.9C34.3,69.9 41.6,66.7 50.9,68.9C55.8,70.0 57.8,69.6 57.8,67.5C57.7,63.0 49.9,56.6 42.2,54.9C38.8,54.1 35.7,52.7 33.1,50.6C27.2,46.1 22.8,46.0 16.3,49.9C2.9,58.1 -2.7,58.0 1.2,49.6C3.2,45.5 6.3,42.0 10.8,39.0C20.7,32.5 29.7,32.2 37.5,38.3C42.9,42.4 43.4,42.8 44.7,43.2C46.3,43.6 47.1,43.5 49.5,42.4C55.8,39.3 61.1,34.0 60.6,31.2C60.3,29.4 58.6,28.2 51.8,25.6C41.9,21.7 39.5,19.3 41.2,14.8C43.9,7.7 54.1,0.5 61.9,0.1C69.3,-0.3 72.9,3.9 72.8,13.1C72.8,18.4 71.7,22.7 69.0,28.2C68.0,30.0 67.7,30.9 68.0,30.7C73.2,27.0 75.8,25.6 78.3,25.2C82.1,24.5 83.9,26.2 87.4,33.9C90.1,39.9 91.0,40.3 93.8,36.8C98.6,30.8 99.1,30.6 106.1,33.1C108.3,33.8 111.9,34.9 114.1,35.3C120.1,36.7 122.2,37.9 122.2,39.8C122.3,41.0 121.4,42.0 119.8,42.8C118.8,43.3 118.1,43.4 114.6,43.5C109.9,43.7 107.7,44.2 104.3,45.9C100.3,47.8 97.1,50.3 94.2,54.0C92.1,56.5 90.5,57.1 88.7,55.9C87.5,55.1 86.9,53.6 85.9,49.5C84.4,43.4 83.3,40.7 81.7,38.9C78.5,35.2 73.2,38.1 72.2,44.2C71.8,46.3 72.2,48.6 73.5,51.6C74.8,54.7 75.1,55.9 75.1,59.2C75.1,63.6 74.0,67.8 71.6,73.2C70.1,76.7 69.7,78.7 69.7,82.5C69.7,86.4 70.2,88.6 71.6,91.7C74.9,98.7 80.6,102.3 92.7,105.4C97.6,106.6 98.3,107.0 98.8,108.8C99.6,112.0 96.1,119.3 91.3,124.3C88.6,127.0 86.3,127.9 84.5,126.8C82.3,125.5 82.8,122.1 86.0,117.5C87.4,115.4 87.7,114.3 87.1,113.2C86.1,111.5 83.1,111.1 74.7,111.6C71.6,111.8 70.8,111.8 69.2,111.4C63.2,110.1 57.8,105.1 56.4,99.6C55.4,95.6 56.1,90.8 58.6,85.0C59.7,82.4 59.7,82.3 57.7,82.3C54.9,82.2 50.5,84.3 48.0,86.8C45.2,89.6 44.5,92.1 44.5,100.1C44.5,107.8 44.0,111.2 42.1,115.1C40.9,117.8 39.4,119.9 36.9,122.4C30.9,128.4 24.3,130.7 17.0,129.4Z"/></symbol><symbol id="s-o4" viewBox="0 0 325.6 400.0"><path d="M92.8,398.6C70.9,391.2 50.5,366.3 59.2,357.6C61.6,355.2 62.6,355.1 76.4,355C97.1,354.9 108,351.5 111.2,344C112.5,340.9 112,339.3 108.2,334.1C98.5,320.8 95.2,303.9 99.8,290.7C104.6,276.7 116.6,267.4 140.5,259C144,257.8 143.3,257.3 135.4,255.4C91.3,244.7 66.3,218.8 70,187.4C72.1,168.9 81.4,143.2 92.8,124.2C100.6,111.3 103.3,105.1 105,97.2C106.6,88.9 106.8,73.1 105.2,67.1C101.3,51.7 82.7,41 54.4,37.9C51.4,37.5 48.1,37.1 47,37C45.9,36.8 37.4,36.6 28,36.4C8.8,36.1 8.4,36.1 4.7,32.8C-1.1,27.7 -1.7,17.3 3.4,8.6C8.1,0.5 20.5,-1.7 44.2,1.3C77.6,5.6 84.2,6.7 96.4,9.9C126.8,17.8 142.1,32.1 146.7,56.6C147.6,61.6 147.7,81.5 146.9,87.4C144.4,105.2 140.2,120 129.2,150.4C118.8,179.2 117.3,185.1 118.8,191.6C123.4,211.6 158.4,217.3 165.2,199.2C167.6,192.8 166.4,187.2 160.3,176.5C153.3,164.3 153,160.4 158,153.8C164.3,145.4 176,141 192.2,141C225.8,141 247.6,159.7 241.3,183C240.2,186.9 237.5,192.5 233.3,199.7C217.5,226.6 219.4,234.5 240,227.6C273.8,216.3 295.5,179.2 280.9,157.9C270.9,143.4 239.8,126.6 207.7,118.4C182.3,111.9 167,91.3 168.8,66.1C170.9,38.1 188.7,17 216.2,9.8C242.4,3 287.6,10.5 309.6,25.2C327.4,37.1 330.9,54.6 317.9,66.6C309.9,74.1 306.9,74.1 274.2,67.3C263.9,65.1 262.6,64.8 256.9,63.8C240.4,60.9 233.9,62 236.8,67.5C240.2,74 248.8,79.7 267.8,88.3C300.5,103.2 312.1,116.5 317.8,145.5C327.8,197.2 306.4,243.5 260.2,270.2C242.4,280.5 233.9,296.1 236.4,314.3C237.9,324.9 245.6,337.9 253.4,342.8C261.8,348.1 270.5,345.7 280.4,335.4C288.2,327.1 290.3,319 287.4,308C284.4,296.6 291.5,286.6 302.6,286.6C335.1,286.6 321.3,374.1 286.3,389.5C262.6,400 226.7,379.2 212,346.4C207.6,336.6 205.9,329.8 203.8,314.2C202.1,301.5 197.9,293.9 190.7,290.5C179.1,284.9 157.2,290.7 145.7,302.3C137.2,310.8 137.2,319.4 145.7,333.9C154.1,348.2 156.4,356.2 154.4,363.8C150.9,377.4 133.7,392.4 115.8,397.7C113.8,398.3 111.3,399.1 110.2,399.4C106.2,400.6 97.3,400.1 92.8,398.6Z"/></symbol><symbol id="s-o5" viewBox="0 0 304.4 400.0"><path d="M78.6,399.1C61,395 50.9,388.7 44.3,377.7C33.5,359.9 36,342.9 50.4,334.7C56.3,331.4 63.9,330.9 74.6,333.2C86.9,335.8 99.3,334.1 105.3,328.8C113.1,322 118.4,303.2 121.6,271.8C121.8,269.6 122.1,267.4 122.2,266.8C123.7,258.3 123.7,228 122.1,221.8C119.7,212 109.1,207.1 99.7,211.4C93.9,214 91.1,218.4 90.4,226C87,262.6 74.1,281.3 52,281.9C34.9,282.4 28.1,274.8 26,253.2C23.9,230.5 17.3,209.3 5.7,188.3C1,179.6 -0,176.8 -0,171.6C0,163.5 4,158.5 13.3,154.9C15.3,154.2 18,153.2 19.2,152.7C22.8,151.3 31.8,151.4 34.8,152.8C43.4,156.9 47.2,164 50.6,182.8C54.3,202.7 61.5,214.5 66.6,209C69.4,206.1 70,198.5 68.8,183.8C67.8,171.1 68.4,152.7 70.2,144.9C73.3,131.5 81.7,125.2 96.2,125.2C105.7,125.2 112.4,117.9 109.2,110.9C108.1,108.4 106.3,107.5 97.7,105C83.5,100.9 77.3,97.8 71.4,91.8C55.1,75.3 57.3,40.7 75.3,30.1C83.5,25.2 88.6,24.5 111.8,25.2C121.8,25.5 128.2,22.8 133.9,15.9C134.7,14.9 137.2,11.9 139.4,9.2C144.7,2.8 148.1,-0 150.5,-0C152.7,0 153.3,1.6 154,9.2C155.2,23.8 156.7,30.3 159,30.7C160.2,31 161.4,29.7 164.8,24.2C173.4,10.4 179.2,7.3 183.9,14.2C188.4,20.8 190.2,43.3 187.6,59.6C184.6,77.7 179.4,94.8 173.6,105.5C171,110.2 171.6,110.3 177.9,106.7C233.5,74 272.4,84.4 292.2,137.3C296.9,150 301,168.6 302.8,185.6C303.1,187.9 303.5,191.2 303.7,192.8C303.9,194.5 304.2,202.6 304.3,210.9C304.5,227.7 303.9,231.5 300,241.7C291.7,262.9 270.3,274.6 253.5,267C242.6,262.1 242.2,253.3 251.4,223.2C258.4,200.3 260.5,188.2 259.6,175.9C257.8,152.7 240.5,131.5 223.2,131.5C217.2,131.5 215.2,132.3 210.9,136.6C204.4,143 205,145.3 216.1,156.7C227.5,168.6 231.1,174.5 233.5,185.7C234.3,189.7 234.5,207 233.7,213C231.7,228.7 228.6,242.9 220.5,274C220,275.7 218.7,280.6 217.6,285C216.4,289.4 215.3,294 215,295.2C214.7,296.4 213.9,300.3 213.1,303.8C209.8,318.4 209.3,325.6 211.2,329.4C214.3,335.6 218.7,334.8 243.6,323.8C267.2,313.4 274.7,313.6 280.2,325C288.1,341.4 280.2,375.4 265.8,386.9C252.3,397.7 226.1,396 204.4,382.8C186.1,371.6 185,367.2 186,306.8C187,245.9 186.1,230.7 180.5,222.4C173.4,211.6 163.3,233.1 159.2,267.6C156,294.3 156,316.1 159.2,345.4C162.3,373.1 144.4,393.6 113.2,398.4C111.6,398.6 109.1,399.1 107.7,399.4C103.6,400.3 82.9,400.2 78.6,399.1Z"/></symbol><symbol id="s-o6" viewBox="0 0 400.0 390.0"><path d="M277.6,389.6C277.1,389.3 275.3,388.8 273.6,388.4C252.8,382.8 237.5,361.7 240.6,342.8C242.2,332.6 246.1,318 251.8,299.6C256.4,284.9 256.4,280.1 251.6,273.3C248.4,268.7 241.2,263.9 234.3,261.8C230.8,260.7 230.7,260.9 230.3,266.4C225.6,346.1 160.3,373.7 88.2,326.5C64.6,311 47.6,311.5 40.7,327.9C31.5,349.5 9.9,357.3 1.4,342.1C-1.2,337.4 -0.8,332.8 2.8,324.4C9.6,308.5 10.7,302.5 8.4,293.2C6.1,283.8 8.5,275.1 14.5,271C26.4,262.8 50.3,267 85.8,283.3C105.3,292.3 116.1,293.7 128.3,288.8C142.8,283 159,263.8 167.3,242.5C180.6,208.7 173.5,159.5 153.6,147.9C137.8,138.6 117.6,143.8 110.2,158.9C102,175.8 104.4,201.6 114.2,201.6C116.1,201.6 117.1,200.4 118.3,196.9C123.9,180.5 142,175.5 156.9,186.3C172.5,197.7 155.4,231.7 130.4,239.2C99.3,248.5 72.5,220.7 63.4,169.8C63.1,167.8 62.6,165.2 62.4,164C55.9,127.8 65.2,102.8 87.2,96.7C94.6,94.6 108.1,93.9 116.4,95.1C126.5,96.6 133,97.7 137.4,98.8C138.3,99 140.6,99.6 142.6,100C144.6,100.5 149.1,101.5 152.6,102.4C172.6,107.3 175.7,107.7 183.7,106.8C201.3,104.9 201.9,95.9 185.5,81.9C171.5,70 164,54.7 164,38.1C164,17.9 177,5.6 202.4,1.6C205.1,1.2 208.3,0.6 209.3,0.4C216.5,-1.1 236.2,0.1 246.6,2.6C273.6,9.2 284.4,30.6 274.9,58.6C274.1,61 271.2,67.5 268.5,73C255.5,99.3 251.4,113.4 256.2,115.5C258.5,116.6 260.4,115.9 267.9,111.3C302.3,90.4 333.3,87.6 356.7,103.1C374,114.6 389.6,137.9 397.3,163.6C402.9,182.1 399.4,202.2 390,206.9C379.1,212.3 365.6,200.1 351.9,172.6C334.8,138.2 324.2,131.7 302.7,142.4C286.6,150.5 268.4,164.9 259.9,176.2C248.3,191.5 250,203.2 264.8,211.6C299.8,231.2 311.9,255.3 303.6,288.8C300.9,299.8 295.8,311.3 289.1,321.9C284.6,329.2 283.8,331.6 285,335.8C287.1,343.5 293.6,347.1 299.5,343.8C302.2,342.3 306.3,338 312,330.6C322.9,316.4 329.1,312 337.5,312.5C346.6,313.1 355.1,319.6 359.4,329.4C365.7,343.6 361.9,359.8 350.2,369.1C343.2,374.8 319.8,384.4 305.6,387.6C303.5,388.1 300.4,388.8 298.6,389.2C295.1,390.1 279.5,390.3 277.6,389.6Z"/></symbol>
@@ -3093,6 +3114,7 @@ route("ev", (id) => {
         ${puoMat && !fin ? `<form class="pb" data-form="mat-add" data-id="${e.id}" style="border-top:1px solid var(--line)"><div class="row nw"><label class="sr" for="matN">Cosa serve</label><input class="in grow" id="matN" name="n" placeholder="Aggiungi: es. colla a caldo, prolunga…" maxlength="80" required><button class="btn">${ic("plus")}<span class="sr">Aggiungi</span></button></div></form>` : ""}
       </section>
     </div>
+    ${bloccoBudgetEv(e)}
     <div class="btns">
       <a class="btn" href="${linkGoogleCal(e)}" target="_blank" rel="noopener">${ic("cal")}Aggiungi a Google Calendar</a>
       ${(e.tipo === "riunione" || riunioneDiOrgano(e, "consiglio")) && isCouncil() ? (verb ? `<a class="btn" href="#${ORGANI[verbO].r}-${verb.id}">${ic("doc")}Verbale</a>` : finito(e) ? `<button class="btn" data-act="vb-carica" data-rid="${e.id}">${ic("up")}Carica il verbale</button>` : "") : e.tipo === "riunione" && verb && pubblico(verb) ? `<a class="btn" href="#vb-${verb.id}">${ic("doc")}Verbale</a>` : ""}
@@ -3474,8 +3496,8 @@ route("gr", (k) => {
     const t = totaliGiro();
     extra = `<a class="goal" href="#sponsor" style="text-decoration:none"><span class="eyebrow" style="color:var(--nero)">Raccolti nel giro ${esc(giroAttuale())}</span><span class="big">${esc(euroT(t.raccolti))}</span>${t.obiettivo ? `<div class="gbar"><b style="width:${Math.min(100, ((t.raccolti + t.promessi) / t.obiettivo) * 100)}%"></b><i style="width:${Math.min(100, (t.raccolti / t.obiettivo) * 100)}%"></i></div><span class="small"><b>Obiettivo ${esc(euroT(t.obiettivo))}</b> · promessi ${esc(euroT(t.promessi))}</span>` : ""}<span class="btn dark sm" style="align-self:flex-start">Apri Sponsor${ic("chev")}</span></a>`;
   }
-  if (g.budget) extra = bloccoBudget(k);
-  if (k === "marketing") extra = (can.sponsorizzate() ? bloccoSponsorizzate() : "") + (can.editoriale() ? bloccoEditoriale() : "") + `<div class="notice">Gli incontri «aperti a tutti» (per esempio le riprese) li vede ogni socio, che può dire se partecipa. Segna sempre luogo, orario e materiale.</div>`;
+  if (g.budget) extra = bloccoBudgetEventiGruppo(k) + bloccoBudget(k);
+  if (k === "marketing") extra = (isCouncil() || mio ? bloccoBudgetEventiGruppo(k) : "") + (can.sponsorizzate() ? bloccoSponsorizzate() : "") + (can.editoriale() ? bloccoEditoriale() : "") + `<div class="notice">Gli incontri «aperti a tutti» (per esempio le riprese) li vede ogni socio, che può dire se partecipa. Segna sempre luogo, orario e materiale.</div>`;
   const puoCreare = can.creaIncontro(k);
   return `<div class="wrap">
     ${backLink("gruppi", "Gruppi")}
@@ -3500,14 +3522,16 @@ route("budget", () => {
   if (!gs.length && !mkt) return `<div class="wrap">${backLink("strumenti", "Strumenti")}${empty("Budget dei gruppi", "Li vedono il consiglio e i gruppi che hanno un budget.")}</div>`;
   return `<div class="wrap">${backLink("strumenti", "Strumenti")}
     <div class="pagehead"><div class="stack"><span class="eyebrow">Quanto può spendere ogni gruppo nel ${anno}</span><h1>Budget</h1></div></div>
-    ${isCouncil() ? `<div class="notice small">Il consiglio fissa il budget dell'anno con «Imposta» (o «Cambia»). Le spese si scalano da sole: quelle fatte con le carte, quelle segnate qui e i rimborsi approvati. I soldi caricati sulle prepagate si dividono tra i budget da <a href="#carte">Carte → Ricarica</a>.</div>` : ""}
-    ${gs.map((k) => `<div class="stack s"><h2 class="budh"><i class="sq" style="background:${colBudget(k)}"></i>${esc(GRUPPI[k].nome)}</h2>${bloccoBudget(k)}</div>`).join("")}
-    ${mkt ? `<div class="stack s"><h2 class="budh"><i class="sq" style="background:#d6457a"></i>Marketing</h2>${riepilogoMarketing(contiMarketing(), true)}</div>` : ""}
+    ${isCouncil() ? `<div class="notice small">Il budget di ogni evento si stanzia nella pagina dell'evento («Budget dell'evento»), diviso in voci. Quello dell'anno di un gruppo («Imposta» o «Cambia») vale per le spese fuori dagli eventi. Le spese si scalano da sole: quelle fatte con le carte, quelle segnate qui, i pagamenti e i rimborsi approvati. I soldi caricati sulle prepagate si dividono tra i budget da <a href="#carte">Carte → Ricarica</a>.</div>` : ""}
+    ${gs.map((k) => `<div class="stack s"><h2 class="budh"><i class="sq" style="background:${colBudget(k)}"></i>${esc(GRUPPI[k].nome)}</h2>${bloccoBudgetEventiGruppo(k)}${bloccoBudget(k)}</div>`).join("")}
+    ${mkt ? `<div class="stack s"><h2 class="budh"><i class="sq" style="background:#d6457a"></i>Marketing</h2>${bloccoBudgetEventiGruppo("marketing")}${riepilogoMarketing(contiMarketing(), true)}</div>` : ""}
+    ${isCouncil() ? bloccoEventiConBudget() : ""}
   </div>`;
 });
+/* le spese del budget dell'anno: senza quelle per un evento che ha il suo budget (contano lì) */
 function speseGruppo(k, anno = String(new Date().getFullYear())) {
-  const carte = speseCarte().filter((m) => m.budget === k).map((m) => ({ id: "c-" + m.id, importo: m.importo, desc: m.desc, data: m.data, da: m.chi, carta: m.carta }));
-  return [...Object.entries((S.budget[k] || {}).spese || {}).map(([id, s]) => ({ id, ...s })), ...carte].filter((s) => (s.data || "").startsWith(anno)).sort((a, b) => (b.data || "").localeCompare(a.data || ""));
+  const carte = speseCarte().filter((m) => m.budget === k && !spesaDiEvento(m)).map((m) => ({ id: "c-" + m.id, importo: m.importo, desc: m.desc, data: m.data, da: m.chi, carta: m.carta }));
+  return [...Object.entries((S.budget[k] || {}).spese || {}).filter(([, s]) => !spesaDiEvento(s)).map(([id, s]) => ({ id, ...s })), ...carte].filter((s) => (s.data || "").startsWith(anno)).sort((a, b) => (b.data || "").localeCompare(a.data || ""));
 }
 function bloccoBudget(k) {
   const anno = String(new Date().getFullYear());
@@ -3543,17 +3567,21 @@ ACT["spesa-nuova"] = (el) => {
     <p class="small muted">Per le spese pagate con i soldi dell'associazione. Se hai pagato tu, chiedi il rimborso: la spesa entra nel budget quando il tesoriere la approva.</p>
     <label class="field"><span>Importo</span><span class="money"><b>€</b><input name="imp" inputmode="decimal" required autofocus></span></label>
     <label class="field"><span>Cosa</span><input class="in" name="desc" required maxlength="100" placeholder="es. Vernice spray e pennelli"></label>
-    <label class="field"><span>Quando</span><input class="in" type="date" name="data" value="${oggi()}" required></label><p class="err" hidden></p></form>`,
-    foot: `<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fSp">Segna</button>` });
+    <label class="field"><span>Quando</span><input class="in" type="date" name="data" value="${oggi()}" required></label>
+    ${(() => { const evs = eventiPerSpese().filter((e) => voceDiGruppo(e.id, k)); const e0 = eventoPerGruppo(k); return evs.length ? `<label class="field"><span>Per l'evento</span><select class="in" name="evento">${opt("", "Nessun evento (budget dell'anno)")}${evs.map((e) => opt(e.id, `${e.titolo} (${fData(e.data)})`, e0 && e.id === e0.id)).join("")}</select></label>${campoVoce()}` : ""; })()}
+    <p class="err" hidden></p></form>`,
+    foot: `<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fSp">Segna</button>`,
+    mount: (root) => { const f = root.querySelector("#fSp"); if (!f || f.dataset.ok || !f.elements.evento) return; f.dataset.ok = 1; collegaVoce(f, { evDi: () => f.elements.evento.value, gruppoDi: () => k, trig: ["evento"] }); } });
 };
 FORMS.spesa = async (f) => {
   const k = f.dataset.g, imp = leggiImporto(fv(f, "imp")), desc = fv(f, "desc");
   if (!(imp > 0)) return fErr(f, "Scrivi un importo maggiore di zero.");
   if (!desc) return fErr(f, "Scrivi cosa avete comprato.");
-  const s = { importo: imp, desc, data: fv(f, "data"), da: ME(), at: Date.now() };
+  const ev = (f.elements.evento && fv(f, "evento")) || null;
+  const s = { importo: imp, desc, data: fv(f, "data"), da: ME(), at: Date.now(), ...(ev ? { evento: ev, voce: (haBudgetEv(ev) && fv(f, "voce")) || null } : {}) };
   const id = genId("s");
   if (S.budget[k]) await wUpd("budget/" + k, { spese: { [id]: s } }); else await wSet("budget/" + k, { importi: {}, spese: { [id]: s } });
-  closeSheet(); toast("Spesa segnata nel budget.");
+  closeSheet(); toast(ev ? `Spesa segnata per ${tagEvento(ev)}.` : "Spesa segnata nel budget.");
 };
 ACT["spesa-del"] = (el) => confirmSheet({ title: "Eliminare la spesa?", text: "Sparisce dal budget del gruppo.", ok: "Elimina", danger: true, onOk: async () => {
   const b = clone(S.budget[el.dataset.g]); delete b.id; delete b.spese[el.dataset.id]; await wSet("budget/" + el.dataset.g, b); } });
@@ -3613,7 +3641,7 @@ route("medaglie", () => {
 
 /* ================= ANTICIPI (lato socio) ================= */
 const STATI_ANT = { inviato: ["Inviato", "warn"], approvato: ["Approvato", "info"], rimborsato: ["Rimborsato", "ok"], rifiutato: ["Non approvato", "bad"] };
-function perLabel(p) { if (!p || p.tipo === "associazione") return "Associazione"; if (p.tipo === "gruppo") return GRUPPI[p.id] ? GRUPPI[p.id].nome : p.id; if (p.tipo === "evento") return (S.cal[p.id] || {}).titolo || "Evento"; return ""; }
+function perLabel(p) { if (!p || p.tipo === "associazione") return "Associazione"; if (p.tipo === "gruppo") return GRUPPI[p.id] ? GRUPPI[p.id].nome : p.id; if (p.tipo === "evento") return ((S.cal[p.id] || {}).titolo || "Evento") + (p.voce && nomeVoce(p.id, p.voce) ? " · " + nomeVoce(p.id, p.voce) : ""); return ""; }
 function rigaAnticipo(a, gestione = false) {
   const [l, c] = STATI_ANT[a.stato] || ["", ""];
   const step = ["inviato", "approvato", "rimborsato"].indexOf(a.stato);
@@ -3631,22 +3659,37 @@ route("anticipi", () => {
     <section class="panel">${ant.length ? `<div class="list">${ant.map((a) => rigaAnticipo(a)).join("")}</div>` : empty("Nessun rimborso chiesto", "Quando paghi qualcosa per Bagaera, chiedi qui il rimborso: il tesoriere riceve l'avviso.")}</section>
   </div>`;
 });
-ACT["nuovo-anticipo"] = (el) => {
-  const g = el.dataset.g;
-  const evs = eventi().filter((e) => e.tipo === "evento" && giorniTra(e.data, oggi()) < 120).sort(ordinaEv).reverse();
-  const opzioni = [["associazione:", "Associazione in generale"], ...Object.entries(GRUPPI).filter(([k]) => k !== "consiglio").map(([k, x]) => ["gruppo:" + k, "Gruppo " + x.nome]), ...evs.map((e) => ["evento:" + e.id, "Evento: " + e.titolo])];
-  openSheet({ title: "Chiedi un rimborso", eyebrow: "Hai pagato tu per Bagaera",
-    body: `<form data-form="anticipo" id="fAnt" class="stack">
-      <label class="field"><span>Quanto hai speso</span><span class="money"><b>€</b><input name="imp" inputmode="decimal" placeholder="0,00" required autofocus></span></label>
-      <label class="field"><span>Cosa hai comprato</span><input class="in" name="desc" maxlength="100" required placeholder="es. Nastro e fascette per le luci"></label>
-      <div class="fields"><label class="field"><span>Quando</span><input class="in" type="date" name="data" value="${oggi()}" max="${oggi()}" required></label>
-        <label class="field"><span>Per</span><select class="in" name="per">${opzioni.map(([v, l]) => opt(v, l, g && v === "gruppo:" + g)).join("")}</select></label></div>
-      <div class="field"><span>Come preferisci riaverli</span><div class="opts">${radio("mezzo", "Contanti", "Contanti", true)}${radio("mezzo", "Bonifico", "Bonifico", false)}</div></div>
-      <label class="field"><span>Foto dello scontrino (facoltativa)</span><input class="in" type="file" name="foto" accept="image/*" capture="environment"><small>Il tesoriere la vede insieme alla richiesta.</small></label>
-      <label class="field"><span>Note</span><input class="in" name="nota" maxlength="200" placeholder="es. scontrino nella busta in sede"></label>
+ACT["nuovo-anticipo"] = (el) => formAnticipo(null, { g: el.dataset.g || "", ev: el.dataset.ev || "", voce: el.dataset.voce });
+ACT["modifica-anticipo"] = (el) => { const a = anticipiMiei().find((x) => x.id === el.dataset.id); if (!a) return; if (a.stato !== "inviato") return toast("Il tesoriere l'ha già approvata: non si può più modificare."); formAnticipo(a); };
+/* richiesta di rimborso (nuova o da modificare finché il tesoriere non la approva): per un evento si sceglie anche la voce del suo budget */
+function formAnticipo(a, ctx = {}) {
+  const evs = eventiPerSpese();
+  const futuri = evs.filter((e) => !finito(e)), passati = evs.filter(finito).reverse();
+  let per = "associazione:";
+  if (a) per = a.per && a.per.tipo !== "associazione" ? `${a.per.tipo}:${a.per.id}` : "associazione:";
+  else if (ctx.ev) per = "evento:" + ctx.ev;
+  else if (ctx.g) { const e = eventoPerGruppo(ctx.g); per = e ? "evento:" + e.id : "gruppo:" + ctx.g; }
+  if (per.startsWith("evento:") && !evs.some((e) => "evento:" + e.id === per) && S.cal[per.slice(7)]) (finito(S.cal[per.slice(7)]) ? passati : futuri).push(S.cal[per.slice(7)]);
+  const oe = (e) => opt("evento:" + e.id, `${e.titolo} (${fData(e.data)})`, per === "evento:" + e.id);
+  const gruppi = Object.entries(GRUPPI).filter(([k]) => k !== "consiglio");
+  openSheet({ title: a ? "Modifica la richiesta" : "Chiedi un rimborso", eyebrow: a ? "Finché il tesoriere non la approva" : "Hai pagato tu per Bagaera",
+    body: `<form data-form="anticipo" id="fAnt" class="stack" data-id="${a ? a.id : ""}">
+      <label class="field"><span>Quanto hai speso</span><span class="money"><b>€</b><input name="imp" inputmode="decimal" placeholder="0,00" required ${a ? `value="${esc(String(a.importo).replace(".", ","))}"` : "autofocus"}></span></label>
+      <label class="field"><span>Cosa hai comprato</span><input class="in" name="desc" maxlength="100" required placeholder="es. Nastro e fascette per le luci" value="${esc((a && a.desc) || "")}"></label>
+      <div class="fields"><label class="field"><span>Quando</span><input class="in" type="date" name="data" value="${esc((a && a.data) || oggi())}" max="${oggi()}" required></label>
+        <label class="field"><span>Per</span><select class="in" name="per">${opt("associazione:", "Associazione in generale", per === "associazione:")}
+          ${futuri.length ? `<optgroup label="Eventi in arrivo">${futuri.map(oe).join("")}</optgroup>` : ""}${passati.length ? `<optgroup label="Eventi passati">${passati.map(oe).join("")}</optgroup>` : ""}
+          <optgroup label="Gruppi, fuori dagli eventi">${gruppi.map(([k, x]) => opt("gruppo:" + k, "Gruppo " + x.nome, per === "gruppo:" + k)).join("")}</optgroup></select></label></div>
+      ${campoVoce()}
+      <div class="field"><span>Come preferisci riaverli</span><div class="opts">${radio("mezzo", "Contanti", "Contanti", !a || a.mezzo !== "Bonifico")}${radio("mezzo", "Bonifico", "Bonifico", !!a && a.mezzo === "Bonifico")}</div></div>
+      <label class="field"><span>${a && a.foto ? "Cambia la foto dello scontrino (facoltativo)" : "Foto dello scontrino (facoltativa)"}</span><input class="in" type="file" name="foto" accept="image/*" capture="environment"><small>Il tesoriere la vede insieme alla richiesta.</small></label>
+      <label class="field"><span>Note</span><input class="in" name="nota" maxlength="200" placeholder="es. scontrino nella busta in sede" value="${esc((a && a.nota) || "")}"></label>
       <p class="err" hidden></p></form>`,
-    foot: `<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fAnt">Invia al tesoriere</button>` });
-};
+    foot: `<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fAnt">${a ? "Salva le modifiche" : "Invia al tesoriere"}</button>`,
+    mount: (root) => { const f = root.querySelector("#fAnt"); if (!f || f.dataset.ok) return; f.dataset.ok = 1;
+      const ev = () => { const v = f.elements.per.value; return v.startsWith("evento:") ? v.slice(7) : null; };
+      collegaVoce(f, { evDi: ev, gruppoDi: () => ctx.g || null, sel: a ? (a.per && a.per.voce) || "" : ctx.voce, trig: ["per"] }); } });
+}
 function comprimiFoto(file) {
   return new Promise((ok, ko) => {
     const r = new FileReader();
@@ -3663,12 +3706,24 @@ FORMS.anticipo = async (f) => {
   if (!(imp > 0)) return fErr(f, "Scrivi quanto hai speso, es. 23,50.");
   if (!desc) return fErr(f, "Scrivi cosa hai comprato.");
   const [tipo, pid] = fv(f, "per").split(":");
-  const id = genId("a");
+  const vk = tipo === "evento" && haBudgetEv(pid) ? fv(f, "voce") || null : null;
+  const prima = f.dataset.id ? anticipiMiei().find((x) => x.id === f.dataset.id) : null;
+  if (f.dataset.id && (!prima || prima.stato !== "inviato")) return fErr(f, "Il tesoriere l'ha già approvata: non si può più modificare.");
+  const id = f.dataset.id || genId("a");
   const file = f.elements.foto && f.elements.foto.files && f.elements.foto.files[0];
-  const btn = $('button[form="fAnt"]'); if (btn) { btn.disabled = true; btn.textContent = "Invio…"; }
+  const btn = $('button[form="fAnt"]'); if (btn) { btn.disabled = true; btn.textContent = prima ? "Salvo…" : "Invio…"; }
   let foto = null;
   if (file) { try { foto = await comprimiFoto(file); } catch (e) { foto = null; } }
-  const voce = { importo: imp, desc, data: fv(f, "data"), per: { tipo, id: pid || null }, mezzo: (f.querySelector('[name="mezzo"]:checked') || {}).value || "Contanti", nota: fv(f, "nota"), foto: !!foto, creato: Date.now() };
+  const campi = { importo: imp, desc, data: fv(f, "data"), per: { tipo, id: pid || null, voce: vk }, mezzo: (f.querySelector('[name="mezzo"]:checked') || {}).value || "Contanti", nota: fv(f, "nota") };
+  if (prima) {
+    try {
+      await wUpd("anticipi/" + ME(), { voci: { [id]: { ...campi, foto: !!foto || !!prima.foto, modificato: Date.now() } } });
+      if (foto) await wSet(`anticipi/${ME()}/foto/${id}`, { img: foto }, { quiet: true }).catch(() => toast("Modifiche salvate, ma la foto nuova non è passata."));
+      closeSheet(); toast("Modifiche salvate: il tesoriere vede la richiesta aggiornata.");
+    } catch (e) { if (btn) { btn.disabled = false; btn.textContent = "Salva le modifiche"; } }
+    return;
+  }
+  const voce = { ...campi, foto: !!foto, creato: Date.now() };
   try {
     if (S.anticipi[ME()]) await wUpd("anticipi/" + ME(), { voci: { [id]: voce } }); else await wSet("anticipi/" + ME(), { voci: { [id]: voce } });
     if (foto) await wSet(`anticipi/${ME()}/foto/${id}`, { img: foto }, { quiet: true }).catch(() => toast("Richiesta inviata, ma la foto non è passata: consegna lo scontrino al tesoriere."));
@@ -3688,13 +3743,13 @@ function apriAnticipo(uid, id, gestione) {
     return `<div class="row between"><span class="big">${esc(euro(a.importo))}</span><span class="pill ${c}">${l}</span></div>
       <div class="stack s"><b>${esc(a.desc)}</b><span class="small muted">${esc(fDataL(a.data))} · per ${esc(perLabel(a.per))} · rimborso in ${esc((a.mezzo || "").toLowerCase())}</span>${a.nota ? `<span class="small">«${esc(a.nota)}»</span>` : ""}</div>
       <div class="list" style="border:2px solid var(--rule)">
-        <div class="li">${ic("check", "chev")}<span class="grow small">Inviata il ${esc(fTs(a.creato))}</span></div>
+        <div class="li">${ic("check", "chev")}<span class="grow small">Inviata il ${esc(fTs(a.creato))}${a.modificato ? ` · modificata il ${esc(fTs(a.modificato))}` : ""}</span></div>
         ${a.approvato ? `<div class="li">${ic("check", "chev")}<span class="grow small">Approvata da ${esc(primoNome(a.approvato.da))} il ${esc(fTs(a.approvato.at))}${a.registro ? ` · registro ${a.registro.anno}, n. ${a.registro.n}` : ""}</span></div>` : ""}
         ${a.stato === "rimborsato" ? `<div class="li">${ic("euro", "chev")}<span class="grow small">Rimborsata ${e.mezzo ? "in " + esc(e.mezzo.toLowerCase()) : ""} il ${esc(fDataIt(e.data || ""))} da ${esc(primoNome(e.da))}</span></div>` : ""}
         ${a.stato === "rifiutato" ? `<div class="li">${ic("x", "chev")}<span class="grow small">Non approvata da ${esc(primoNome(e.da))}${e.nota ? `: «${esc(e.nota)}»` : ""}</span></div>` : ""}
       </div>
       ${a.foto ? `<div class="stack s"><span class="eyebrow">Scontrino</span><div id="fotoAnt" class="small muted">Carico la foto…</div></div>` : ""}
-      ${gestione ? azioniTesoriere(uid, id, a) : a.stato === "inviato" ? `<button class="btn danger sm" data-act="ritira-anticipo" data-id="${id}" style="align-self:flex-start">${ic("trash")}Ritira la richiesta</button>` : ""}`;
+      ${gestione ? azioniTesoriere(uid, id, a) : a.stato === "inviato" ? `<p class="small muted">Finché il tesoriere non la approva puoi ancora cambiarla.</p><div class="btns"><button class="btn sm" data-act="modifica-anticipo" data-id="${id}">${ic("edit")}Modifica</button><button class="btn danger sm" data-act="ritira-anticipo" data-id="${id}">${ic("trash")}Ritira la richiesta</button></div>` : ""}`;
   }, mount: async (root) => {
     const box = root.querySelector("#fotoAnt"); if (!box || !S.db) return;
     try { const d = await S.db.doc(`anticipi/${uid}/foto/${id}`).get(); box.innerHTML = d.exists ? `<img class="foto" src="${esc(d.data().img)}" alt="Foto dello scontrino">` : "Foto non disponibile."; } catch (e) { box.textContent = "Foto non disponibile."; }
@@ -3754,14 +3809,27 @@ route("rimborsi", () => {
 async function scriviEsito(uid, id, e) { notificaEsito(uid, id, e); if (S.esiti[uid]) return wUpd("esiti/" + uid, { voci: { [id]: e } }); S.esiti[uid] = { id: uid, voci: {} }; return wSet("esiti/" + uid, { voci: { [id]: e } }); }
 ACT["rim-tab"] = (el) => { S.ui.rimTab = el.dataset.v; render(true); };
 function tagDi(a) { const p = a.per || {}; if (p.tipo === "gruppo") return GRUPPI[p.id] ? GRUPPI[p.id].nome : "Associazione"; if (p.tipo === "evento") return (S.cal[p.id] || {}).titolo || "Associazione"; return "Associazione"; }
+/* rimborso per un evento: da quale voce del budget si scala (il tesoriere può correggerla) */
+const descAnticipo = (a, voce = a.per && a.per.voce) => (a.per && a.per.tipo === "evento" ? descConVoce(a.desc, a.per.id, voce) : a.desc);
+function budgetDiAnticipo(a) {
+  const p = a.per || {};
+  if (p.tipo === "evento") {
+    if (!haBudgetEv(p.id)) return `<p class="small muted">${ic("euro")} ${esc(tagEvento(p.id) || "L'evento")} non ha ancora un budget: la spesa finisce tra le spese dell'evento, senza voce.</p>`;
+    return `<label class="field"><span>Si scala dal budget di ${esc(tagEvento(p.id))}</span><select class="in" name="voce" data-ant-voce>${opzVoci(p.id, p.voce || "")}</select><small>Sul registro va come spesa dell'evento, con la voce tra parentesi.</small></label>`;
+  }
+  if (p.tipo === "gruppo" && GRUPPI[p.id] && GRUPPI[p.id].budget) return `<p class="small muted">${ic("euro")} Si scala dal budget dell'anno di ${esc(GRUPPI[p.id].nome)} (fuori dagli eventi).</p>`;
+  return "";
+}
 function azioniTesoriere(uid, id, a) {
   if (a.stato === "inviato") {
     return `<form data-form="ant-approva" data-u="${uid}" data-id="${id}" class="soft">
       <h3>Approva</h3>
       <label class="check"><input type="checkbox" name="reg" checked><span><b>Scrivi l'uscita sul registro contabile</b><br><small class="muted">Riga in fondo al registro ${esc((a.data || oggi()).slice(0, 4))}, con «Rimborso? Sì» e il nome di chi ha anticipato.</small></span></label>
+      ${budgetDiAnticipo(a)}
       <div class="fields"><label class="field"><span>Voce</span><select class="in" name="codice">${VOCI.U.map(([c, l]) => opt(c, `${l} (${c})`, c === "UA1")).join("")}</select></label>
         <label class="field"><span>Evento / tag</span><input class="in" name="tag" value="${esc(tagDi(a))}" maxlength="60"></label>
         <label class="field"><span>Conto</span><select class="in" name="conto">${opt("cassa", "Cassa (contanti)", a.mezzo !== "Bonifico")}${opt("cc", "Conto corrente", a.mezzo === "Bonifico")}</select></label></div>
+      <label class="field"><span>Descrizione sul registro</span><input class="in" name="rdesc" maxlength="140" value="${esc(descAnticipo(a))}"></label>
       <p class="err" hidden></p>
       <div class="btns"><button class="btn pri">${ic("check")}Approva</button><button type="button" class="btn danger" data-act="ant-rifiuta" data-u="${uid}" data-id="${id}">Non approvare</button></div></form>`;
   }
@@ -3774,17 +3842,29 @@ function azioniTesoriere(uid, id, a) {
   }
   return "";
 }
+/* cambiando la voce, cambia anche la descrizione che va sul registro */
+document.addEventListener("change", (e) => {
+  const sel = e.target; if (!sel.matches || !sel.matches("[data-ant-voce]")) return;
+  const f = sel.form, a = f && anticipiTutti().find((x) => x.uid === f.dataset.u && x.id === f.dataset.id);
+  if (a && f.elements.rdesc) f.elements.rdesc.value = descAnticipo(a, sel.value || null);
+});
 FORMS["ant-approva"] = async (f) => {
   const uid = f.dataset.u, id = f.dataset.id, a = anticipiTutti().find((x) => x.uid === uid && x.id === id); if (!a) return;
   const btn = f.querySelector("button.pri"); btn.disabled = true; btn.textContent = "Approvo…";
   let registro = null;
   await risolviNomi([uid]);
+  const p = a.per || {}, evId = p.tipo === "evento" ? p.id : null;
+  const voce = evId && f.elements.voce ? fv(f, "voce") || null : p.voce || null;
   if (fv(f, "reg")) {
-    try { registro = await scriviMovimento((a.data || oggi()).slice(0, 4), { tipo: "U", conto: fv(f, "conto"), importo: a.importo, data: a.data || oggi(), desc: a.desc, codice: fv(f, "codice"), tag: fv(f, "tag") || "Associazione", anticipo: nm(uid) }); }
+    try { registro = await scriviMovimento((a.data || oggi()).slice(0, 4), { tipo: "U", conto: fv(f, "conto"), importo: a.importo, data: a.data || oggi(), desc: fv(f, "rdesc") || descAnticipo(a, voce), codice: fv(f, "codice"), tag: fv(f, "tag") || "Associazione", anticipo: nm(uid) }); }
     catch (e) { btn.disabled = false; btn.innerHTML = ic("check") + "Approva"; return fErr(f, "Non ho scritto sul registro: " + spiegaMcp(e) + " Puoi togliere la spunta e approvare lo stesso."); }
   }
   await scriviEsito(uid, id, { stato: "approvato", approvato: { da: ME(), at: Date.now() }, registro, esito: { da: ME(), at: Date.now() } });
-  if (a.per && a.per.tipo === "gruppo" && GRUPPI[a.per.id] && GRUPPI[a.per.id].budget) {
+  if (evId) {
+    if (voce !== (p.voce || null)) await wUpd("anticipi/" + uid, { voci: { [id]: { per: { voce } } } }, { quiet: true }).catch(() => {});
+    const s = { importo: a.importo, desc: a.desc, data: a.data || oggi(), da: uid, at: Date.now(), anticipo: id, voce };
+    if (budgetEv(evId)) await wUpd("budget/" + chiaveEv(evId), { spese: { ["ant-" + id]: s } }); else await wSet("budget/" + chiaveEv(evId), { evento: evId, voci: {}, spese: { ["ant-" + id]: s } });
+  } else if (a.per && a.per.tipo === "gruppo" && GRUPPI[a.per.id] && GRUPPI[a.per.id].budget) {
     const s = { importo: a.importo, desc: a.desc, data: a.data, da: uid, at: Date.now(), anticipo: id };
     if (S.budget[a.per.id]) await wUpd("budget/" + a.per.id, { spese: { ["ant-" + id]: s } }); else await wSet("budget/" + a.per.id, { importi: {}, spese: { ["ant-" + id]: s } });
   }
@@ -4435,7 +4515,7 @@ ACT["cspesa-nuova"] = (el) => {
     <div class="fields"><label class="field"><span>Quando</span><input class="in" type="date" name="data" value="${oggi()}" max="${oggi()}" required></label>
       <label class="field"><span>Da quale budget</span><select class="in" name="budget" id="csBud">${opt("", "Nessuno")}${opzBudget()}</select></label></div>
     <p class="small" id="csAvv" hidden></p>
-    ${evs.length ? `<label class="field"><span>Per l'evento (facoltativo)</span><select class="in" name="evento">${opt("", "—")}${evs.map((e) => opt(e.id, `${e.titolo} (${fData(e.data)})`)).join("")}</select></label>` : ""}
+    ${evs.length ? `<label class="field"><span>Per l'evento (facoltativo)</span><select class="in" name="evento">${opt("", "—")}${evs.map((e) => opt(e.id, `${e.titolo} (${fData(e.data)})`, e.id === el.dataset.ev)).join("")}</select></label>${campoVoce()}` : ""}
     <label class="field"><span>Foto dello scontrino</span><input class="in" type="file" name="foto" accept="image/*" capture="environment"><small>Serve al tesoriere per il rendiconto.</small></label>
     <p class="err" hidden></p></form>`,
     foot: `<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fCs">Segna</button>`,
@@ -4445,6 +4525,7 @@ ACT["cspesa-nuova"] = (el) => {
         if (b && c && c.tipo === "prepagata" && imp > 0 && imp > residuo(b) + 0.001) { p.hidden = false; p.className = "notice warn small"; p.textContent = `Sul budget ${nomeBudget(b)} restano ${euro(residuo(b))}: questa spesa lo supera di ${euro(imp - residuo(b))}.`; } else p.hidden = true; };
       f.elements.carta.addEventListener("change", () => { const c = S.carte[f.elements.carta.value]; if (c && c.budget) f.elements.budget.value = c.budget; const h = detentore(c.id); if (h && h.chi && f.elements.chi.querySelector(`option[value="${h.chi}"]`)) f.elements.chi.value = h.chi; avv(); });
       f.addEventListener("input", avv); f.addEventListener("change", avv);
+      if (f.elements.evento) collegaVoce(f, { evDi: () => f.elements.evento.value, gruppoDi: () => f.elements.budget.value, trig: ["evento", "budget", "carta"] });
     } });
 };
 FORMS.cspesa = async (f) => {
@@ -4456,7 +4537,7 @@ FORMS.cspesa = async (f) => {
   let foto = null; if (file) { try { foto = await comprimiFoto(file); } catch (e) { foto = null; } }
   const id = genId("cs");
   try {
-    await wSet("cartemov/" + id, { tipo: "spesa", carta: fv(f, "carta"), chi: fv(f, "chi") || ME(), importo: imp, desc, data: fv(f, "data"), budget: fv(f, "budget") || null, evento: (f.elements.evento && fv(f, "evento")) || null, foto: !!foto, da: ME(), at: Date.now() });
+    await wSet("cartemov/" + id, { tipo: "spesa", carta: fv(f, "carta"), chi: fv(f, "chi") || ME(), importo: imp, desc, data: fv(f, "data"), budget: fv(f, "budget") || null, evento: (f.elements.evento && fv(f, "evento")) || null, voce: (f.elements.evento && haBudgetEv(fv(f, "evento")) && fv(f, "voce")) || null, foto: !!foto, da: ME(), at: Date.now() });
     if (foto) await wSet("cartefoto/" + id, { img: foto }, { quiet: true }).catch(() => toast("Spesa salvata, ma la foto non è passata."));
     closeSheet();
     const b = fv(f, "budget"), c = S.carte[fv(f, "carta")];
@@ -4469,7 +4550,7 @@ ACT["cspesa-apri"] = (el) => {
     const m = S.cartemov[id]; if (!m) return `<p class="muted">Spesa non trovata.</p>`;
     const puo = isCouncil() || m.da === ME() || m.chi === ME();
     return `<div class="row between"><span class="big">${esc(euro(m.importo))}</span>${m.budget ? `<span class="pill" style="color:${colBudget(m.budget)}">${esc(nomeBudget(m.budget))}</span>` : ""}</div>
-      <div class="stack s"><b>${esc(m.desc)}</b><span class="small muted">${esc(fDataL(m.data))} · ${esc(nm(m.chi))} con la ${esc(nomeCarta(m.carta))}${S.carte[m.carta] && S.carte[m.carta].intestatario ? " (intestata a " + esc(S.carte[m.carta].intestatario) + ")" : ""}${m.evento && S.cal[m.evento] ? " · per " + esc(S.cal[m.evento].titolo) : ""}</span><span class="tiny muted">Segnata da ${esc(nm(m.da))} il ${esc(fTs(m.at))}</span></div>
+      <div class="stack s"><b>${esc(m.desc)}</b><span class="small muted">${esc(fDataL(m.data))} · ${esc(nm(m.chi))} con la ${esc(nomeCarta(m.carta))}${S.carte[m.carta] && S.carte[m.carta].intestatario ? " (intestata a " + esc(S.carte[m.carta].intestatario) + ")" : ""}${m.evento && S.cal[m.evento] ? " · per " + esc(S.cal[m.evento].titolo) + (voceCarta(m) ? " · " + esc(nomeVoce(m.evento, voceCarta(m))) : "") : ""}</span><span class="tiny muted">Segnata da ${esc(nm(m.da))} il ${esc(fTs(m.at))}</span></div>
       ${m.foto ? `<div class="stack s"><span class="eyebrow">Scontrino</span><div id="fotoCs" class="small muted">Carico la foto…</div></div>` : ""}
       ${m.registro ? `<div class="notice small">${ic("check")} Sul registro ${m.registro.anno}, movimento n. ${m.registro.n}.</div>` : isAdmin() && isCouncil() ? `<form data-form="cspesa-reg" data-id="${id}" class="soft"><h3>Scrivi sul registro contabile</h3>
         <div class="fields"><label class="field"><span>Voce</span><select class="in" name="codice">${VOCI.U.map(([c, l]) => opt(c, `${l} (${c})`, c === "UA1")).join("")}</select></label><label class="field"><span>Evento / tag</span><input class="in" name="tag" value="${esc(m.evento && S.cal[m.evento] ? S.cal[m.evento].titolo : m.budget ? nomeBudget(m.budget) : "Associazione")}" maxlength="60"></label>
@@ -4484,10 +4565,12 @@ FORMS["cspesa-reg"] = async (f) => {
   const m = S.cartemov[f.dataset.id]; if (!m) return;
   const btn = f.querySelector("button"); btn.disabled = true; btn.textContent = "Scrivo…";
   try {
-    const r = await scriviMovimento(m.data.slice(0, 4), { tipo: "U", conto: fv(f, "conto"), importo: m.importo, data: m.data, desc: `${m.desc} (carta ${nomeCarta(m.carta)}, ${nm(m.chi)})`, codice: fv(f, "codice"), tag: fv(f, "tag") || "Associazione" });
+    const r = await scriviMovimento(m.data.slice(0, 4), { tipo: "U", conto: fv(f, "conto"), importo: m.importo, data: m.data, desc: descConVoce(m.desc, m.evento, voceCarta(m), `carta ${nomeCarta(m.carta)}, ${nm(m.chi)}`), codice: fv(f, "codice"), tag: fv(f, "tag") || "Associazione" });
     await wUpd("cartemov/" + m.id, { registro: { anno: r.anno, n: r.n, riga: r.riga } }); toast(`Scritta sul registro: movimento n. ${r.n}.`);
   } catch (e) { btn.disabled = false; btn.innerHTML = ic("chart") + "Registra l'uscita"; fErr(f, "Non ho scritto sul registro: " + spiegaMcp(e)); }
 };
+/* la voce dell'evento di una spesa con la carta: quella scelta, o quella del gruppo del budget della carta */
+const voceCarta = (m) => (m.evento ? (m.voce && voceEv(m.evento, m.voce) ? m.voce : voceDiGruppo(m.evento, m.budget)) : null);
 ACT["cspesa-del"] = (el) => confirmSheet({ title: "Eliminare la spesa?", text: "Il budget torna come prima.", ok: "Elimina", danger: true, onOk: async () => { await wDel("cartemov/" + el.dataset.id); wDel("cartefoto/" + el.dataset.id, { quiet: true }).catch(() => {}); toast("Spesa eliminata."); } });
 
 /* ricariche e spostamenti (consiglio) */
@@ -4645,6 +4728,7 @@ function rigaPag(p) {
     <span class="v">${esc(euro(p.importo))}</span></button>
     ${fatto ? `<span class="tick on" aria-label="Pagato">${ic("check")}</span>` : `<button class="tick" data-act="pag-fatto" data-id="${p.id}" aria-label="Segna come pagato: ${esc(p.beneficiario)}">${ic("check")}<span>Fatto</span></button>`}</div>`;
 }
+const vocePag = (p) => (p.evento ? (p.voce && voceEv(p.evento, p.voce) ? p.voce : voceDiGruppo(p.evento, p.budget)) : null);
 ACT["pag-nuovo"] = () => formPag(null);
 ACT["pag-apri"] = (el) => formPag(S.pagamenti[el.dataset.id]);
 function formPag(p) {
@@ -4661,9 +4745,11 @@ function formPag(p) {
     <label class="field"><span>IBAN (per i bonifici)</span><input class="in" name="iban" maxlength="40" value="${esc((p && p.iban) || "")}" placeholder="IT00 X000 0000 0000 0000 0000 000" autocapitalize="characters" style="font-family:ui-monospace,monospace"></label>
     <div class="fields"><label class="field"><span>Budget</span><select class="in" name="budget">${opt("", "Associazione")}${budgetVoci().map(([k, l]) => opt(k, l, p && p.budget === k)).join("")}</select></label>
       ${evs.length ? `<label class="field"><span>Evento</span><select class="in" name="evento">${opt("", "—")}${evs.map((e) => opt(e.id, e.titolo, p && p.evento === e.id)).join("")}</select></label>` : ""}</div>
+    ${evs.length ? campoVoce() : ""}
     <label class="field"><span>Note</span><textarea class="in" name="nota" rows="2" maxlength="500">${esc((p && p.nota) || "")}</textarea></label>
     <p class="err" hidden></p></form>`,
-    foot: `${p ? `<button class="btn danger" data-act="pag-del" data-id="${p.id}" aria-label="Elimina">${ic("trash")}</button>` : ""}${p && p.stato === "fatto" && !(p.fatto || {}).registro ? `<button class="btn" data-act="pag-riapri" data-id="${p.id}">Non ancora pagato</button>` : ""}<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fPg">Salva</button>` });
+    foot: `${p ? `<button class="btn danger" data-act="pag-del" data-id="${p.id}" aria-label="Elimina">${ic("trash")}</button>` : ""}${p && p.stato === "fatto" && !(p.fatto || {}).registro ? `<button class="btn" data-act="pag-riapri" data-id="${p.id}">Non ancora pagato</button>` : ""}<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fPg">Salva</button>`,
+    mount: (root) => { const f = root.querySelector("#fPg"); if (!f || f.dataset.ok || !f.elements.evento) return; f.dataset.ok = 1; collegaVoce(f, { evDi: () => f.elements.evento.value, gruppoDi: () => f.elements.budget.value, sel: p ? p.voce || "" : undefined, trig: ["evento", "budget"] }); } });
 }
 FORMS.pag = async (f) => {
   const imp = leggiImporto(fv(f, "imp")), ben = fv(f, "ben");
@@ -4671,7 +4757,7 @@ FORMS.pag = async (f) => {
   const iban = fv(f, "iban").replace(/\s+/g, "").toUpperCase();
   if (iban && !/^[A-Z]{2}\d{2}[A-Z0-9]{10,30}$/.test(iban)) return fErr(f, "L'IBAN non sembra giusto: controlla lettere e numeri.");
   const id = f.dataset.id || genId("pg"); const prima = S.pagamenti[id];
-  await wSet("pagamenti/" + id, { ...(prima ? strip(prima) : { stato: "da_fare", creato: Date.now(), creatoDa: ME() }), beneficiario: ben, importo: imp, causale: fv(f, "causale"), scadenza: fv(f, "scad") || null, metodo: fv(f, "metodo"), chi: fv(f, "chi") || null, iban, budget: fv(f, "budget") || null, evento: (f.elements.evento && fv(f, "evento")) || null, nota: fv(f, "nota"), agg: Date.now() });
+  await wSet("pagamenti/" + id, { ...(prima ? strip(prima) : { stato: "da_fare", creato: Date.now(), creatoDa: ME() }), beneficiario: ben, importo: imp, causale: fv(f, "causale"), scadenza: fv(f, "scad") || null, metodo: fv(f, "metodo"), chi: fv(f, "chi") || null, iban, budget: fv(f, "budget") || null, evento: (f.elements.evento && fv(f, "evento")) || null, voce: (f.elements.evento && haBudgetEv(fv(f, "evento")) && fv(f, "voce")) || null, nota: fv(f, "nota"), agg: Date.now() });
   if (!prima || (fv(f, "chi") || null) !== (prima.chi || null)) notifica(fv(f, "chi") ? [fv(f, "chi")] : firmatari(), "Bonifico da fare", `${euro(imp)} a ${ben}${fv(f, "scad") ? " entro il " + fData(fv(f, "scad")) : ""}`, "#pagamenti", "ruolo");
   closeSheet(); toast(prima ? "Salvato." : fv(f, "chi") ? `Salvato: ${primoNome(fv(f, "chi"))} riceve l'avviso.` : "Salvato: i firmatari ricevono l'avviso.");
 };
@@ -4696,11 +4782,14 @@ FORMS["pag-fatto"] = async (f) => {
   const data = fv(f, "data"); const btn = $('button[form="fPf2"]'); btn.disabled = true; btn.textContent = "Salvo…";
   let registro = null;
   if (f.elements.reg && fv(f, "reg")) {
-    try { registro = await scriviMovimento(data.slice(0, 4), { tipo: "U", conto: fv(f, "conto"), importo: p.importo, data, desc: [p.causale || "Pagamento", p.beneficiario].join(" – "), codice: fv(f, "codice"), tag: fv(f, "tag") || "Associazione" }); }
+    try { registro = await scriviMovimento(data.slice(0, 4), { tipo: "U", conto: fv(f, "conto"), importo: p.importo, data, desc: descConVoce([p.causale || "Pagamento", p.beneficiario].join(" – "), p.evento, vocePag(p)), codice: fv(f, "codice"), tag: fv(f, "tag") || "Associazione" }); }
     catch (e) { btn.disabled = false; btn.innerHTML = ic("check") + "Pagato"; return fErr(f, "Non ho scritto sul registro: " + spiegaMcp(e) + " Togli la spunta per segnarlo solo qui."); }
   }
   await wUpd("pagamenti/" + p.id, { stato: "fatto", fatto: { data, da: fv(f, "da") || ME(), at: Date.now(), registro } });
-  if (p.budget && GRUPPI[p.budget] && GRUPPI[p.budget].budget) {
+  if (p.evento && haBudgetEv(p.evento)) {
+    const s = { importo: p.importo, desc: `${p.beneficiario}${p.causale ? " – " + p.causale : ""}`, data, da: fv(f, "da") || ME(), at: Date.now(), pagamento: p.id, voce: vocePag(p) };
+    await wUpd("budget/" + chiaveEv(p.evento), { spese: { ["pag-" + p.id]: s } }, { quiet: true }).catch(() => {});
+  } else if (p.budget && GRUPPI[p.budget] && GRUPPI[p.budget].budget) {
     const s = { importo: p.importo, desc: `${p.beneficiario}${p.causale ? " – " + p.causale : ""}`, data, da: fv(f, "da") || ME(), at: Date.now(), pagamento: p.id };
     if (S.budget[p.budget]) await wUpd("budget/" + p.budget, { spese: { ["pag-" + p.id]: s } }, { quiet: true }).catch(() => {}); else await wSet("budget/" + p.budget, { importi: {}, spese: { ["pag-" + p.id]: s } }, { quiet: true }).catch(() => {});
   }
@@ -4713,6 +4802,192 @@ ACT["firm-mod"] = () => {
     foot: `<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fFi">Salva</button>` });
 };
 FORMS.firm = async (f) => { const u = fvAll(f, "u"); if (!u.length) return fErr(f, "Scegli almeno una persona."); await wSet("config/finanze", { ...strip(cfg("finanze")), firmatari: u }); closeSheet(); toast("Firmatari salvati."); };
+
+/* ================= BUDGET PER EVENTO =================
+   Il consiglio stanzia il budget di un evento in voci (es. Fem Fest Winter: Grandi opere 300, Decorazioni 300,
+   Sponsorizzate 150, DJ 250, Service 1000). Una voce può essere di un gruppo (lo vedono e lo usano i suoi membri).
+   Archivio: budget/ev-<idEvento> = { evento, voci: {k: {nome, importo, gruppo, ord}}, spese: {id: {importo, desc, data, da, voce, anticipo|pagamento}} }
+   (lo scrive solo il consiglio: le regole di budget/{k} lo permettono ai gruppi solo per budget/<gruppo>).
+   Le spese di un evento arrivano da:
+   - rimborsi approvati e pagamenti fatti → budget/ev-<id>.spese (li scrive il consiglio);
+   - spese segnate da un gruppo → budget/<gruppo>.spese con evento (e voce);
+   - spese con le carte → cartemov con evento (e voce).
+   Senza voce scelta vale la voce del gruppo (della spesa, o del budget della carta). */
+const chiaveEv = (id) => "ev-" + id;
+const budgetEv = (id) => (id && S.budget[chiaveEv(id)]) || null;
+function vociEv(id) {
+  const b = budgetEv(id);
+  return b ? Object.entries(b.voci || {}).map(([k, v]) => ({ k, ...v })).sort((a, c) => (a.ord || 0) - (c.ord || 0) || (a.nome || "").localeCompare(c.nome || "", "it")) : [];
+}
+const haBudgetEv = (id) => vociEv(id).length > 0;
+const voceEv = (id, k) => (k && vociEv(id).find((v) => v.k === k)) || null;
+const voceDiGruppo = (id, g) => (g && (vociEv(id).find((v) => v.gruppo === g) || {}).k) || null;
+const mioGruppoVoce = (id) => (vociEv(id).find((v) => v.gruppo && inGroup(v.gruppo)) || {}).k || null;
+const nomeVoce = (id, k) => (voceEv(id, k) || {}).nome || "";
+const vedeVoce = (v) => isCouncil() || !!(v.gruppo && inGroup(v.gruppo));
+/* una spesa con un evento che ha il budget conta lì, non nel budget dell'anno del gruppo */
+const spesaDiEvento = (s) => !!(s && s.evento && haBudgetEv(s.evento));
+/* sul registro: tag = titolo dell'evento, la voce tra parentesi nella descrizione */
+const descConVoce = (desc, evId, voce, extra = "") => { const n = evId && voce ? nomeVoce(evId, voce) : ""; const p = [n, extra].filter(Boolean).join("; "); return p ? `${desc} (${p})` : desc; };
+const tagEvento = (evId) => (evId && S.cal[evId] ? S.cal[evId].titolo : "");
+function speseEvento(id) {
+  const out = [], ok = (k) => (k && voceEv(id, k) ? k : null);
+  const b = budgetEv(id);
+  for (const [sid, s] of Object.entries((b && b.spese) || {})) out.push({ ...s, id: sid, voce: ok(s.voce), fonte: s.anticipo ? "rimborso" : s.pagamento ? "pagamento" : "spesa", sorg: "ev" });
+  for (const g of Object.keys(GRUPPI)) for (const [sid, s] of Object.entries((S.budget[g] || {}).spese || {})) if (s.evento === id) out.push({ ...s, id: sid, voce: ok(s.voce) || voceDiGruppo(id, g), fonte: s.anticipo ? "rimborso" : s.pagamento ? "pagamento" : "spesa", gruppo: g, sorg: g });
+  for (const m of speseCarte()) if (m.evento === id) out.push({ id: m.id, importo: m.importo, desc: m.desc, data: m.data, da: m.chi, carta: m.carta, voce: ok(m.voce) || voceDiGruppo(id, m.budget), fonte: "carta", sorg: "carta" });
+  return out.sort((a, c) => (c.data || "").localeCompare(a.data || "") || (c.at || 0) - (a.at || 0));
+}
+function contiEvento(id) {
+  const voci = vociEv(id), spese = speseEvento(id), per = {};
+  voci.forEach((v) => { per[v.k] = { ...v, importo: Number(v.importo) || 0, speso: 0, spese: [] }; });
+  const altro = { k: "", nome: "Altre spese (senza voce)", importo: 0, speso: 0, spese: [] };
+  for (const s of spese) { const x = (s.voce && per[s.voce]) || altro; x.speso += Number(s.importo) || 0; x.spese.push(s); }
+  const r2 = (n) => Math.round(n * 100) / 100;
+  Object.values(per).forEach((x) => { x.speso = r2(x.speso); }); altro.speso = r2(altro.speso);
+  return { voci: voci.map((v) => per[v.k]), altro, stanziato: r2(voci.reduce((t, v) => t + (Number(v.importo) || 0), 0)), speso: r2(spese.reduce((t, s) => t + (Number(s.importo) || 0), 0)) };
+}
+/* eventi a cui si può attribuire una spesa: dai 120 giorni fa in poi, in ordine di data */
+function eventiPerSpese() {
+  return eventi().filter((e) => !e.annullato && (e.tipo === "evento" || haBudgetEv(e.id)) && giorniTra(e.dataFine || e.data, oggi()) <= 120).sort(ordinaEv);
+}
+/* l'evento di cui un gruppo sta spendendo il budget: il prossimo con una voce del gruppo, o l'ultimo finito da poco */
+function eventoPerGruppo(g) {
+  const l = eventiPerSpese().filter((e) => voceDiGruppo(e.id, g));
+  return l.find((e) => !finito(e)) || l.filter((e) => giorniTra(e.dataFine || e.data, oggi()) <= 30).pop() || null;
+}
+function opzVoci(evId, sel) {
+  const c = contiEvento(evId);
+  return c.voci.map((v) => opt(v.k, `${v.nome}${vedeVoce(v) ? ` (restano ${euroT(v.importo - v.speso)})` : ""}`, v.k === sel)).join("") + opt("", "Altro (nessuna voce)", !sel);
+}
+/* campo «Voce» che segue la scelta dell'evento (si vede solo se l'evento ha un budget) */
+const campoVoce = (name = "voce") => `<label class="field" data-voce hidden><span>Voce del budget dell'evento</span><select class="in" name="${name}"></select></label>`;
+function collegaVoce(f, { evDi, gruppoDi = () => null, sel, trig = [] }) {
+  const box = f.querySelector("[data-voce]"); if (!box) return;
+  const s = box.querySelector("select"); let toccata = false, ultimo;
+  const agg = () => {
+    const ev = evDi() || null, ha = !!ev && haBudgetEv(ev);
+    box.hidden = !ha;
+    if (!ha) { s.innerHTML = opt("", "—", true); ultimo = ev; return; }
+    let scelta;
+    if (ultimo === undefined && sel !== undefined && sel !== null) scelta = sel;
+    else if (ev === ultimo && toccata) scelta = s.value;
+    else { toccata = false; scelta = voceDiGruppo(ev, gruppoDi()) || mioGruppoVoce(ev) || ""; }
+    ultimo = ev; s.innerHTML = opzVoci(ev, scelta);
+  };
+  s.addEventListener("change", () => { toccata = true; });
+  f.addEventListener("change", (e) => { if (trig.includes(e.target.name)) agg(); });
+  agg();
+}
+
+/* ---------- nella pagina dell'evento ---------- */
+const barraBudget = (speso, tot) => (tot ? `<div class="bar" role="img" aria-label="Speso ${Math.round((speso / tot) * 100)}%"><i class="${speso > tot + 0.001 ? "over" : ""}" style="width:${Math.min(100, (speso / Math.max(tot, 0.01)) * 100)}%"></i></div>` : "");
+function bloccoBudgetEv(e) {
+  const c = contiEvento(e.id), mie = c.voci.filter(vedeVoce);
+  const cons = isCouncil();
+  if (!cons && !mie.length) return "";
+  if (!cons && !c.voci.length) return "";
+  if (cons && !c.voci.length && e.tipo !== "evento" && !c.speso) return "";
+  const riga = (v) => `<button class="li budv" data-act="budev-voce" data-id="${e.id}" data-v="${esc(v.k)}"><i class="sq" style="background:${v.gruppo ? colBudget(v.gruppo) : "var(--muted)"}"></i>
+    <span class="grow stack s" style="gap:4px"><span class="t">${esc(v.nome)}${v.gruppo && GRUPPI[v.gruppo] && GRUPPI[v.gruppo].nome !== v.nome ? ` <span class="pill">${esc(GRUPPI[v.gruppo].breve)}</span>` : ""}</span>
+      ${v.k ? barraBudget(v.speso, v.importo) : ""}<span class="s">${v.k ? `${esc(euro(v.speso))} spesi su ${esc(euroT(v.importo))}` : `${v.spese.length} ${v.spese.length === 1 ? "spesa" : "spese"}`}</span></span>
+    <span class="v ${v.k && v.speso > v.importo + 0.001 ? "neg" : ""}">${v.k ? esc(euro(v.importo - v.speso)) : esc(euro(v.speso))}<small>${v.k ? (v.speso > v.importo + 0.001 ? "sforati" : "restano") : "spesi"}</small></span></button>`;
+  const vis = cons ? c.voci : mie;
+  return `<section class="panel budev"><div class="ph"><h3>Budget dell'evento</h3>${cons ? `<button class="btn sm" data-act="budev-imposta" data-id="${e.id}">${ic("edit")}${c.voci.length ? "Cambia" : "Imposta"}</button>` : ""}</div>
+    ${cons && c.voci.length ? `<div class="pb"><div class="row between"><span><span class="big" style="font-size:1.8rem">${esc(euro(c.stanziato - c.speso))}</span><br><span class="small muted">rimasti su ${esc(euroT(c.stanziato))} stanziati</span></span><span class="v" style="font:700 1.1rem var(--f-display);text-align:right">${esc(euro(c.speso))}<br><span class="small muted">spesi</span></span></div>${barraBudget(c.speso, c.stanziato)}</div>` : ""}
+    ${!c.voci.length ? `<div class="pb"><p class="small muted">Il budget di questo evento non è ancora stanziato. Con «Imposta» lo dividi in voci (per esempio Grandi opere, Decorazioni, Sponsorizzate, DJ, Service): rimborsi, spese con le carte e pagamenti dell'evento si scalano dalla loro voce.</p></div>` : ""}
+    ${vis.length || (cons && c.altro.spese.length) ? `<div class="list" style="border-top:2px solid var(--rule)">${vis.map(riga).join("")}${cons && c.altro.spese.length ? riga(c.altro) : ""}</div>` : ""}
+    ${!finito(e) || giorniTra(e.dataFine || e.data, oggi()) <= 60 ? `<div class="pb" style="border-top:1px solid var(--line)"><div class="btns"><button class="btn sm" data-act="nuovo-anticipo" data-ev="${e.id}">${ic("euro")}Ho pagato io: chiedi il rimborso</button></div></div>` : ""}
+  </section>`;
+}
+const fonteSpesa = (s) => s.fonte === "rimborso" ? `rimborso a ${esc(primoNome(s.da))}` : s.fonte === "carta" ? `${esc(primoNome(s.da))} con la ${esc(nomeCarta(s.carta))}` : s.fonte === "pagamento" ? "pagamento dell'associazione" : `segnata da ${esc(primoNome(s.da))}${s.gruppo ? " (" + esc(GRUPPI[s.gruppo].breve) + ")" : ""}`;
+ACT["budev-voce"] = (el) => {
+  const id = el.dataset.id, k = el.dataset.v || "";
+  openSheet({ title: "Spese della voce", live: true, eyebrow: esc(tagEvento(id)), body: () => {
+    const c = contiEvento(id), v = k ? c.voci.find((x) => x.k === k) : c.altro;
+    if (!v) return `<p class="muted">Voce non trovata.</p>`;
+    return `<div class="row between"><span><b style="font:700 1.2rem var(--f-display)">${esc(v.nome)}</b>${v.gruppo && GRUPPI[v.gruppo] ? `<br><span class="small muted">del gruppo ${esc(GRUPPI[v.gruppo].nome)}</span>` : ""}</span>
+      ${k ? `<span class="v" style="text-align:right">${esc(euro(v.importo - v.speso))}<br><span class="small muted">restano su ${esc(euroT(v.importo))}</span></span>` : ""}</div>
+      ${k ? barraBudget(v.speso, v.importo) : ""}
+      ${v.spese.length ? `<div class="list" style="border:2px solid var(--rule)">${v.spese.map((s) => `<div class="li"><span class="grow"><span class="t">${esc(s.desc || "Spesa")}</span><br><span class="s">${esc(fData(s.data))} · ${fonteSpesa(s)}</span></span><span class="v">${esc(euro(s.importo))}</span></div>`).join("")}</div>`
+        : `<p class="small muted">Ancora nessuna spesa su questa voce.</p>`}
+      <p class="tiny muted">Contano i rimborsi approvati, le spese con le carte, i pagamenti fatti e le spese segnate dai gruppi per questo evento.</p>`;
+  }, foot: `<button class="btn ghost" data-act="sheet-close">Chiudi</button><button class="btn pri" data-act="nuovo-anticipo" data-ev="${id}" data-voce="${esc(k)}">${ic("euro")}Chiedi un rimborso</button>` });
+};
+/* il consiglio stanzia il budget: voci con nome, gruppo (facoltativo) e importo */
+const VOCI_EV_BASE = [["Grandi opere", "grandiopere"], ["Decorazioni", "decorazioni"], ["Sponsorizzate", "marketing"], ["DJ", ""], ["Service", ""]];
+function ultimoBudgetEv(id) { return eventi().filter((e) => e.id !== id && haBudgetEv(e.id)).sort(ordinaEv).pop() || null; }
+const rigaVoceEv = (v, i) => `<div class="bevr" data-r>
+  <input type="hidden" name="k_${i}" value="${esc(v.k || "")}">
+  <label class="field"><span>Voce</span><input class="in" name="n_${i}" maxlength="40" value="${esc(v.nome || "")}" placeholder="es. Luci"></label>
+  <label class="field"><span>Gruppo</span><select class="in" name="g_${i}">${opt("", "Nessuno")}${Object.entries(GRUPPI).filter(([g]) => g !== "consiglio").map(([g, x]) => opt(g, x.breve, v.gruppo === g)).join("")}</select></label>
+  <label class="field"><span>Importo</span><span class="money"><b>€</b><input name="i_${i}" inputmode="decimal" value="${v.importo || v.importo === 0 ? esc(String(v.importo).replace(".", ",")) : ""}" placeholder="0"></span></label>
+  <button type="button" class="btn sm ghost" data-act="bev-togli" aria-label="Togli la voce">${ic("trash")}</button></div>`;
+ACT["budev-imposta"] = (el) => {
+  const id = el.dataset.id, e = S.cal[id]; if (!e || !isCouncil()) return;
+  let voci = vociEv(id), da = null;
+  if (!voci.length) { da = ultimoBudgetEv(id); voci = da ? vociEv(da.id).map((v) => ({ ...v, k: "" })) : VOCI_EV_BASE.map(([nome, gruppo]) => ({ nome, gruppo, importo: "" })); }
+  openSheet({ title: "Budget dell'evento", eyebrow: esc(e.titolo), body: `<form data-form="budev" data-id="${id}" id="fBev" class="stack">
+    <p class="small muted">${da ? `Ho ripreso le voci di <b>${esc(da.titolo)}</b>: cambia gli importi o togli quelle che non servono.` : "Dividi il budget in voci. Se una voce è di un gruppo, i suoi membri la vedono e i loro rimborsi si scalano da lì."}</p>
+    <div class="stack s" id="bevRighe">${voci.map(rigaVoceEv).join("")}</div>
+    <button type="button" class="btn sm" data-act="bev-aggiungi" style="align-self:flex-start">${ic("plus")}Aggiungi una voce</button>
+    <p class="small" id="bevTot"></p><p class="err" hidden></p></form>`,
+    foot: `<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fBev">Salva</button>`,
+    mount: (root) => {
+      const f = root.querySelector("#fBev"); if (!f || f.dataset.ok) return; f.dataset.ok = 1;
+      const tot = () => { let t = 0; f.querySelectorAll('[name^="i_"]').forEach((x) => { t += leggiImporto(x.value) || 0; }); root.querySelector("#bevTot").innerHTML = `Totale stanziato: <b>${esc(euro(t))}</b>`; };
+      f.addEventListener("input", tot); tot();
+    } });
+};
+let bevN = 100;
+ACT["bev-aggiungi"] = () => {
+  const box = $("#bevRighe"); if (!box) return;
+  const i = bevN++;
+  box.insertAdjacentHTML("beforeend", rigaVoceEv({ nome: "", gruppo: "", importo: "" }, i));
+  const n = box.querySelector(`[name="n_${i}"]`); if (n) n.focus();
+};
+ACT["bev-togli"] = (el) => { const r = el.closest("[data-r]"); if (r) r.remove(); const f = $("#fBev"); if (f) f.dispatchEvent(new Event("input")); };
+FORMS.budev = async (f) => {
+  const id = f.dataset.id, prima = budgetEv(id), voci = {};
+  let ord = 0;
+  for (const r of f.querySelectorAll("[data-r]")) {
+    const i = r.querySelector('[name^="n_"]').name.slice(2);
+    const nome = fv(f, "n_" + i), raw = fv(f, "i_" + i), imp = leggiImporto(raw), g = fv(f, "g_" + i) || null;
+    if (!nome && !raw) continue;
+    if (!nome) return fErr(f, "Ogni voce ha bisogno di un nome.");
+    if (!(imp >= 0)) return fErr(f, `Scrivi l'importo di «${nome}», es. 300.`);
+    voci[fv(f, "k_" + i) || genId("v")] = { nome, importo: imp, gruppo: g, ord: ord++ };
+  }
+  if (!ord && !prima) return fErr(f, "Aggiungi almeno una voce.");
+  const tolte = prima ? Object.keys(prima.voci || {}).filter((k) => !voci[k]) : [];
+  const conSpese = tolte.filter((k) => speseEvento(id).some((s) => s.voce === k));
+  await wSet("budget/" + chiaveEv(id), { evento: id, voci, spese: (prima && prima.spese) || {}, agg: Date.now(), aggDa: ME() });
+  closeSheet(); toast(conSpese.length ? "Salvato. Le spese delle voci tolte finiscono in «Altre spese»." : "Budget dell'evento salvato.");
+};
+
+/* ---------- nel budget del gruppo: le voci del gruppo negli eventi ---------- */
+function bloccoBudgetEventiGruppo(k) {
+  const anno = String(new Date().getFullYear());
+  const evs = eventi().filter((e) => !e.annullato && voceDiGruppo(e.id, k) && ((e.dataFine || e.data) >= anno || !finito(e))).sort(ordinaEv);
+  if (!evs.length) return "";
+  return `<section class="panel budev"><div class="ph"><h3>Budget per gli eventi</h3></div><div class="list">${evs.map((e) => {
+    const v = contiEvento(e.id).voci.find((x) => x.k === voceDiGruppo(e.id, k));
+    return `<a class="li budv" href="#ev-${e.id}"><span class="grow stack s" style="gap:4px"><span class="t">${esc(e.titolo)}</span>${barraBudget(v.speso, v.importo)}<span class="s">${esc(fData(e.data))} · ${esc(v.nome)}: ${esc(euro(v.speso))} spesi su ${esc(euroT(v.importo))}</span></span>
+      <span class="v ${v.speso > v.importo + 0.001 ? "neg" : ""}">${esc(euro(v.importo - v.speso))}<small>${v.speso > v.importo + 0.001 ? "sforati" : "restano"}</small></span></a>`;
+  }).join("")}</div>
+  <div class="pb" style="border-top:1px solid var(--line)"><p class="tiny muted">Il consiglio stanzia il budget di ogni evento nella sua pagina. Le spese per un evento si scalano da qui, non dal budget dell'anno.</p></div></section>`;
+}
+
+/* in «Budget», per il consiglio: gli eventi con un budget (o da stanziare) */
+function bloccoEventiConBudget() {
+  const evs = eventi().filter((e) => !e.annullato && e.tipo === "evento" && (haBudgetEv(e.id) ? !finito(e) || giorniTra(e.dataFine || e.data, oggi()) <= 60 : !finito(e))).sort(ordinaEv);
+  if (!evs.length) return "";
+  return `<div class="stack s"><h2 class="budh"><i class="sq" style="background:var(--verde)"></i>Eventi</h2><section class="panel budev"><div class="list">${evs.map((e) => {
+    const c = contiEvento(e.id);
+    return `<a class="li budv" href="#ev-${e.id}"><span class="grow stack s" style="gap:4px"><span class="t">${esc(e.titolo)}</span>${c.voci.length ? barraBudget(c.speso, c.stanziato) : ""}<span class="s">${esc(fData(e.data))} · ${c.voci.length ? `${esc(euro(c.speso))} spesi su ${esc(euroT(c.stanziato))} · ${c.voci.length} voci` : "budget da stanziare"}</span></span>
+      ${c.voci.length ? `<span class="v ${c.speso > c.stanziato + 0.001 ? "neg" : ""}">${esc(euro(c.stanziato - c.speso))}<small>${c.speso > c.stanziato + 0.001 ? "sforati" : "restano"}</small></span>` : ic("chev", "chev")}</a>`;
+  }).join("")}</div></section></div>`;
+}
 
 /* ================= DALLA POSTA: appuntamenti trovati nelle mail del consiglio ================= */
 const GMAIL_SRV = "Gmail";
@@ -6495,17 +6770,34 @@ function openCallDiEvento(e) {
 }
 
 /* ================= CALENDARIO EDITORIALE (gruppo marketing) ================= */
+/* [nome, colore, testo, sigla]. Colori scelti per restare distinguibili anche con le discromatopsie (protanopia, deuteranopia,
+   tritanopia: simulazione Machado 2009, distanza minima ΔE 21 contro 7 dei vecchi; Reel e Facebook erano quasi uguali).
+   La sigla fa riconoscere il canale anche senza colore. Ognuno può cambiarsi i colori («Colori», salvati in prefs/<id>.coloriCanali). */
 const CANALI = {
-  post: ["Post Instagram", "#d6457a", "#ffffff"], reel: ["Reel", "#7b3fa0", "#ffffff"], storia: ["Storia", "#e07a1f", "#0b0c0b"],
-  tiktok: ["TikTok", "#0b0c0b", "#ffffff"], facebook: ["Facebook", "#1f7ac4", "#ffffff"], altro: ["Altro", "#4a5a66", "#ffffff"],
+  post: ["Post Instagram", "#cc79a7", "#0b0c0b", "IG"], reel: ["Reel", "#d55e00", "#0b0c0b", "R"], storia: ["Storia", "#f0e442", "#0b0c0b", "S"],
+  tiktok: ["TikTok", "#0b0c0b", "#ffffff", "TT"], facebook: ["Facebook", "#0072b2", "#ffffff", "FB"], altro: ["Altro", "#d9dee2", "#0b0c0b", "+"],
 };
+/* testo nero o bianco, quello che si legge meglio sul colore */
+function testoSu(hex) {
+  const l = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+  const L = 0.2126 * l[0] + 0.7152 * l[1] + 0.0722 * l[2];
+  return (L + 0.05) / 0.0545 >= 1.05 / (L + 0.05) ? "#0b0c0b" : "#ffffff";
+}
+const coloreOk = (h) => typeof h === "string" && /^#[0-9a-f]{6}$/i.test(h);
+const mieiColori = () => (S.prefs && S.prefs.coloriCanali) || {};
+function coloreCanale(k) {
+  const c = CANALI[k] || CANALI.altro, mio = mieiColori()[k];
+  return coloreOk(mio) ? [c[0], mio.toLowerCase(), testoSu(mio), c[3]] : c;
+}
 const STATI_POST = { idea: ["Idea", ""], lavorazione: ["In lavorazione", "warn"], pronto: ["Pronto", "ok"], pubblicato: ["Pubblicato", "solid"] };
 can.editoriale = () => isCouncil() || inGroup("marketing");
-const canale = (p) => CANALI[p.canale] || CANALI.altro;
+const canale = (p) => coloreCanale(CANALI[p.canale] ? p.canale : "altro");
 const postTutti = () => Object.values(S.post || {}).sort((a, b) => (a.data + (a.ora || "99")).localeCompare(b.data + (b.ora || "99")));
 function postMiei() { return postTutti().filter((p) => p.chi === ME() && p.stato !== "pubblicato" && p.data >= oggi() && giorniTra(oggi(), p.data) <= 2); }
 const sponsDiPost = (id) => Object.values(S.sponsorizzate || {}).filter((x) => x.post === id);
-const chipPost = (p) => { const c = canale(p); return `<span class="pchip" style="background:${c[1]};color:${c[2]}" title="${esc(c[0])}: ${esc(p.titolo)}">${esc(p.titolo)}</span>`; };
+const chipPost = (p) => { const c = canale(p); return `<span class="pchip" style="background:${c[1]};color:${c[2]}" title="${esc(c[0])}: ${esc(p.titolo)}"><b class="psig">${esc(c[3])}</b><span class="ptit">${esc(p.titolo)}</span></span>`; };
+const quadratino = (c) => `<span class="psq" style="background:${c[1]};color:${c[2]}" aria-hidden="true">${esc(c[3])}</span>`;
+const legendaCanali = () => Object.keys(CANALI).map((k) => { const c = coloreCanale(k); return `<span class="pill"><i class="sq psig-sq" style="background:${c[1]};color:${c[2]}">${esc(c[3])}</i>${esc(c[0])}</span>`; }).join("");
 route("editoriale", (mese) => {
   if (!can.editoriale()) return `<div class="wrap">${backLink("gr-marketing", "Marketing")}${empty("Calendario del gruppo Marketing", "Lo usano i membri del gruppo Marketing e il consiglio.")}</div>`;
   const m = /^\d{4}-\d{2}$/.test(mese || "") ? mese : oggi().slice(0, 7);
@@ -6521,14 +6813,14 @@ route("editoriale", (mese) => {
   }
   const giorni = [...new Set(delMese.map((p) => p.data))];
   const riga = (p) => { const c = canale(p), s = STATI_POST[p.stato] || STATI_POST.idea;
-    return `<button class="li" data-act="post-apri" data-id="${p.id}"><span class="psq" style="background:${c[1]}"></span><span class="grow"><span class="t">${esc(p.titolo)}</span>${sponsDiPost(p.id).length ? ` <span class="pill sm">€ sponsorizzato</span>` : ""}<br><span class="s">${esc(c[0])}${p.ora ? " · " + esc(p.ora) : ""}${p.chi ? " · " + esc(primoNome(p.chi)) : ""}${p.evento && S.cal[p.evento] ? " · " + esc(S.cal[p.evento].titolo) : ""}</span></span><span class="pill ${s[1]}">${s[0]}</span></button>`; };
+    return `<button class="li" data-act="post-apri" data-id="${p.id}">${quadratino(c)}<span class="grow"><span class="t">${esc(p.titolo)}</span>${sponsDiPost(p.id).length ? ` <span class="pill sm">€ sponsorizzato</span>` : ""}<br><span class="s">${esc(c[0])}${p.ora ? " · " + esc(p.ora) : ""}${p.chi ? " · " + esc(primoNome(p.chi)) : ""}${p.evento && S.cal[p.evento] ? " · " + esc(S.cal[p.evento].titolo) : ""}</span></span><span class="pill ${s[1]}">${s[0]}</span></button>`; };
   const daFare = tutti.filter((p) => p.data >= oggi() && p.stato !== "pubblicato").slice(0, 3);
   return `<div class="wrap">${backLink("gr-marketing", "Marketing")}
     <div class="pagehead"><div class="stack"><span class="eyebrow">Gruppo Marketing</span><h1>Calendario editoriale</h1></div><button class="btn pri" data-act="post-nuovo">${ic("plus")}Nuovo post</button></div>
     ${daFare.length ? `<p class="small muted">Prossimi: ${daFare.map((p) => `<b>${esc(fData(p.data))}</b> ${esc(p.titolo)}`).join(" · ")}</p>` : ""}
     <div class="row between"><a class="btn sm ghost" href="#editoriale-${prima}" aria-label="Mese prima">${ic("back")}</a><h2 class="disp" style="margin:0;text-transform:capitalize">${MESI[mm - 1]} ${y}</h2><a class="btn sm ghost" href="#editoriale-${dopo}" aria-label="Mese dopo" style="transform:scaleX(-1)">${ic("back")}</a></div>
     <div class="ecal" role="grid">${["lun", "mar", "mer", "gio", "ven", "sab", "dom"].map((g) => `<span class="eg">${g}</span>`).join("")}${celle.join("")}</div>
-    <div class="chips">${Object.entries(CANALI).map(([, c]) => `<span class="pill"><i class="sq" style="background:${c[1]}"></i>${esc(c[0])}</span>`).join("")}</div>
+    <div class="chips legcanali">${legendaCanali()}<button class="btn sm ghost" data-act="colori-canali">${ic("edit")}Colori</button></div>
     <section class="panel"><div class="ph"><h3>Post di ${MESI[mm - 1]}</h3><span class="pill">${delMese.length}</span></div>
       ${giorni.length ? giorni.map((g) => `<div class="wk">${esc(fDataL(g))}</div><div class="list">${delMese.filter((p) => p.data === g).map(riga).join("")}</div>`).join("") : `<div class="pb"><p class="small muted">Nessun post in calendario questo mese: tocca un giorno per aggiungerlo.</p></div>`}</section>
   </div>`;
@@ -6539,7 +6831,7 @@ function formPost(p, pre = {}) {
   const marketing = [...new Set([...membriDi("marketing"), ...(v.chi ? [v.chi] : [])])].sort((a, b) => nm(a).localeCompare(nm(b), "it"));
   openSheet({ title: p ? "Modifica post" : "Nuovo post", eyebrow: "Calendario editoriale", body: `<form data-form="post" data-id="${p ? p.id : ""}" id="fPo" class="stack">
     <label class="field"><span>Di cosa parla</span><input class="in" name="titolo" required maxlength="90" value="${esc(v.titolo || "")}" placeholder="es. Countdown Fem Fest: -7" ${p ? "" : "autofocus"}></label>
-    <div class="field"><span>Dove esce</span><div class="opts">${Object.entries(CANALI).map(([k, c]) => radio("canale", k, `<i class="sq" style="background:${c[1]}"></i>${esc(c[0])}`, v.canale === k)).join("")}</div></div>
+    <div class="field"><span>Dove esce</span><div class="opts">${Object.keys(CANALI).map((k) => { const c = coloreCanale(k); return radio("canale", k, `<i class="sq psig-sq" style="background:${c[1]};color:${c[2]}">${esc(c[3])}</i>${esc(c[0])}`, v.canale === k); }).join("")}</div></div>
     <div class="fields"><label class="field"><span>Giorno</span><input class="in" type="date" name="data" required value="${esc(v.data)}"></label><label class="field"><span>Ora</span><input class="in" type="time" name="ora" value="${esc(v.ora || "")}"></label>
       <label class="field"><span>Chi lo pubblica</span><select class="in" name="chi">${opt("", "Da decidere")}${marketing.map((u) => opt(u, nm(u), v.chi === u)).join("")}</select></label></div>
     <div class="field"><span>A che punto è</span><div class="opts">${Object.entries(STATI_POST).map(([k, s]) => radio("stato", k, s[0], (v.stato || "idea") === k)).join("")}</div></div>
@@ -6565,9 +6857,38 @@ ACT["post-del"] = (el) => confirmSheet({ title: "Togliere il post dal calendario
 function bloccoEditoriale() {
   const pross = postTutti().filter((p) => p.data >= oggi()).slice(0, 5);
   return `<section class="panel"><div class="ph"><h3>Calendario editoriale</h3><a class="btn sm" href="#editoriale">${ic("cal")}Apri</a></div>
-    ${pross.length ? `<div class="list">${pross.map((p) => { const c = canale(p), s = STATI_POST[p.stato] || STATI_POST.idea; return `<button class="li" data-act="post-apri" data-id="${p.id}"><span class="psq" style="background:${c[1]}"></span><span class="grow"><span class="t">${esc(p.titolo)}</span><br><span class="s">${esc(fData(p.data))}${p.ora ? " · " + esc(p.ora) : ""} · ${esc(c[0])}${p.chi ? " · " + esc(primoNome(p.chi)) : ""}</span></span><span class="pill ${s[1]}">${s[0]}</span></button>`; }).join("")}</div>`
+    ${pross.length ? `<div class="list">${pross.map((p) => { const c = canale(p), s = STATI_POST[p.stato] || STATI_POST.idea; return `<button class="li" data-act="post-apri" data-id="${p.id}">${quadratino(c)}<span class="grow"><span class="t">${esc(p.titolo)}</span><br><span class="s">${esc(fData(p.data))}${p.ora ? " · " + esc(p.ora) : ""} · ${esc(c[0])}${p.chi ? " · " + esc(primoNome(p.chi)) : ""}</span></span><span class="pill ${s[1]}">${s[0]}</span></button>`; }).join("")}</div>`
       : `<div class="pb"><p class="small muted">Nessun post in programma.</p><button class="btn sm pri" data-act="post-nuovo">${ic("plus")}Aggiungi il primo</button></div>`}</section>`;
 }
+
+/* colori dei canali: ognuno può scegliersi i suoi (solo per sé, su tutti i suoi dispositivi) */
+ACT["colori-canali"] = () => {
+  const mio = mieiColori();
+  const riga = (k) => { const b = CANALI[k], c = coloreCanale(k);
+    return `<div class="li colcan" data-k="${k}"><span class="pchip anteprima" style="background:${c[1]};color:${c[2]}"><b class="psig">${esc(b[3])}</b><span class="ptit">${esc(b[0])}</span></span>
+      <span class="grow"></span><input type="color" name="c_${k}" value="${c[1]}" aria-label="Colore di ${esc(b[0])}">
+      <button type="button" class="btn sm ghost" data-act="colore-base" data-k="${k}" ${coloreOk(mio[k]) ? "" : "hidden"}>Base</button></div>`; };
+  openSheet({ title: "Colori dei canali", eyebrow: "Calendario editoriale", body: `<form data-form="colori-canali" id="fCol" class="stack">
+    <p class="small muted">I colori valgono solo per te, su tutti i tuoi dispositivi. Quelli di base sono già scelti per distinguersi anche con il daltonismo; la sigla (IG, R, S, TT, FB) aiuta comunque.</p>
+    <div class="list" style="border:2px solid var(--rule)">${Object.keys(CANALI).map(riga).join("")}</div>
+    <button type="button" class="btn sm ghost" data-act="colori-tutti-base" style="align-self:flex-start">Torna a tutti i colori di base</button><p class="err" hidden></p></form>`,
+    foot: `<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fCol">Salva</button>`,
+    mount: (root) => {
+      const f = root.querySelector("#fCol"); if (!f || f.dataset.ok) return; f.dataset.ok = 1;
+      f.addEventListener("input", (e) => { const r = e.target.closest(".colcan"); if (!r || !coloreOk(e.target.value)) return;
+        const ch = r.querySelector(".anteprima"); ch.style.background = e.target.value; ch.style.color = testoSu(e.target.value);
+        r.querySelector("[data-act=colore-base]").hidden = e.target.value.toLowerCase() === CANALI[r.dataset.k][1]; });
+    } });
+};
+ACT["colore-base"] = (el) => { const r = el.closest(".colcan"), i = r && r.querySelector("input[type=color]"); if (!i) return; i.value = CANALI[r.dataset.k][1]; i.dispatchEvent(new Event("input", { bubbles: true })); };
+ACT["colori-tutti-base"] = () => { document.querySelectorAll("#fCol .colcan [data-act=colore-base]").forEach((b) => ACT["colore-base"](b)); };
+FORMS["colori-canali"] = async (f) => {
+  const c = {};
+  for (const k of Object.keys(CANALI)) { const v = (f.elements["c_" + k] || {}).value || ""; c[k] = coloreOk(v) && v.toLowerCase() !== CANALI[k][1] ? v.toLowerCase() : null; }
+  S.prefs = { ...S.prefs, coloriCanali: c };
+  await salvaPrefs({ coloriCanali: c }).catch(() => {});
+  closeSheet(); render(true); toast(Object.values(c).some(Boolean) ? "Colori salvati: li vedi solo tu." : "Tornati i colori di base.");
+};
 
 /* ================= SPONSORIZZATE: il budget del marketing =================
    Il consiglio fissa quanto c'è per l'anno (budget/marketing, come gli altri budget: solo il consiglio).
@@ -6680,7 +7001,7 @@ function bloccoSponsorizzate() {
 /* ================= GIOCHI: la parte vera sta in un file a parte (giochi.txt) =================
    L'app resta leggera: il file dei giochi si scarica solo quando qualcuno apre la sezione, poi resta in memoria
    (e il telefono lo tiene anche senza rete). Qui c'è solo il caricatore e la pagina d'attesa. */
-const GIOCHI_V = "8f2975041c";
+const GIOCHI_V = "b17cd195bb";
 const GIOCHI = { stato: null, err: "" }; /* null · carico · ok · errore */
 function caricaGiochi() {
   if (GIOCHI.stato) return; /* già scaricato, in arrivo o andato male (si riprova solo col pulsante) */
