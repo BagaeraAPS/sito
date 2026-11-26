@@ -607,6 +607,9 @@ details.rip summary svg { width: 18px; height: 18px; }
 .budrow .v { font: 700 1.2rem/1 var(--f-display); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .budrow .v.neg, .li .v.neg { color: var(--bad); }
 .li .v.pos { color: var(--accent-ink); }
+.li .vcol { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex: none; }
+.li .vcol .btn { padding: 4px 8px; min-height: 0; }
+.li .nw, .s .nw { white-space: nowrap; }
 
 /* =====================================================================
    TEMA MORBIDO (novembre 2026): verde bosco al posto del nero piatto, superfici
@@ -4549,7 +4552,16 @@ function allineaChi() {
 }
 function detentore(cid) { let best = null; for (const m of Object.values(S.cartemov)) if (m.tipo === "passaggio" && m.carta === cid && (!best || (m.at || 0) > (best.at || 0))) best = m; return best ? { chi: best.chi || null, at: best.at } : null; }
 const speseCarte = () => Object.values(S.cartemov).filter((m) => m.tipo === "spesa");
+/* le prepagate condividono il saldo: una ricarica su una carta vale per tutte, e ogni spesa (con qualsiasi prepagata) lo abbassa
+   per tutte. Es. 500 € caricati sulla carta di A → A e B hanno 500 €; A spende 100 € → A e B hanno 400 €. */
+const carteDiTipo = (t) => new Set(Object.values(S.carte).filter((c) => c.tipo === t).map((c) => c.id));
+function saldoPrepagate() {
+  const pre = carteDiTipo("prepagata");
+  const ric = Object.values(S.carteric).filter((r) => r.tipo === "ricarica" && pre.has(r.carta)).reduce((s, r) => s + (Number(r.importo) || 0), 0);
+  return Math.round((ric - speseCarte().filter((m) => pre.has(m.carta)).reduce((s, m) => s + (Number(m.importo) || 0), 0)) * 100) / 100;
+}
 function saldoCarta(cid) {
+  if (S.carte[cid] && S.carte[cid].tipo === "prepagata") return saldoPrepagate();
   const ric = Object.values(S.carteric).filter((r) => r.tipo === "ricarica" && r.carta === cid).reduce((s, r) => s + (Number(r.importo) || 0), 0);
   return ric - speseCarte().filter((m) => m.carta === cid).reduce((s, m) => s + (Number(m.importo) || 0), 0);
 }
@@ -4565,7 +4577,7 @@ function cassaCarte() {
     libero += r.tipo === "ricarica" ? (Number(r.importo) || 0) - tot : -tot;
   }
   for (const m of speseCarte()) { if (!pre.has(m.carta)) continue; if (m.budget && per[m.budget]) per[m.budget].speso += Number(m.importo) || 0; else libero -= Number(m.importo) || 0; }
-  const totale = [...pre].reduce((s, c) => s + saldoCarta(c), 0);
+  const totale = saldoPrepagate();
   return { per, libero: Math.round(libero * 100) / 100, totale, n: pre.size, vis: [...pre].filter((c) => !S.carte[c].eliminata).length };
 }
 const residuo = (k) => { const x = cassaCarte().per[k]; return x ? x.caricato - x.speso : 0; };
@@ -4594,9 +4606,9 @@ route("carte", () => {
     ${carte.length ? `<div class="ccards">${carte.map(cartaHtml).join("")}</div>` : empty("Nessuna carta", isCouncil() ? "Aggiungi il bancomat del consiglio e le prepagate: poi segnate chi le ha in mano e cosa si spende." : "Il consiglio non ha ancora aggiunto le carte.")}
     ${isCouncil() ? `<div class="btns">${carte.some((c) => c.tipo === "prepagata") ? `<button class="btn" data-act="cric-nuova">${ic("plus")}Ricarica</button><button class="btn" data-act="csposta">${ic("swap")}Sposta tra budget</button>` : ""}<button class="btn" data-act="carta-nuova">${ic("card")}Nuova carta</button><a class="btn" href="#budget">${ic("wallet")}Budget dei gruppi</a></div>${needAdmin()}` : ""}
     ${arch.length ? `<section class="panel"><div class="ph"><h3>Archivio</h3><span class="small muted">${arch.length === 1 ? "1 carta disattivata" : arch.length + " carte disattivate"}</span></div><div class="list">${arch.map((c) => { const h = detentore(c.id);
-      return `<button class="li" data-act="carta-scheda" data-id="${c.id}"><span class="ic">${ic("card")}</span><span class="grow"><span class="t">${esc(c.nome)}</span><br><span class="s">${c.tipo === "bancomat" ? "Bancomat" : "Prepagata"}${c.intestatario ? " · " + esc(c.intestatario) : ""}${c.ultime4 ? " · •••• " + esc(c.ultime4) : ""}${c.tipo === "prepagata" ? " · saldo " + esc(euro(saldoCarta(c.id))) : ""}${h && h.chi ? " · ce l'ha ancora " + esc(primoNome(h.chi)) : ""}</span></span>${ic("chev", "chev")}</button>`; }).join("")}</div></section>` : ""}
+      return `<button class="li" data-act="carta-scheda" data-id="${c.id}"><span class="ic">${ic("card")}</span><span class="grow"><span class="t">${esc(c.nome)}</span><br><span class="s">${c.tipo === "bancomat" ? "Bancomat" : "Prepagata"}${c.intestatario ? " · " + esc(c.intestatario) : ""}${c.ultime4 ? " · •••• " + esc(c.ultime4) : ""}${c.tipo === "prepagata" ? " · saldo comune " + esc(euro(saldoCarta(c.id))) : ""}${h && h.chi ? " · ce l'ha ancora " + esc(primoNome(h.chi)) : ""}</span></span>${ic("chev", "chev")}</button>`; }).join("")}</div></section>` : ""}
     <section class="panel"><div class="ph"><h3>Movimenti</h3></div>
-      <div class="pb" style="padding-bottom:0"><div class="seg" role="group" aria-label="Movimenti">${[["tutti", "Tutti"], ["spese", "Spese"], ["ricariche", "Ricariche"], ["passaggi", "Chi l'ha avuta"]].map(([k, l]) => `<button data-act="carte-tab" data-v="${k}" aria-pressed="${tab === k}">${l}</button>`).join("")}</div></div>
+      <div class="pb" style="padding-bottom:0"><div class="seg" role="group" aria-label="Movimenti">${[["tutti", "Tutti"], ["spese", "Spese"], ["ricariche", "Ricariche"], ["passaggi", "Passaggi"]].map(([k, l]) => `<button data-act="carte-tab" data-v="${k}" aria-pressed="${tab === k}">${l}</button>`).join("")}</div></div>
       ${mov.length ? `<div class="list">${mov.slice(0, 60).map(rigaMovCarta).join("")}</div>` : `<div class="pb"><p class="small muted">Niente da mostrare.</p></div>`}</section>
   </div>`;
 });
@@ -4607,7 +4619,7 @@ function cartaHtml(c) {
       <div class="row between nw"><span class="eyebrow">${c.tipo === "bancomat" ? "Bancomat del consiglio" : "Prepagata"}</span>${c.budget ? `<span class="ccbud" style="background:${colBudget(c.budget)}">${esc(nomeBudget(c.budget))}</span>` : ""}</div>
       <b class="ccnome">${esc(c.nome)}</b>
       <span class="ccnum">•••• •••• •••• ${esc(c.ultime4 || "····")}</span>
-      <div class="row between nw" style="align-items:flex-end"><span class="ccint">${esc((c.intestatario || "").toUpperCase())}</span>${c.tipo === "prepagata" ? `<span class="ccsaldo"><small>saldo</small>${esc(euro(saldoCarta(c.id)))}</span>` : ""}</div>
+      <div class="row between nw" style="align-items:flex-end"><span class="ccint">${esc((c.intestatario || "").toUpperCase())}</span>${c.tipo === "prepagata" ? `<span class="ccsaldo"><small>saldo comune</small>${esc(euro(saldoCarta(c.id)))}</span>` : ""}</div>
       ${isCouncil() ? `<button class="ccedit" data-act="carta-modifica" data-id="${c.id}" aria-label="Modifica ${esc(c.nome)}">${ic("edit")}</button>` : ""}
     </div>
     <div class="cchold">${h && h.chi ? `${av(h.chi)}<span class="grow small"><b>${mia ? "Ce l'hai tu" : "Ce l'ha " + esc(primoNome(h.chi))}</b><br>${gg ? `da ${gg} ${gg === 1 ? "giorno" : "giorni"}` : "da oggi"}</span>` : `<span class="grow small muted">Nessuno ce l'ha segnata in mano</span>`}
@@ -4615,8 +4627,9 @@ function cartaHtml(c) {
 }
 function rigaMovCarta(m) {
   if (m._c === "ric") {
-    const al = Object.entries(m.alloc || {}).filter(([, v]) => Number(v)).map(([k, v]) => `${nomeBudget(k)} ${Number(v) > 0 ? "+" : ""}${euroT(v)}`).join(" · ");
-    return `<div class="li"><span class="ic" style="background:var(--verde);color:var(--nero)">${ic(m.tipo === "sposta" ? "swap" : "plus")}</span><span class="grow"><span class="t">${m.tipo === "sposta" ? "Spostamento tra budget" : "Ricarica " + esc(nomeCarta(m.carta))}</span><br><span class="s">${esc(fData(m.data))}${al ? " · " + esc(al) : ""}${m.nota ? " · " + esc(m.nota) : ""}</span></span>${m.tipo === "ricarica" ? `<span class="v pos">+${esc(euro(m.importo))}</span>` : ""}${isCouncil() ? `<button class="btn sm ghost" data-act="cric-del" data-id="${m.id}" aria-label="Elimina">${ic("trash")}</button>` : ""}</div>`;
+    const al = Object.entries(m.alloc || {}).filter(([, v]) => Number(v)).map(([k, v]) => `<span class="nw">${esc(nomeBudget(k))} ${Number(v) > 0 ? "+" : "−"}${esc(euroT(Math.abs(Number(v))))}</span>`).join(" · ");
+    return `<div class="li ric"><span class="ic" style="background:var(--verde);color:var(--nero)">${ic(m.tipo === "sposta" ? "swap" : "plus")}</span><span class="grow"><span class="t">${m.tipo === "sposta" ? "Spostamento tra budget" : "Ricarica " + esc(nomeCarta(m.carta))}</span><br><span class="s"><span class="nw">${esc(fData(m.data))}</span>${al ? " · " + al : ""}${m.nota ? " · " + esc(m.nota) : ""}</span></span>
+      <span class="vcol">${m.tipo === "ricarica" ? `<span class="v pos">+${esc(euro(m.importo))}</span>` : ""}${isCouncil() ? `<button class="btn sm ghost" data-act="cric-del" data-id="${m.id}" aria-label="Elimina il movimento">${ic("trash")}</button>` : ""}</span></div>`;
   }
   if (m.tipo === "passaggio") return `<div class="li"><span class="ic">${ic("swap")}</span><span class="grow"><span class="t">${m.chi ? `${esc(nm(m.chi))} ha la ${esc(nomeCarta(m.carta))}` : `${esc(nomeCarta(m.carta))} riconsegnata`}</span><br><span class="s">${esc(fTs(m.at))}${m.da && m.da !== m.chi ? " · segnato da " + esc(primoNome(m.da)) : ""}</span></span></div>`;
   return `<button class="li" data-act="cspesa-apri" data-id="${m.id}">${av(m.chi)}<span class="grow"><span class="t">${esc(m.desc)}</span><br><span class="s">${esc(nm(m.chi))} con la ${esc(nomeCarta(m.carta))} · ${esc(fData(m.data))}${m.budget ? ` · <b style="color:${colBudget(m.budget)}">${esc(nomeBudget(m.budget))}</b>` : ""}${m.foto ? " · " + ic("camera") : ""}${m.registro ? " · sul registro" : ""}</span></span><span class="v">−${esc(euro(m.importo))}</span></button>`;
@@ -4717,7 +4730,7 @@ ACT["cric-nuova"] = () => {
       <label class="field"><span>Quanto avete caricato</span><span class="money"><b>€</b><input name="imp" inputmode="decimal" required autofocus></span></label>
       <label class="field"><span>Quando</span><input class="in" type="date" name="data" value="${oggi()}" required></label></div>
     <div class="field"><span>Come si divide tra i budget</span><div class="stack s">${budgetVoci().map(([k, l]) => `<label class="row nw"><i class="sq" style="background:${colBudget(k)}"></i><span class="grow small">${esc(l)}</span><span class="money" style="max-width:150px"><b>€</b><input name="a_${k}" inputmode="decimal" placeholder="0"></span></label>`).join("")}</div>
-      <small id="crResto">Il budget è comune a tutte le prepagate: conta quanto è stanziato, non su quale carta.</small></div>
+      <small id="crResto">Saldo e budget sono comuni a tutte le prepagate: la ricarica vale per tutte, conta quanto è stanziato e non su quale carta.</small></div>
     <label class="field"><span>Nota</span><input class="in" name="nota" maxlength="120" placeholder="es. bonifico del 4 novembre"></label><p class="err" hidden></p></form>`,
     foot: `<button class="btn ghost" data-act="sheet-close">Annulla</button><button class="btn pri" type="submit" form="fCr">Salva la ricarica</button>`,
     mount: (root) => { const f = root.querySelector("#fCr"); const upd = () => { const imp = leggiImporto(f.elements.imp.value) || 0; const s = budgetVoci().reduce((t, [k]) => t + (leggiImporto(f.elements["a_" + k].value) || 0), 0); const r = root.querySelector("#crResto"); if (imp) r.textContent = Math.abs(imp - s) < 0.005 ? "Tutto assegnato." : imp > s ? `Da assegnare: ${euro(imp - s)} (restano «non assegnati»).` : `Hai diviso ${euro(s - imp)} in più dell'importo.`; }; f.addEventListener("input", upd); } });
@@ -4758,9 +4771,9 @@ function schedaCarta(id) {
     return `<div class="stack">
       <div class="ccard ${c.tipo} ${c.attiva === false ? "spenta" : ""}" style="border-radius:var(--r-m)"><div class="row between nw"><span class="eyebrow">${c.tipo === "bancomat" ? "Bancomat del consiglio" : "Prepagata"}${c.attiva === false ? " · disattivata" : ""}</span>${c.budget ? `<span class="ccbud" style="background:${colBudget(c.budget)}">${esc(nomeBudget(c.budget))}</span>` : ""}</div>
         <b class="ccnome">${esc(c.nome)}</b><span class="ccnum">•••• •••• •••• ${esc(c.ultime4 || "····")}</span>
-        <div class="row between nw" style="align-items:flex-end"><span class="ccint">${esc((c.intestatario || "").toUpperCase())}</span>${c.tipo === "prepagata" ? `<span class="ccsaldo"><small>saldo</small>${esc(euro(saldoCarta(id)))}</span>` : ""}</div></div>
+        <div class="row between nw" style="align-items:flex-end"><span class="ccint">${esc((c.intestatario || "").toUpperCase())}</span>${c.tipo === "prepagata" ? `<span class="ccsaldo"><small>saldo comune</small>${esc(euro(saldoCarta(id)))}</span>` : ""}</div></div>
       <div class="ccstat"><div><b>${spese.length}</b><span>${spese.length === 1 ? "spesa segnata" : "spese segnate"}</span></div><div><b>${esc(euroT(speso))}</b><span>spesi in tutto</span></div><div><b>${ultima ? esc(fData(ultima.data)) : "—"}</b><span>ultima spesa</span></div><div><b>${h && h.chi ? esc(primoNome(h.chi)) : "in sede"}</b><span>ce l'ha</span></div></div>
-      ${c.attiva === false && c.tipo === "prepagata" && Math.abs(saldoCarta(id)) >= 0.01 ? `<div class="notice warn">Sulla carta risultano ancora ${esc(euro(saldoCarta(id)))}: restano contati nei budget finché non li spendete o li spostate.</div>` : ""}
+      ${c.tipo === "prepagata" ? `<p class="small muted">Il saldo è comune a tutte le prepagate: ricariche e spese di ognuna valgono per tutte.</p>` : ""}
       <div class="btns">${c.attiva === false ? `<button class="btn pri" data-act="carta-riattiva" data-id="${id}">${ic("undo")}Riattiva</button>` : `<button class="btn" data-act="carta-disattiva" data-id="${id}">Metti in archivio</button>`}<button class="btn" data-act="carta-modifica" data-id="${id}">${ic("edit")}Modifica</button>${WEB && c.haPin ? `<button class="btn" data-act="carta-pin" data-id="${id}">${ic("key")}PIN</button>` : ""}<button class="btn danger" data-act="carta-elimina" data-id="${id}">${ic("trash")}Elimina</button></div>
       <div class="stack s"><span class="eyebrow">Movimenti di questa carta</span>${mv.length ? `<div class="list" style="border:1px solid var(--line);border-radius:var(--r-s, 10px)">${mv.slice(0, 30).map(rigaMovCarta).join("")}</div>` : `<p class="small muted">Nessun movimento.</p>`}</div>
     </div>`;
@@ -4770,7 +4783,7 @@ ACT["carta-riattiva"] = async (el) => { const c = S.carte[el.dataset.id]; if (!c
 ACT["carta-disattiva"] = async (el) => { const c = S.carte[el.dataset.id]; if (!c) return; await wUpd("carte/" + c.id, { attiva: false }); toast(`${c.nome} è nell'archivio.`, { label: "Annulla", fn: () => wUpd("carte/" + c.id, { attiva: true }) }); };
 ACT["carta-elimina"] = (el) => {
   const c = S.carte[el.dataset.id]; if (!c) return;
-  const usata = movCarta(c.id).length > 0, saldo = c.tipo === "prepagata" ? saldoCarta(c.id) : 0;
+  const usata = movCarta(c.id).length > 0, saldo = 0;   /* le prepagate hanno il saldo in comune: eliminandone una il saldo resta sulle altre */
   confirmSheet({ title: `Eliminare ${esc(c.nome)}?`, ok: "Elimina", danger: true,
     text: usata ? `Sparisce dalle carte e dall'archivio, e il PIN viene cancellato. Le spese e le ricariche fatte con questa carta restano nello storico e nei budget${Math.abs(saldo) >= 0.01 ? `, compresi i ${esc(euro(saldo))} che risultano ancora sulla carta` : ""}.` : "Non ha movimenti: viene cancellata del tutto, PIN compreso.",
     onOk: async () => {
@@ -7136,7 +7149,7 @@ function bloccoSponsorizzate() {
 /* ================= GIOCHI: la parte vera sta in un file a parte (giochi.txt) =================
    L'app resta leggera: il file dei giochi si scarica solo quando qualcuno apre la sezione, poi resta in memoria
    (e il telefono lo tiene anche senza rete). Qui c'è solo il caricatore e la pagina d'attesa. */
-const GIOCHI_V = "d5efa1434f";
+const GIOCHI_V = "58d47e0463";
 const GIOCHI = { stato: null, err: "" }; /* null · carico · ok · errore */
 function caricaGiochi() {
   if (GIOCHI.stato) return; /* già scaricato, in arrivo o andato male (si riprova solo col pulsante) */

@@ -2645,6 +2645,8 @@ function opereApri(box) {
     const P = pal(), lv = L(), nf = lv.nFissi || lv.segs.length;
     for (const [lx, a, b] of lv.scale) {
       const yt = Math.round(goYAt(lv.segs[a], lx)), yb = Math.round(goYAt(lv.segs[b], lx)), l = Math.round(lx);
+      /* contorno scuro: le scale si vedono su qualsiasi sfondo (anche sul bianco del faro) */
+      x.fillStyle = GO_COMUNI[0]; x.fillRect(l - 6, yt, 4, yb - yt); x.fillRect(l + 2, yt, 4, yb - yt); for (let y = yt + 4; y < yb - 1; y += 5) x.fillRect(l - 3, y - 1, 6, 3);
       x.fillStyle = P.scala; x.fillRect(l - 5, yt, 2, yb - yt); x.fillRect(l + 3, yt, 2, yb - yt);
       x.fillStyle = P.piolo; for (let y = yt + 4; y < yb - 1; y += 5) x.fillRect(l - 3, y, 6, 1);
     }
