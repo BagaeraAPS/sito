@@ -3219,9 +3219,19 @@ function vPromemoria(id, p) {
     <section class="evhead"><div class="band incontro"><span class="eyebrow">Promemoria personale · lo vedi solo tu</span><h1>${esc(p.titolo)}</h1><span class="count">${esc(traQuanto(p.data))}</span></div>
     <div class="facts"><div>${ic("cal")}<span><b>${esc(fDataL(p.data))}</b>${esc(p.ora || "Tutto il giorno")}</span></div>${p.luogo ? `<div>${ic("pin")}<span><b>${esc(p.luogo)}</b></span></div>` : ""}</div></section>
     ${p.cosa ? `<p style="white-space:pre-wrap">${esc(p.cosa)}</p>` : ""}
-    <div class="btns"><a class="btn" href="${linkGoogleCal(p)}" target="_blank" rel="noopener">${ic("cal")}Aggiungi a Google Calendar</a><button class="btn danger" data-act="del-promemoria" data-id="${id}">${ic("trash")}Elimina</button></div></div>`;
+    <div class="btns"><a class="btn" href="${linkGoogleCal(p)}" target="_blank" rel="noopener">${ic("cal")}Aggiungi a Google Calendar</a><button class="btn" data-act="mod-promemoria" data-id="${id}">${ic("edit")}Modifica</button><button class="btn danger" data-act="del-promemoria" data-id="${id}">${ic("trash")}Elimina</button></div></div>`;
 }
-ACT["del-promemoria"] = async (el) => { const pm = { ...(S.prefs.promemoria || {}) }; delete pm[el.dataset.id]; await wSet(`data/users/${ME()}/prefs`, { ...S.prefs, promemoria: pm }); go("calendario"); toast("Promemoria eliminato."); };
+/* i promemoria personali stanno in prefs/<id>.promemoria: li cambia e li cancella solo chi li ha fatti
+   (prima «Elimina» scriveva in un percorso vecchio, data/users/…, che le regole rifiutano) */
+ACT["mod-promemoria"] = (el) => { const p = (S.prefs.promemoria || {})[el.dataset.id]; if (p) formEvento({ ...p, id: el.dataset.id, tipo: "personale", personale: true }); };
+ACT["del-promemoria"] = (el) => {
+  const id = el.dataset.id, p = (S.prefs.promemoria || {})[id]; if (!p) return;
+  confirmSheet({ title: "Eliminare il promemoria?", text: `«${esc(p.titolo)}» sparisce dal tuo calendario.`, ok: "Elimina", danger: true, onOk: async () => {
+    const pm = { ...(S.prefs.promemoria || {}) }; delete pm[id];
+    await wSet("prefs/" + ME(), { ...S.prefs, promemoria: pm });
+    closeSheet(); go("calendario"); toast("Promemoria eliminato.");
+  } });
+};
 ACT["vedi-medaglia"] = (el) => { const e = S.cal[el.dataset.id]; if (e) mostraMedaglia(e, false); };
 ACT.cero = async (el) => { const e = S.cal[el.dataset.id]; if (!e) return; await wUpd("calendario/" + e.id, { presenze: { [ME()]: { c: Date.now(), r: "si", dich: true } } }); mostraMedaglia(e, true); };
 ACT["mat-ok"] = async (el) => { const e = S.cal[el.dataset.id]; const m = e && e.materiale && e.materiale[el.dataset.m]; if (!m) return; await wUpd("calendario/" + e.id, { materiale: { [el.dataset.m]: { ok: !m.ok, okDa: ME() } } }); };
@@ -3337,13 +3347,13 @@ function formEvento(e, pre = {}, opz = {}) {
   const tipi = [];
   if (can.creaGenerale()) tipi.push(["evento", "Evento"], ["riunione", "Assemblea generale"], ["appuntamento", "Appuntamento / progetto"]);
   if (miei.length) tipi.push(["incontro", "Incontro di gruppo"]);
-  if (!e) tipi.push(["personale", "Solo per me"]);
+  if (!e || e.personale) tipi.push(["personale", "Solo per me"]);
   const t0 = (e && e.tipo) || pre.tipo || (pre.progetto ? "appuntamento" : miei.length && !can.creaGenerale() ? "incontro" : tipi[0][0]);
   const v = e || { data: pre.data || oggi(), gruppo: pre.gruppo || miei.find((g) => g !== "consiglio") || miei[0], luogo: "", ...pre };
   const pjs = Object.values(S.progetti).filter((p) => !p.archiviato || p.id === v.progetto).sort((a, b) => a.nome.localeCompare(b.nome, "it"));
   const visib = v.visib || (v.progetto ? "tutti" : "consiglio");
   const cand = tuttiSoci().filter((u) => !isCouncil(u)).sort((a, b) => nm(a).localeCompare(nm(b), "it"));
-  openSheet({ title: e ? "Modifica appuntamento" : opz.titolo || "Nuovo appuntamento", eyebrow: opz.eyebrow || "Calendario", fonte: opz.fonte || null, dopo: opz.dopo || null,
+  openSheet({ title: e ? (e.personale ? "Modifica promemoria" : "Modifica appuntamento") : opz.titolo || "Nuovo appuntamento", eyebrow: opz.eyebrow || "Calendario", fonte: opz.fonte || null, dopo: opz.dopo || null,
     body: `<form data-form="evento" id="fEv" data-id="${e ? e.id : ""}" class="stack">
       ${opz.nota || ""}
       ${tipi.length > 1 ? `<div class="field"><span>Che cos'è</span><div class="opts">${tipi.map(([k, l]) => radio("tipo", k, l, k === t0, e ? "disabled" : "")).join("")}</div></div>` : `<input type="hidden" name="tipo" value="${t0}">`}
@@ -3381,9 +3391,9 @@ FORMS.evento = async (f) => {
   if (!d.titolo) return fErr(f, "Scrivi un titolo.");
   if (!d.data) return fErr(f, "Scegli il giorno.");
   if (tipo === "personale") {
-    const pid = genId("p");
+    const giaC = id && (S.prefs.promemoria || {})[id], pid = giaC ? id : genId("p");
     await salvaPrefs({ promemoria: { [pid]: d } });
-    closeSheet(); toast("Promemoria salvato: lo vedi solo tu."); go("ev-" + pid); return;
+    closeSheet(); toast(giaC ? "Promemoria salvato." : "Promemoria salvato: lo vedi solo tu."); go("ev-" + pid); return;
   }
   if (tipo === "incontro") { d.gruppo = fv(f, "gruppo"); d.aperto = fv(f, "aperto"); if (!can.creaIncontro(d.gruppo)) return fErr(f, "Puoi creare incontri solo per i tuoi gruppi."); }
   else { d.gruppo = null; d.aperto = false; }
@@ -7149,7 +7159,7 @@ function bloccoSponsorizzate() {
 /* ================= GIOCHI: la parte vera sta in un file a parte (giochi.txt) =================
    L'app resta leggera: il file dei giochi si scarica solo quando qualcuno apre la sezione, poi resta in memoria
    (e il telefono lo tiene anche senza rete). Qui c'è solo il caricatore e la pagina d'attesa. */
-const GIOCHI_V = "58d47e0463";
+const GIOCHI_V = "8a896da81e";
 const GIOCHI = { stato: null, err: "" }; /* null · carico · ok · errore */
 function caricaGiochi() {
   if (GIOCHI.stato) return; /* già scaricato, in arrivo o andato male (si riprova solo col pulsante) */
